@@ -1,0 +1,59 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>PDF</title>
+        <style type="text/css">
+            @page {
+                size: A4;
+                margin-top: 3.5cm;
+                margin-bottom: 2cm;
+                @bottom-right {
+                    content: "Pagina " counter(page) " de " counter(pages);
+                    font-family: "Courier New";
+                    font-size: 8px;
+                }
+            }
+            @page :first {
+                margin-top: 1cm;
+            }
+            @page :right {
+                margin-left: 4cm;
+                margin-right: 1cm;
+            }
+            @page :left {
+                margin-left: 1cm;
+                margin-right: 4cm;
+            }
+
+            .cabecera {
+                font-family: Arial;
+                font-size: 12px;
+                text-align: center;
+                font-style: italic;
+            }
+
+            .texto {
+                padding-top: 0.5cm;
+                text-align: justify;
+                text-justify: inter-word;
+                font-family: "Courier New";
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            
+
+        </style>
+    </head>
+    <body>
+        <div class="cabecera">
+            {% load static %}
+            <img src="{% static 'assets/images/logo.png' %}" alt="Logo">
+        </div>
+        
+        <div class="texto">
+            <b>ORDEN DE PAGO </b> {{ op_pagada.copanro }} / {{ op_pagada.copaanio }}
+            
+        </div>
+    </body>
+</html>

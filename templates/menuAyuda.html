@@ -1,0 +1,17 @@
+    <div class="input-group">
+        <span class="input-group-text"><i class="icon-magnifier"></i></span>
+        <input type="text" class="form-control" placeholder="Buscar..." id="ul_input_ayuda">
+    </div>
+
+<ul class="list-unstyled question" id="ul_ayuda">
+    <li class="menu-heading">GENERAL</li>
+    {% for ayuda in ayuda_items %}
+            <li><a href="{{ ayuda.url }}" target="_blank">{{ ayuda.nombre }}</a></li>
+    {% endfor %}
+    {% for grupo in user.groups.all %}
+        <li class="menu-heading">{{ grupo }}</li>
+        {% for ayuda in grupo.ayuda_set.all %}
+            <li><a href="{{ ayuda.url }}" target="_blank">{{ ayuda.nombre }}</a></li>
+        {% endfor %}
+    {% endfor %}
+</ul>

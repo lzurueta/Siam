@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block extraCss %}
+{% endblock %}
+{% block main %}
+    <div id="main-content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="row">
+                    <div class="col-lg-12 col-md-8 col-sm-12">
+                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth">
+                            <i class="fa fa-arrow-left"></i></a> {{ defensoria }}</h2>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/"><i class="icon-home"></i></a></li>
+                            <li class="breadcrumb-item active">{{ titulo }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover small">
+                                    <thead>
+                                        <tr>
+                                            {% for list in list_display %}
+                                                <th>{{ list }}</th>
+                                            {% endfor %}
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in objetos %}
+                                            <tr>
+                                            {% for value in values %}
+                                                <td>
+                                                {% if forloop.last %}
+                                                    {% if 'editar' in botones %}
+                                                        <button type="button" data-id="{{ value }}" class="btn btn-info js-editar" title="Editar"><i class="fa fa-edit"></i></button>
+                                                    {% endif %}
+                                                    {% if 'eliminar' in botones %}
+                                                        <button type="button" data-id="{{ value }}" class="btn btn-danger js-sweetalert" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                                    {% endif %}
+                                                {% else %}
+                                                     {{ value }}
+                                                {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="modal-alta" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block extraJS %}
+    <script>
+    $(document).ready(function(){
+
+        $.fn.dataTable.ext.buttons.nuevo = {
+            text: 'Nuevo',
+            className: 'btn-info',
+            action: function ( e, dt, node, config ) {
+                loadForm()
+            }
+        };
+
+        var data_table = $('#data_table').DataTable( {
+            autoWidth: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {% if 'insertar' in botones %}
+                'nuevo',
+                {% endif %}
+                'csv', 'print',
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
+        } );
+
+
+        var loadForm = function () {
+            var btn = $(this);
+            $.ajax({
+              url: '{% url 'abmAlta' app_name=app_name model_name=model_name form_name=form_name %}',
+              type: 'get',
+                {% if padre  %}
+                    data: {padre: '{{ padre }}',field_name: '{{ field_name }}',field_value: '{{ field_value }}'},
+                {% endif %}
+              dataType: 'json',
+              beforeSend: function () {
+                $("#modal-alta .modal-content").html("");
+                $("#modal-alta").modal("show");
+              },
+              success: function (data) {
+                $("#modal-alta .modal-content").html(data.html_form);
+              }
+            });
+          };
+
+        $(".js-editar").click(function(){
+            var btn = $(this);
+            $.ajax({
+              url: '{% url 'abmAlta' app_name=app_name model_name=model_name form_name=form_name %}',
+              type: 'get',
+              data: {id: btn.attr("data-id")},
+              dataType: 'json',
+              beforeSend: function () {
+                $("#modal-alta .modal-content").html("");
+                $("#modal-alta").modal("show");
+              },
+              success: function (data) {
+                $("#modal-alta .modal-content").html(data.html_form);
+              }
+            });
+
+        });
+
+        $(".js-sweetalert").click(function(){
+            var btn = $(this);
+           swal({
+                title: "Esta seguro?",
+                text: "Esta operacion no se puede deshacer!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc3545",
+                confirmButtonText: "Si, Eliminar!",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                      url: '{% url 'abmEliminar' app_name=app_name model_name=model_name form_name=form_name %}',
+                      type: 'get',
+                      data: {id: btn.attr("data-id")},
+                      dataType: 'json',
+                      success: function (data) {
+                          swal({
+                               title: "Eliminado!",
+                               text: "Se elimino exitosamente!",
+                               type: "success"
+                             },
+                           function(){
+                               location.reload();
+                           }
+                        );
+                      }
+                    });
+
+            });
+        });
+
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

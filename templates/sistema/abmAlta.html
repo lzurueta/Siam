@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <h4 class="title" id="largeModalLabel">{{ titulo }}</h4>
+</div>
+<form id="form_alta" method="post" enctype="multipart/form-data">
+
+    <div class="modal-body">
+        {% csrf_token %}
+        <input type="hidden" id="padre" name="padre" value="{{ padre }}">
+        <input type="hidden" id="field_name" name="field_name" value="{{ field_name }}">
+        <input type="hidden" id="field_value" name="field_value" value="{{ field_value }}">
+        <input type="hidden" id="personaopera" name="personaopera" value="{{ personaopera }}">
+        {% if form.instance.id %}
+            <input type="hidden" id="id" name="id" value="{{ form.instance.id }}">
+        {% endif %}
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12">
+                {{ form.as_div }}
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="btn-guardar" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function(){
+
+        $("#btn-guardar").click(function(){
+            var btn = $(this);
+            //var formData = $("#form_alta").serializeArray();
+            var formData = new FormData($('#form_alta')[0]);
+            $.ajax({
+              url: '{% url 'abmAlta' app_name=app_name model_name=model_name form_name=form_name %}',
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function (data) {
+                   if (data['resultado'] == "OK") {
+                       swal({
+                               title: "Ok!",
+                               text: "Se guardo correctamente!",
+                               type: "success"
+                             },
+                           function(){
+                               location.reload();
+                           }
+                        );
+                   } else {
+                       swal({ type: "error", html:true, title: "Error!", text: data['resultado'] });
+
+                   }
+              }
+            });
+
+        });
+
+
+    });
+</script>
+

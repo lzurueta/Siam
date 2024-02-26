@@ -1,0 +1,121 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+<title>SISTEMA INTEGRADO DE ADMINISTRACIÓN FINANCIERA</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+<link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+<!-- VENDOR CSS -->
+<link rel="stylesheet" href="{% static 'assets/css/dataTables.min.css' %}">
+<link rel="stylesheet" href="{% static 'assets/vendor/nouislider/nouislider.min.css' %}" />
+
+<!-- SWEET ALERT  -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<!-- SELECT2  -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+<!-- MAIN CSS -->
+<link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+
+<!-- EXTRA CSS -->
+{% block extraCss %}
+{% endblock %}
+
+</head>
+<body data-theme="theme-purple">
+
+<!-- Overlay For Sidebars -->
+
+<div id="wrapper">
+
+    <nav class="navbar navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-btn">
+                <button type="button" class="btn-toggle-offcanvas text-light"><i class="lnr lnr-menu fa fa-bars"></i></button>
+            </div>
+
+            <div class="navbar-brand">
+                <a href="/">
+                    <img src="{% static 'assets/images/logo-white.png' %}" alt="Logo">
+                </a>                
+            </div>
+            
+            <div class="navbar-right">
+                <div id="navbar-menu">
+                    {% include "navbar.html" %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div id="left-sidebar" class="sidebar">
+        <div class="sidebar-scroll">
+            <div class="user-account">
+                <img src="{% if user.profile.foto %}{{ user.profile.foto.url }}{% else %} {% static 'assets/images/user.png' %} {% endif %}" class="rounded-circle user-photo" alt="User Profile Picture">
+                <div class="dropdown">
+                    <span>Bienvenido,</span>
+                    <span class="user-name"><strong>{{ user.get_full_name }}</strong></span>
+                </div>
+            </div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#menu">Menu</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#question"><i class="icon-question"></i></a></li>
+            </ul>
+                
+            <!-- Tab panes -->
+            <div class="tab-content ps-0 pe-0">
+                <div class="tab-pane active" id="menu">
+                    {%  include 'menu.html' %}
+                </div>
+                <div class="tab-pane px-2" id="question">
+                    {%  include 'menuAyuda.html' %}
+                </div>                
+            </div>          
+        </div>
+    </div>
+    <!-- BLOQUE MAIN -->
+    {% block main %}
+    <div id="main-content">
+        BLOQUE MAIN DEFAULT
+    </div>
+    {% endblock %}
+
+    
+</div>
+
+<!-- Javascript -->
+<script src="{% static 'assets/bundles/libscripts.bundle.js' %}"></script>
+<script src="{% static 'assets/bundles/vendorscripts.bundle.js' %}"></script>
+<script src="{% static 'assets/bundles/datatablescripts.bundle.js' %}"></script>
+<script src="{% static 'assets/vendor/nouislider/nouislider.js' %}"></script> <!-- noUISlider Plugin Js -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{% static 'assets/vendor/ckeditor/ckeditor.js' %}"></script> <!-- Ckeditor -->
+
+<script src="{% static 'assets/bundles/mainscripts.bundle.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+  $("#ul_input_ayuda").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#ul_ayuda li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+<!-- EXTRA JS -->
+{% block extraJS %}
+{% endblock %}
+
+</body>
+</html>

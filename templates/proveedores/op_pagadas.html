@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block extraCss %}
+{% endblock %}
+{% block main %}
+{% load static %}
+<div id="main-content" class="profilepage_2 blog-page">
+        <div class="container-fluid">
+            <div class="block-header">
+                <div class="row g-3">
+                    <div class="col-lg-5 col-md-8 col-sm-12">
+                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
+                            {{ titulo }}</h2>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><i class="icon-home"></i></a></li>
+                            <li class="breadcrumb-item active">{{ titulo }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-lg-12">
+                    <form method="post">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row clearfix">
+                            <div class="col-lg-1">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="ejer" id="ejer">
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="jur" id="jur">
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="udo" id="udo">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="nro_op" id="nro_op">
+                                </div>
+                            </div>    
+                            <div class="col-lg-2">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
+                                    </div>
+                                    <input type="date" class="form-control" name="desde" id="desde">
+                                </div>
+                            </div>
+                                <div class="col-lg-2">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
+                                    </div>
+                                    <input type="date" class="form-control" name="hasta" id="hasta">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
+                                    </div>
+                                    <select class="form-control" id="cheque" name="cheque">
+                                        <option value="T" selected="selected">Todos</option>
+                                        <option value="C">En Cartera</option>
+                                        <option value="P">Pagados</option>
+                                        <option value="E">En Proceso de Pago</option>
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <button class="btn btn-primary" type="submit" title="Buscar"><i class="fa fa-search"></i></button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+
+                <div class="col-lg-12 col-md-12">
+                    <div class="card">
+                        <div class="body">
+                           <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped table-hover small">
+                                    <thead>
+                                        <tr>
+                                            <th>Fec.Pago</th>
+                                            <th>Ejer.</th>
+                                            <th>Nro. OP</th>
+                                            <th>Jur.</th>
+                                            <th>UDO</th>
+                                            <th>Repartición</th>
+                                            <th>Est. Tipo</th>
+                                            <th>Tipo Pago</th>
+                                            <th>Pagado</th>
+                                            <th>Saldo</th>
+                                            <th>Imp.Pago</th>
+                                            <th>Cuit</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for op in pagadas %}
+                                            <tr>
+                                                <td>{{ op.cpopfpg }}</td>
+                                                <td>{{ op.cpopanio }}</td>
+                                                <td>{{ op.copanro }}</td>
+                                                <td>{{ op.cjurcod }}</td>
+                                                <td>{{ op.crepudo }}</td>
+                                                <td></td>
+                                                <td>{{ op.cpoptip }}</td>
+                                                <td>{{ op.cpoptip }}</td>
+                                                <td class="align-right">{{ op.copapgd }}</td>
+                                                <td class="align-right">{{ op.copasdo }}</td>
+                                                <td class="align-right">{{ op.cpopimp }}</td>
+                                                <td class="align-right">{{ op.cbencui }}</td>
+                                                <td>
+                                                    <a href="{% url 'op_pagadas_imprimir' id=op.id %}" target="_blank" class="btn btn-outline-secondary" title="Imprimir"><i class="fa fa-print"></i></a>
+                                                    <button type="button" data-id="{{ op.id }}" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>
+                                                    <button type="button" data-id="{{ op.id }}" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal-detalle" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block extraJS %}
+    <script>
+    $(document).ready(function(){
+        
+        $(".js-detalle").click(function(){
+            var btn = $(this);
+            $.ajax({
+              url: '{% url 'op_pagadas_detalle' %}',
+              type: 'get',
+              data: {id: btn.attr("data-id")},
+              dataType: 'json',
+              beforeSend: function () {
+                $("#modal-detalle .modal-content").html("");
+                $("#modal-detalle").modal("show");
+              },
+              success: function (data) {
+                $("#modal-detalle .modal-content").html(data.html_form);
+              }
+            });
+
+        });
+
+        var data_table = $('#data_table').DataTable( {
+            autoWidth: false,
+            searching: false,
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'print',
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
+        } );
+
+
+
+
+
+    });
+</script>
+{% endblock %}

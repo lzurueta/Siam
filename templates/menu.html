@@ -1,0 +1,15 @@
+<nav id="left-sidebar-nav" class="sidebar-nav">
+    <ul id="main-menu" class="metismenu">
+        {% for grupo in user.groups.all %}
+        <li>
+            <a href="#" class="has-arrow"><i class="{{ grupo.icon }}"></i> <span>{{ grupo }}</span></a>
+            <ul>
+                <li><a href="{{ grupo.home }}">Home</a></li>
+                {% for menu in grupo.menugrupo_set.all %}
+                    <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
