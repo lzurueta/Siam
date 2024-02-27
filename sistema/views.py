@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.views import View
 
 from sistema.forms import NewUserForm
+from sistema.functions import conectarSQL
 
 
 # Create your views here.
@@ -206,3 +207,11 @@ class abmEliminar(View):
         data = dict()
         data['html_form'] = "OK"
         return JsonResponse(data)
+
+class test_sql(View):
+
+    def get(self, request, *args, **kwargs):
+
+        sql = conectarSQL()
+
+        return HttpResponse(sql)

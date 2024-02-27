@@ -4,6 +4,8 @@ import tempfile
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
+
+import pymssql
 #import logging
 #logger = logging.getLogger('weasyprint')
 #logger.addHandler(logging.FileHandler('/var/log/weasyprint.log'))
@@ -36,4 +38,16 @@ def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None
     html = HTML(string=html_string, base_url=request.build_absolute_uri())
     html.write_pdf(nombre_archivo, presentational_hints=True, attachments=attachments)
     return True
+
+
+def conectarSQL():
+    direccion_servidor = '123.123.123.45'
+    instancia = "srv-lab"
+    nombre_bd = 'siaf'
+    nombre_usuario = 'siafsql'
+    password = '159753'
+
+    conexion = pymssql.connect(direccion_servidor, nombre_usuario, password, nombre_bd)
+
+    return conexion
 
