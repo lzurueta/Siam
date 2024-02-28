@@ -214,7 +214,7 @@ class test_sql(View):
 
         conexion = conectarSQL()
         cursor = conexion.cursor()
-        cursor.execute('SELECT * FROM CPOPAGO')
+        cursor.execute('SELECT * FROM CPOPAGO WHERE cpopanio=2024')
 
         html = ''
         for i in cursor:
