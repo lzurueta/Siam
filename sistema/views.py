@@ -212,6 +212,16 @@ class test_sql(View):
 
     def get(self, request, *args, **kwargs):
 
-        sql = conectarSQL()
+        conexion = conectarSQL()
+        cursor = conexion.cursor()
+        cursor.execute('SELECT * FROM CPOPAGO')
 
-        return HttpResponse(sql)
+        html = ''
+        for i in cursor:
+            cpopanio = i.cpopanio
+            cpopnro = i.cpopnro
+            cpopfpg = i.cpopfpg
+            cpopimp = i.cpopimp
+            html = html + str(cpopanio) + " || " + str(cpopnro) + " || " + str(cpopfpg) + " || " + str(cpopimp) + '<br><br>'
+
+        return HttpResponse(html)
