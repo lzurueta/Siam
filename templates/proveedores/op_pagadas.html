@@ -23,6 +23,9 @@
           <div class="card-body">
             <div class="col-lg-12">
 
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
 
               <div class="row">
                 <div class="col-lg-3">
@@ -33,236 +36,133 @@
                     <input type="text" class="form-control" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
                   </div>
                 </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
-                      </div>
-                      <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
+                <div class="col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
                     </div>
+                    <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
                   </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
-                      </div>
-                      <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
+                </div>
+                <div class="col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
                     </div>
+                    <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
                   </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
-                      </div>
-                      <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
+                </div>
+                <div class="col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
                     </div>
+                    <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
                   </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
-                      </div>
-                      <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
+                </div>
+                <div class="col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
                     </div>
+                    <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
                   </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
-                      </div>
-                      <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
+                </div>
+                <div class="col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
                     </div>
+                    <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
                   </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
-                      </div>
-                      <select class="form-control" id="cheque_ajax" name="cheque_ajax">
-                        <option value="T" selected="selected">Todos</option>
-                        <option value="C">En Cartera</option>
-                        <option value="P">Pagados</option>
-                        <option value="E">En Proceso de Pago</option>
-                      </select>
+                </div>
+                <div class="col-lg-4">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
                     </div>
+                    <select class="form-control" id="cheque_ajax" name="cheque_ajax">
+                      <option value="T" selected="selected">Todos</option>
+                      <option value="C">En Cartera</option>
+                      <option value="P">Pagados</option>
+                      <option value="E">En Proceso de Pago</option>
+                    </select>
                   </div>
-                <div class="col-lg-1">
+                </div>
+                <div class="col-lg-2">
                   <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
                 </div>
               </div>
 
+             <!-- --------------------------------------------------------------------------------- -->
+             <!-- --------------------------------------------------------------------------------- -->
+             <!-- --------------------------------------------------------------------------------- -->
+
             </div>
+              
+            <!-- --------------------------------------------------------------------------------- -->  
+            <!-- ------------------------------- TABLA OPS --------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- --> 
 
             <div class="table-responsive col-lg-12">
               <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
                 <thead>
                   <tr>
                     <th>Fec.Pago</th>
-                      <th>Ejer.</th>
-                      <th>Nro. OP</th>
-                      <th>Jur.</th>
-                      <th>UDO</th>
-                      <th>Repartición</th>
-                      <th>Est. Tipo</th>
-                      <th>Tipo Pago</th>
-                      <th>Pagado</th>
-                      <th>Saldo</th>
-                      <th>Imp.Pago</th>
-                      <th>Cuit</th>
-                      <th></th>
+                    <th>Ejer.</th>
+                    <th>Nro. OP</th>
+                    <th>Jur.</th>
+                    <th>UDO</th>
+                    <th>Repartición</th>
+                    <th>Est. Tipo</th>
+                    <th>Tipo Pago</th>
+                    <th>Pagado</th>
+                    <th>Saldo</th>
+                    <th>Imp.Pago</th>
+                    <th>Cuit</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                 </tbody>
               </table>
             </div>
+              
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- --> 
+  
           </div>
         </div>
       </div>
 
-      <div class="row clearfix mt-4">
-        <div class="col-lg-12">
-          <form method="post">
-            {% csrf_token %}
-            <div class="card">
-              <div class="card-body">
-                <div class="row clearfix">
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
-                      </div>
-                      <input type="text" class="form-control" name="ejer" id="ejer" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
-                      </div>
-                      <input type="text" class="form-control" name="jur" id="jur" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
-                      </div>
-                      <input type="text" class="form-control" name="udo" id="udo" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
-                      </div>
-                      <input type="text" class="form-control" name="nro_op" id="nro_op" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
-                      </div>
-                      <input type="date" class="form-control" name="desde" id="desde" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
-                      </div>
-                      <input type="date" class="form-control" name="hasta" id="hasta" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-lg-3">
-                    <div class="input-group input-group-sm mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
-                      </div>
-                      <select class="form-control" id="cheque" name="cheque">
-                        <option value="T" selected="selected">Todos</option>
-                        <option value="C">En Cartera</option>
-                        <option value="P">Pagados</option>
-                        <option value="E">En Proceso de Pago</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-lg-1">
-                    <button class="btn btn-primary w-100" type="submit" title="Buscar"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="row clearfix">
-
-        <div class="col-lg-12 col-md-12">
-          <div class="card">
-            <div class="body">
-              <div class="table-responsive">
-                <table id="data_table" class="table table-bordered table-striped table-hover small">
-                  <thead>
-                    <tr>
-                      <th>Fec.Pago</th>
-                      <th>Ejer.</th>
-                      <th>Nro. OP</th>
-                      <th>Jur.</th>
-                      <th>UDO</th>
-                      <th>Repartición</th>
-                      <th>Est. Tipo</th>
-                      <th>Tipo Pago</th>
-                      <th>Pagado</th>
-                      <th>Saldo</th>
-                      <th>Imp.Pago</th>
-                      <th>Cuit</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for op in pagadas %}
-                    <tr>
-                      <td>{{ op.cpopfpg }}</td>
-                      <td>{{ op.cpopanio }}</td>
-                      <td>{{ op.copanro }}</td>
-                      <td>{{ op.cjurcod }}</td>
-                      <td>{{ op.crepudo }}</td>
-                      <td></td>
-                      <td>{{ op.cpoptip }}</td>
-                      <td>{{ op.cpoptip }}</td>
-                      <td class="align-right">{{ op.copapgd }}</td>
-                      <td class="align-right">{{ op.copasdo }}</td>
-                      <td class="align-right">{{ op.cpopimp }}</td>
-                      <td class="align-right">{{ op.cbencui }}</td>
-                      <td>
-                        <a href="{% url 'op_pagadas_imprimir' id=op.id %}" target="_blank" class="btn btn-outline-secondary" title="Imprimir"><i class="fa fa-print"></i></a>
-                        <button type="button" data-id="{{ op.id }}" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>
-                        <button type="button" data-id="{{ op.id }}" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- ------------------------------ MODAL LG VACIO ----------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+
   <div class="modal fade" id="modal-detalle" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content"></div>
     </div>
   </div>
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
   {% endblock %}
   {% block extraJS %}
   <script>
 
-  var tablePrueba;
+  /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE DE OPs ********************/
+  /******************************************************************************************/
+
+  var tableOP;
 
   function cargarTabla(){
 
@@ -270,16 +170,17 @@
     $('#data_table_ajax').dataTable().fnDestroy();
 
     var valores = {
-      "ejer_ajax":  $('input[name="ejer_ajax"]').val(),
-      "jur_ajax":  $('input[name="jur_ajax"]').val(),
-      "udo_ajax":  $('input[name="udo_ajax"]').val(),
-      "nro_op_ajax":  $('input[name="nro_op_ajax"]').val(),
-      "desde_ajax":  $('input[name="desde_ajax"]').val(),
-      "hasta_ajax":  $('input[name="hasta_ajax"]').val(),
-      "cheque_ajax":  $('input[name="cheque_ajax"]').val(),
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "ejer_ajax":  $("#ejer_ajax").val(),
+      "jur_ajax":  $("#jur_ajax").val(),
+      "udo_ajax":  $("#udo_ajax").val(),
+      "nro_op_ajax":  $("#nro_op_ajax").val(),
+      "desde_ajax":  $("#desde_ajax").val(),
+      "hasta_ajax":  $("#hasta_ajax").val(),
+      "cheque_ajax":  $("#cheque_ajax").val(),
     }
 
-    tablePrueba = $('#data_table_ajax').DataTable({
+    tableOP = $('#data_table_ajax').DataTable({
       autoWidth: false,
       searching: false,
       dom: 'Bfrtip',
@@ -293,6 +194,7 @@
         "url": "{% url 'op_pagadas_ajax' %}",
         "data": valores,
         "async": true,
+        "type": "POST",
         "dataSrc": ""
       },
       "columns": [
@@ -324,8 +226,8 @@
           "render": function(data, type, row) {
 
             return '<a target="_blank" href="op_pagadas_imprimir/'+data.id+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-                '<button type="button" onclick="verDetalle('+data.id+')" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
-                '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
+            '<button type="button" onclick="verDetalle('+data.id+')" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
+            '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
           }
         },
@@ -333,105 +235,86 @@
     });
   }
 
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+  /******************************************************************************************/
+  /*************************** FUNCION PARA EL BOTON VER DETALLES ***************************/
+  /******************************************************************************************/
 
   function verDetalle(id){
 
-        $.ajax({
-        url: '{% url 'op_pagadas_detalle' %}',
-        type: 'get',
-        data: {id: id},
-        dataType: 'json',
-        beforeSend: function () {
-          $("#modal-detalle .modal-content").html("");
-          $("#modal-detalle").modal("show");
-        },
-        success: function (data) {
-          $("#modal-detalle .modal-content").html(data.html_form);
-        }
-      });
+    $.ajax({
+      url: '{% url 'op_pagadas_detalle' %}',
+      type: 'get',
+      data: {id: id},
+      dataType: 'json',
+      beforeSend: function () {
+        $("#modal-detalle .modal-content").html("");
+        $("#modal-detalle").modal("show");
+      },
+      success: function (data) {
+        $("#modal-detalle .modal-content").html(data.html_form);
+      }
+    });
 
-    }
+  }
 
-    function verComprobante(id){
-      $.ajax({
-        url: '{% url 'op_pagadas_comprobante' %}',
-        type: 'get',
-        data: {id: id},
-        dataType: 'json',
-        beforeSend: function () {
-          $("#modal-detalle .modal-content").html("");
-          $("#modal-detalle").modal("show");
-        },
-        success: function (data) {
-          $("#modal-detalle .modal-content").html(data.html_form);
-        }
-      });
-    }
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
 
+
+  /******************************************************************************************/
+  /************************ FUNCION PARA EL BOTON VER COMPROBANTE ***************************/
+  /******************************************************************************************/
+
+  function verComprobante(id){
+    $.ajax({
+      url: '{% url 'op_pagadas_comprobante' %}',
+      type: 'get',
+      data: {id: id},
+      dataType: 'json',
+      beforeSend: function () {
+        $("#modal-detalle .modal-content").html("");
+        $("#modal-detalle").modal("show");
+      },
+      success: function (data) {
+        $("#modal-detalle .modal-content").html(data.html_form);
+      }
+    });
+  }
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  /******************************************************************************************/
+  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
+  /******************************************************************************************/
 
   $(document).ready(function(){
     cargarTabla();
-
-    $("#btnBuscar").click(function(){
-      cargarTabla();
-    });
-
-
-    $(".js-detalle").click(function(){
-      var btn = $(this);
-
-      $.ajax({
-        url: '{% url 'op_pagadas_detalle' %}',
-        type: 'get',
-        data: {id: btn.attr("data-id")},
-        dataType: 'json',
-        beforeSend: function () {
-          $("#modal-detalle .modal-content").html("");
-          $("#modal-detalle").modal("show");
-        },
-        success: function (data) {
-          $("#modal-detalle .modal-content").html(data.html_form);
-        }
-      });
-
-    });
-
-    {#TRAER INFORMACION PARA MODAL DE COMPROBANTE#}
-
-    $(".js-comprobante").click(function(){
-      var btn = $(this);
-      $.ajax({
-        url: '{% url 'op_pagadas_comprobante' %}',
-        type: 'get',
-        data: {id: btn.attr("data-id")},
-        dataType: 'json',
-        beforeSend: function () {
-          $("#modal-detalle .modal-content").html("");
-          $("#modal-detalle").modal("show");
-        },
-        success: function (data) {
-          $("#modal-detalle .modal-content").html(data.html_form);
-        }
-      });
-
-    });
-
-    var data_table = $('#data_table').DataTable( {
-      autoWidth: false,
-      searching: false,
-      dom: 'Bfrtip',
-      buttons: [
-        'csv', 'print',
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
-      }
-    } );
-
-
-
-
-
   });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
+  /******************************************************************************************/
+
+  $("#btnBuscar").click(function(){
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
 </script>
 {% endblock %}
