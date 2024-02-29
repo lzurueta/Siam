@@ -323,7 +323,7 @@
           "width" : "2%",
           "render": function(data, type, row) {
 
-            return '<button type="button" data-id="'+data.id+'"   class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></button>' +
+            return '<a target="_blank" href="op_pagadas_imprimir/'+data.id+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
                 '<button type="button" onclick="verDetalle('+data.id+')" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
                 '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
