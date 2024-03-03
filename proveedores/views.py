@@ -29,14 +29,12 @@ class op_pagadas(View):
     template_name = 'proveedores/op_pagadas.html'
 
     def get_context_data(self, **kwargs):
-<<<<<<< HEAD
         cuit = 30718402234
         pagadas = CPOPAGO.objects.filter(cbencui=cuit)
         if self.request.POST.get('nro_op'):
             pagadas = pagadas.filter(copanro=self.request.POST.get('nro_op'))
         if self.request.POST.get('desde'):
             pagadas = pagadas.filter(cpopfpg__gte=self.request.POST.get('desde'))
-=======
         cuit = 30718402235
         anio = timezone.now().year
 
@@ -48,7 +46,6 @@ class op_pagadas(View):
                      "AND POPAGO.repudo=OPAGO2.repudo WHERE POPAGO.OpaAnio=" + str(anio) + " AND OPAGO2.BENCUI=") + str(cuit)
         cursor.execute(sql_query)
 
->>>>>>> origin/German
         context = {
             'titulo': "OP Pagadas",
             'pagadas': cursor,
