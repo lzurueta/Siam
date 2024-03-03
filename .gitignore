@@ -2,3 +2,5 @@
 *.pyc
 
 .idea/
+
+proveedores/__pycache__/

@@ -31,9 +31,6 @@ def generate_pdf(request, template, texto, attachments=None):
     return response
 
 
-
-
-
 def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None):
     # Rendered
     html_string = render_to_string(template, texto)
@@ -42,10 +39,6 @@ def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None
     return True
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/German
 def conectarSQL():
     direccion_servidor = '123.123.123.45'
     instancia = "srv-lab"
