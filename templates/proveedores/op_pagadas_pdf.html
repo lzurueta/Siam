@@ -84,13 +84,14 @@
             <p class="text-right" style="font-weight: bold">ORDEN DE PAGO </p>
             </div>
             <div class="box" style="width: 27% !important;">
-            <p class="text-right">{{ op_pagada.copanro }} / {{ op_pagada.copaanio }}</p>
+            <p class="text-right">{{ cabecera.OpaNro }} / {{ cabecera.OpaAnio }}</p>
             </div>
         </div>
 
         <div class="div">
             <div class="box" style="width: 99.6% !important;">
-                <p>MINISTERIO PÚBLICO DE LA DEFENSA</p>
+                <p>{{ reparticion.JurDes }}</p>
+                <p>{{ reparticion.RepDes }}</p>
             </div>
         </div>
 
@@ -99,7 +100,7 @@
                 <p class="text-right" style="font-weight: bold">Lugar y Fecha</p>
             </div>
             <div class="box  text-right" style="width: 35.9% !important;">
-                <p class="text-right" >San Salvador de Jujuy, {% now "d/m/Y" %}</p>
+                <p class="text-right" >{{ cabecera.OpaLug }}, {% now "d/m/Y" %}</p>
             </div>
         </div>
 
@@ -108,7 +109,7 @@
                 <p class="text-right" style="font-weight: bold">Fecha OP </p>
             </div>
             <div class="box  text-right" style="width: 10.9% !important;">
-                <p class="text-right">{% now "d/m/Y" %}</p>
+                <p class="text-right">{{ cabecera.OpaFch|date:"d/m/Y" }}</p>
             </div>
         </div>
 
@@ -120,23 +121,20 @@
                 <p>Proveedor</p>
             </div>
             <div class="box" style="width: 41.9% !important;">
-                <p>MINISTERIO PÚBLICO DE LA DEFENSA</p>
+                <p>{{ cabecera.OpaNom }}</p>
             </div>
             <div class="box" style="width: 7% !important;">
                 <p>CUIT N°</p>
             </div>
             <div class="box text-right" style="width: 14.7% !important;">
-                <p class="text-right">{{ op_pagada.cbencui|floatformat:"0" }}</p>
+                <p class="text-right">{{ cabecera.BENCUI }}</p>
             </div>
         </div>
 
         <div class="div">
             <div class="box" style="width: 67% !important;">
-                <p>Por TESORERIA DE LA PROVINCIA, previa intervención de la Contaduria de la Provincia, páguese a:</p> 
-            </div>
-            <div class="box" style="width: 31.9% !important;">
-                <p class="text-right">MINISTERIO PÚBLICO DE LA DEFENSA</p>
-            </div>
+                <p>Por TESORERIA DE LA PROVINCIA, previa intervención de la Contaduria de la Provincia, páguese a: {{ cabecera.OpaNom }}</p> 
+            </div>  
         </div>
 
         <div class="div">
@@ -150,7 +148,7 @@
 
       <div class="div" style="border-top: solid 1px #000">
             <div class="box" style="width: 77% !important;">
-                <p style="font-weight: bold; text-align: center !important;">Orden de Pago {{estado_op}}</p>
+                <p style="font-weight: bold; text-align: center !important;">Orden de Pago {% if cabecera.OpaEst == 1 %} Cancelada {% else %} Pendiente {% endif %}</p>
             </div>
             <div class="box text-right" style="width: 21.9% !important;">
                 <div class="div">

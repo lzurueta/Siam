@@ -33,7 +33,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
                     </div>
-                    <input type="text" class="form-control" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
+                    <input type="text" class="form-control" value="{{ anio }}" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
                   </div>
                 </div>
                 <div class="col-lg-3">
@@ -198,35 +198,26 @@
         "dataSrc": ""
       },
       "columns": [
-        { "data": "cpopfpg" },
-        { "data": "cpopanio" },
-        { "data": "copanro" },
-        { "data": "cjurcod" },
-        { "data": "crepudo" },
+        { "data": "Popfpg" },
+        { "data": "OpaAnio" },
+        { "data": "OpaNro" },
+        { "data": "jurcod" },
+        { "data": "repudo" },
+        { "data": "OpaNom" },
+        { "data": "Poptip" },
+        { "data": "###" },
+        { "data": "###" },
+        { "data": "###" },
+        { "data": "Popimp" },
+        { "data": "BENCUI" },
         {
           "data": null,
           "sortable": false,
           "width" : "2%",
           "render": function(data, type, row) {
 
-            return '';
-
-          }
-        },
-        { "data": "cpoptip" },
-        { "data": "cpoptip" },
-        { "data": "copapgd" },
-        { "data": "copasdo" },
-        { "data": "cpopimp" },
-        { "data": "cbencui" },
-        {
-          "data": null,
-          "sortable": false,
-          "width" : "2%",
-          "render": function(data, type, row) {
-
-            return '<a target="_blank" href="op_pagadas_imprimir/'+data.id+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-            '<button type="button" onclick="verDetalle('+data.id+')" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
+            return '<a target="_blank" href="op_pagadas_imprimir/'+data.OpaAnio+'/'+data.OpaNro+'/'+data.jurcod+'/'+data.repudo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
+            '<button type="button" onclick="verDetalle('+data.OpaAnio+','+data.OpaNro+',`'+data.jurcod+'`,`'+data.repudo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
             '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
           }
@@ -244,12 +235,17 @@
   /*************************** FUNCION PARA EL BOTON VER DETALLES ***************************/
   /******************************************************************************************/
 
-  function verDetalle(id){
+  function verDetalle(OpaAnio,OpaNro,jurcod,repudo){
 
     $.ajax({
       url: '{% url 'op_pagadas_detalle' %}',
       type: 'get',
-      data: {id: id},
+      data: {
+                OpaAnio: OpaAnio,
+                OpaNro: OpaNro,
+                jurcod: jurcod,
+                repudo: repudo, 
+            },
       dataType: 'json',
       beforeSend: function () {
         $("#modal-detalle .modal-content").html("");

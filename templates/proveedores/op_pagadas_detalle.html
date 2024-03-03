@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <p class="h6">{{ titulo }} N° {{ op_pagada.copanro }}</p>
+    <p class="h6">{{ titulo }} N° {{ cabecera.OpaNro }}</p>
 </div>
 <div class="modal-body">
     <div class="row">
@@ -7,37 +7,37 @@
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Ejercicio:</p></div>
-                <div class="col-9"><p>{{ op_pagada.cpopanio }}</p></div>
+                <div class="col-9"><p>{{ cabecera.OpaAnio }}</p></div>
             </div>
         </div>
 
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Jur:</p></div>
-                <div class="col-2"><p>{{ op_pagada.cjurcod }}</p></div>
+                <div class="col-2"><p>{{ cabecera.jurcod }}</p></div>
                 <div class="col-3 text-end"><p class="fw-bold">UDO:</p></div>
-                <div class="col-4"><p>{{ op_pagada.crepudo }}</p></div>
+                <div class="col-4"><p>{{ cabecera.repudo }}</p></div>
             </div>
         </div>
 
          <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Lugar:</p></div>
-                <div class="col-9"><p>SAN SALVADOR DE JUJUY</p></div>
+                <div class="col-9"><p>{{ cabecera.OpaLug }}</p></div>
             </div>
         </div>
 
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Beneficiario:</p></div>
-                <div class="col-9"><p>{{ op_pagada.cbencui|floatformat:"0" }} - MINISTERIO PÚBLICO DE LA DEFENSA</p></div>
+                <div class="col-9"><p>{{ cabecera.BENCUI|floatformat:"0" }} - {{ cabecera.OpaNom }}</p></div>
             </div>
         </div>
 
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Beneficiario del Pago:</p></div>
-                <div class="col-9"><p>MINISTERIO PÚBLICO DE LA DEFENSA</p></div>
+                <div class="col-9"><p>{{ cabecera.OpaNom }}</p></div>
             </div>
         </div>
 
@@ -59,9 +59,19 @@
                 </tr>
               </thead>
               <tbody>
+                {% for row in detalle %}
                 <tr>
-                    <td class="text-center" colspan="8">Ningún dato disponible en esta tabla</td>
+                    <td>{{ row.CpbBenCUI }}</td>
+                    <td>{{ row.OpaCpbTip }}</td>
+                    <td>{{ row.OpaCpbLet }}</td>
+                    <td>{{ row.OpaCpbSuc }}</td>
+                    <td>{{ row.OpaCpbNro }}</td>
+                    <td>{{ row.OpaCpcFec|date:'d/m/Y' }}</td>
+                    <td align="right">{{ row.OpaImp }}</td>
+                    <td align="right">{{ row.OpaImp }}</td>
+
                 </tr>
+                {% endfor %}
               </tbody>
             </table>
         </div>
