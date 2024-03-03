@@ -25,7 +25,7 @@ class op_pagadas(View):
     template_name = 'proveedores/op_pagadas.html'
 
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = 30718402234
         pagadas = CPOPAGO.objects.filter(cbencui=cuit)
         if self.request.POST.get('nro_op'):
             pagadas = pagadas.filter(copanro=self.request.POST.get('nro_op'))
