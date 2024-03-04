@@ -200,3 +200,5 @@ def op_pagadas_ajax(request):
     data = list(cursor)
     return JsonResponse(data, safe=False)
 
+
+
