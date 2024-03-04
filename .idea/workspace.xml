@@ -4,6 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
     <list default="true" id="2a8b326b-8b60-4ac6-bf16-17e6bf293eb3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/sistema/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sistema/views.py" afterDir="false" />
     </list>
@@ -19,15 +23,31 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
+<<<<<<< HEAD
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2cvEbVbSmi4jIzl0HhSQ2Gnti3O" />
+=======
+<<<<<<< HEAD
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2cvEbVbSmi4jIzl0HhSQ2Gnti3O" />
+=======
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2cxgHxNx21V5rksUKit4hAiSPmH" />
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
     "Django Server.SIAF.executor": "Run",
     "JavaScript Debug.op_pagadas_detalle.html.executor": "Run",
     "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
@@ -35,17 +55,46 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "django.template.preview.state": "SHOW_EDITOR",
     "git-widget-placeholder": "main",
+<<<<<<< HEAD
+=======
+=======
+    "Django Server.siaf.executor": "Run",
+    "Python.Unnamed.executor": "Run",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "django.template.preview.state": "SHOW_EDITOR_AND_PREVIEW",
+    "git-widget-placeholder": "Ivan",
+    "last_opened_file_path": "C:/Proyectos/Gitkraken/SIAF/manage.py",
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+<<<<<<< HEAD
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+=======
+<<<<<<< HEAD
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+=======
+    "settings.editor.selected.configurable": "configurable.group.appearance",
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager">
+<<<<<<< HEAD
     <configuration name="SIAF" type="Python.DjangoServer" factoryName="Django server">
+=======
+<<<<<<< HEAD
+    <configuration name="SIAF" type="Python.DjangoServer" factoryName="Django server">
+=======
+    <configuration name="siaf" type="Python.DjangoServer" factoryName="Django server">
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
       <module name="SIAF" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -55,7 +104,15 @@
         <env name="DJANGO_SETTINGS_MODULE" value="siaf.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
+<<<<<<< HEAD
       <option name="SDK_NAME" value="Python 3.10 (silami)" />
+=======
+<<<<<<< HEAD
+      <option name="SDK_NAME" value="Python 3.10 (silami)" />
+=======
+      <option name="SDK_NAME" value="Python 3.10 (SIAF)" />
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -75,13 +132,25 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+<<<<<<< HEAD
         <option value="bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298" />
+=======
+<<<<<<< HEAD
+        <option value="bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298" />
+=======
+        <option value="bundled-python-sdk-5a2391486177-2887949eec09-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.13763.11" />
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
       <changelist id="2a8b326b-8b60-4ac6-bf16-17e6bf293eb3" name="Changes" comment="" />
       <created>1708983724186</created>
       <option name="number" value="Default" />
@@ -89,10 +158,52 @@
       <updated>1708983724186</updated>
       <workItem from="1708983725265" duration="5298000" />
       <workItem from="1709063125201" duration="3431000" />
+<<<<<<< HEAD
+=======
+=======
+      <changelist id="59013993-8728-41bc-bbc1-3ba6ce3ecae1" name="Changes" comment="" />
+      <created>1709058560256</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709058560256</updated>
+      <workItem from="1709060660858" duration="4917000" />
+      <workItem from="1709148403799" duration="3857000" />
+      <workItem from="1709224793920" duration="525000" />
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Ivan" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+>>>>>>> origin/Ivan
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
 </project>

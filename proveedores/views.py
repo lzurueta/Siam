@@ -26,10 +26,14 @@ class op_pagadas(View):
 
     def get_context_data(self, **kwargs):
 <<<<<<< HEAD
+<<<<<<< HEAD
         cuit = 30718402235
 =======
         cuit = 30718402234
 >>>>>>> b54cab0a7304cc54675332aacb8a70b5bf250b90
+=======
+        cuit = 30718402235
+>>>>>>> parent of 803b4b6 (Merge remote-tracking branch 'origin/Mariela')
         pagadas = CPOPAGO.objects.filter(cbencui=cuit)
         if self.request.POST.get('nro_op'):
             pagadas = pagadas.filter(copanro=self.request.POST.get('nro_op'))
