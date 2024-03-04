@@ -29,9 +29,6 @@ def generate_pdf(request, template, texto, attachments=None):
     return response
 
 
-
-
-
 def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None):
     # Rendered
     html_string = render_to_string(template, texto)

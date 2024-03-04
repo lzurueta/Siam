@@ -25,12 +25,30 @@ class op_pagadas(View):
     template_name = 'proveedores/op_pagadas.html'
 
     def get_context_data(self, **kwargs):
+<<<<<<< HEAD
         cuit = 30718402235
+=======
+        cuit = 30718402234
+>>>>>>> b54cab0a7304cc54675332aacb8a70b5bf250b90
         pagadas = CPOPAGO.objects.filter(cbencui=cuit)
         if self.request.POST.get('nro_op'):
             pagadas = pagadas.filter(copanro=self.request.POST.get('nro_op'))
         if self.request.POST.get('desde'):
             pagadas = pagadas.filter(cpopfpg__gte=self.request.POST.get('desde'))
+<<<<<<< HEAD
+=======
+        cuit = 30718402235
+        anio = timezone.now().year
+
+        # ARMAR PRIMER OBJETO CON NRO DE CUIL
+        conexion = conectarSQL()
+        cursor = conexion.cursor(as_dict=True)
+        sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
+                     "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
+                     "AND POPAGO.repudo=OPAGO2.repudo WHERE POPAGO.OpaAnio=" + str(anio) + " AND OPAGO2.BENCUI=") + str(cuit)
+        cursor.execute(sql_query)
+
+>>>>>>> b54cab0a7304cc54675332aacb8a70b5bf250b90
         context = {
             'titulo': "OP Pagadas",
             'pagadas': pagadas,
