@@ -199,3 +199,4 @@ def op_pagadas_ajax(request):
     cursor.execute(sql_query)
     data = list(cursor)
     return JsonResponse(data, safe=False)
+
