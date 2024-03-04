@@ -1,7 +1,6 @@
 import math
 import tempfile
 
-import pymssql
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
@@ -42,10 +41,6 @@ def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None
     return True
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/German
 def conectarSQL():
     direccion_servidor = '123.123.123.45'
     instancia = "srv-lab"

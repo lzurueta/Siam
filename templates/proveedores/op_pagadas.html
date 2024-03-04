@@ -4,7 +4,6 @@
 {% block main %}
 {% load static %}
 <div id="main-content" class="profilepage_2 blog-page">
-<<<<<<< HEAD
         <div class="container-fluid">
             <div class="block-header">
                 <div class="row g-3">
@@ -149,315 +148,52 @@
                     </div>
                 </div>
             </div>
-=======
-  <div class="container-fluid">
-    <div class="block-header">
-      <div class="row g-3">
-        <div class="col-lg-5 col-md-8 col-sm-12">
-          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
-            {{ titulo }}</h2>
-            <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="index.html"><i class="icon-home"></i></a></li>
-              <li class="breadcrumb-item active">{{ titulo }}</li>
-            </ul>
-          </div>
->>>>>>> origin/German
         </div>
-      </div>
-
-      <div class="row clearfix">
-        <div class="card">
-          <div class="card-body">
-            <div class="col-lg-12">
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-
-              <div class="row">
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
-                    </div>
-                    <input type="text" class="form-control" value="{{ anio }}" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
-                    </div>
-                    <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
-                    </div>
-                    <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
-                    </div>
-                    <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
-                    </div>
-                    <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
-                    </div>
-                    <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-lg-4">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
-                    </div>
-                    <select class="form-control" id="cheque_ajax" name="cheque_ajax">
-                      <option value="T" selected="selected">Todos</option>
-                      <option value="C">En Cartera</option>
-                      <option value="P">Pagados</option>
-                      <option value="E">En Proceso de Pago</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-lg-2">
-                  <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
-                </div>
-              </div>
-
-             <!-- --------------------------------------------------------------------------------- -->
-             <!-- --------------------------------------------------------------------------------- -->
-             <!-- --------------------------------------------------------------------------------- -->
-
-            </div>
-              
-            <!-- --------------------------------------------------------------------------------- -->  
-            <!-- ------------------------------- TABLA OPS --------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- --> 
-
-            <div class="table-responsive col-lg-12">
-              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
-                <thead>
-                  <tr>
-                    <th>Fec.Pago</th>
-                    <th>Ejer.</th>
-                    <th>Nro. OP</th>
-                    <th>Jur.</th>
-                    <th>UDO</th>
-                    <th>Repartición</th>
-                    <th>Est. Tipo</th>
-                    <th>Tipo Pago</th>
-                    <th>Pagado</th>
-                    <th>Saldo</th>
-                    <th>Imp.Pago</th>
-                    <th>Cuit</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
-              
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- --> 
-  
-          </div>
+    </div>
+    <div class="modal fade" id="modal-detalle" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content"></div>
         </div>
-      </div>
-
     </div>
-  </div>
+{% endblock %}
+{% block extraJS %}
+    <script>
+    $(document).ready(function(){
+        
+        $(".js-detalle").click(function(){
+            var btn = $(this);
+            $.ajax({
+              url: '{% url 'op_pagadas_detalle' %}',
+              type: 'get',
+              data: {id: btn.attr("data-id")},
+              dataType: 'json',
+              beforeSend: function () {
+                $("#modal-detalle .modal-content").html("");
+                $("#modal-detalle").modal("show");
+              },
+              success: function (data) {
+                $("#modal-detalle .modal-content").html(data.html_form);
+              }
+            });
 
-  <!-- --------------------------------------------------------------------------------- -->
-  <!-- ------------------------------ MODAL LG VACIO ----------------------------------- -->
-  <!-- --------------------------------------------------------------------------------- -->
+        });
+
+        var data_table = $('#data_table').DataTable( {
+            autoWidth: false,
+            searching: false,
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'print',
+            ],
+            language: {
+                url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            }
+        } );
 
 
-  <div class="modal fade" id="modal-detalle" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content"></div>
-    </div>
-  </div>
 
-  <!-- --------------------------------------------------------------------------------- -->
-  <!-- --------------------------------------------------------------------------------- -->
-  <!-- --------------------------------------------------------------------------------- -->
 
-  {% endblock %}
-  {% block extraJS %}
-  <script>
 
-  /******************************************************************************************/
-  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE DE OPs ********************/
-  /******************************************************************************************/
-
-  var tableOP;
-
-  function cargarTabla(){
-
-    $('#data_table_ajax').dataTable().fnClearTable();
-    $('#data_table_ajax').dataTable().fnDestroy();
-
-    var valores = {
-      "csrfmiddlewaretoken" : '{{ csrf_token }}',
-      "ejer_ajax":  $("#ejer_ajax").val(),
-      "jur_ajax":  $("#jur_ajax").val(),
-      "udo_ajax":  $("#udo_ajax").val(),
-      "nro_op_ajax":  $("#nro_op_ajax").val(),
-      "desde_ajax":  $("#desde_ajax").val(),
-      "hasta_ajax":  $("#hasta_ajax").val(),
-      "cheque_ajax":  $("#cheque_ajax").val(),
-    }
-
-    tableOP = $('#data_table_ajax').DataTable({
-      autoWidth: false,
-      searching: false,
-      dom: 'Bfrtip',
-      buttons: [
-        'csv', 'print',
-      ],
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
-      },
-      "ajax": {
-        "url": "{% url 'op_pagadas_ajax' %}",
-        "data": valores,
-        "async": true,
-        "type": "POST",
-        "dataSrc": ""
-      },
-      "columns": [
-        { "data": "Popfpg" },
-        { "data": "OpaAnio" },
-        { "data": "OpaNro" },
-        { "data": "jurcod" },
-        { "data": "repudo" },
-        { "data": "OpaNom" },
-        { "data": "Poptip" },
-        { "data": "###" },
-        { "data": "###" },
-        { "data": "###" },
-        { "data": "Popimp" },
-        { "data": "BENCUI" },
-        {
-          "data": null,
-          "sortable": false,
-          "width" : "2%",
-          "render": function(data, type, row) {
-
-            return '<a target="_blank" href="op_pagadas_imprimir/'+data.OpaAnio+'/'+data.OpaNro+'/'+data.jurcod+'/'+data.repudo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-            '<button type="button" onclick="verDetalle('+data.OpaAnio+','+data.OpaNro+',`'+data.jurcod+'`,`'+data.repudo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
-            '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
-
-          }
-        },
-      ]
     });
-  }
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  /******************************************************************************************/
-  /*************************** FUNCION PARA EL BOTON VER DETALLES ***************************/
-  /******************************************************************************************/
-
-  function verDetalle(OpaAnio,OpaNro,jurcod,repudo){
-
-    $.ajax({
-      url: '{% url 'op_pagadas_detalle' %}',
-      type: 'get',
-      data: {
-                OpaAnio: OpaAnio,
-                OpaNro: OpaNro,
-                jurcod: jurcod,
-                repudo: repudo, 
-            },
-      dataType: 'json',
-      beforeSend: function () {
-        $("#modal-detalle .modal-content").html("");
-        $("#modal-detalle").modal("show");
-      },
-      success: function (data) {
-        $("#modal-detalle .modal-content").html(data.html_form);
-      }
-    });
-
-  }
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  /******************************************************************************************/
-  /************************ FUNCION PARA EL BOTON VER COMPROBANTE ***************************/
-  /******************************************************************************************/
-
-  function verComprobante(id){
-    $.ajax({
-      url: '{% url 'op_pagadas_comprobante' %}',
-      type: 'get',
-      data: {id: id},
-      dataType: 'json',
-      beforeSend: function () {
-        $("#modal-detalle .modal-content").html("");
-        $("#modal-detalle").modal("show");
-      },
-      success: function (data) {
-        $("#modal-detalle .modal-content").html(data.html_form);
-      }
-    });
-  }
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-  /******************************************************************************************/
-  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
-  /******************************************************************************************/
-
-  $(document).ready(function(){
-    cargarTabla();
-  });
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  /******************************************************************************************/
-  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
-  /******************************************************************************************/
-
-  $("#btnBuscar").click(function(){
-    cargarTabla();
-  });
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
 </script>
 {% endblock %}
