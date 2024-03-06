@@ -2,6 +2,7 @@ import math
 import tempfile
 
 import pymssql
+import pyodbc
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -47,7 +48,11 @@ def conectarSQL():
     nombre_usuario = 'siafsql'
     password = '159753'
 
-    conexion = pymssql.connect(direccion_servidor, nombre_usuario, password, nombre_bd)
+    #### MAC Y LINUX
+    #conexion = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + direccion_servidor + ';INSTANCE=' + instancia + ';DATABASE=' + nombre_bd + ';UID=' + nombre_usuario + ';PWD=' + password + ';Encrypt=No;TrustServerCertificate=Yes;')
+
+    #### WINDOWS
+    conexion = pyodbc.connect('DSN=siafprueba;UID=siafsql;PWD=159753;')
 
     return conexion
 
