@@ -2,9 +2,10 @@ import math
 import tempfile
 
 import pymssql
+import pyodbc
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from weasyprint import HTML
+#from weasyprint import HTML
 #import logging
 #logger = logging.getLogger('weasyprint')
 #logger.addHandler(logging.FileHandler('/var/log/weasyprint.log'))
@@ -47,7 +48,13 @@ def conectarSQL():
     nombre_usuario = 'siafsql'
     password = '159753'
 
-    conexion = pymssql.connect(direccion_servidor, nombre_usuario, password, nombre_bd)
+    #conexion = pymssql.connect(direccion_servidor, nombre_usuario, password, nombre_bd)
+
+    #conexion = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' +
+    #                          direccion_servidor + ';INSTANCE=' + instancia + ';DATABASE=' + nombre_bd + ';UID='
+    #                          + nombre_usuario + ';PWD=' + password + ';Encrypt=No;TrustServerCertificate=Yes;Trusted_Connection=Yes')
+
+    conexion = pyodbc.connect('DSN=siafprueba;UID=siafsql;PWD=159753;')
 
     return conexion
 

@@ -34,7 +34,7 @@ class op_pagadas(View):
 
         # ARMAR PRIMER OBJETO CON NRO DE CUIL
         conexion = conectarSQL()
-        cursor = conexion.cursor(as_dict=True)
+        cursor = conexion.cursor()
         sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
                      "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
                      "AND POPAGO.repudo=OPAGO2.repudo WHERE POPAGO.OpaAnio=" + str(anio) + " AND OPAGO2.BENCUI=") + str(cuit)
@@ -64,7 +64,7 @@ class op_pagadas_detalle(View):
         repudo = self.request.GET['repudo']
 
         conexion = conectarSQL()
-        cursor = conexion.cursor(as_dict=True)
+        cursor = conexion.cursor()
 
         sql_query = "SELECT * FROM OPAGO2 WHERE OpaAnio=" + str(OpaAnio) + " AND OpaNro=" + str(
             OpaNro) + " AND jurcod='" + str(jurcod) + "' AND repudo='" + str(repudo) + "'"
@@ -121,7 +121,7 @@ class op_pagadas_imprimir(View):
         repudo = kwargs['repudo']
 
         conexion = conectarSQL()
-        cursor = conexion.cursor(as_dict=True)
+        cursor = conexion.cursor()
 
         sql_query = "SELECT * FROM OPAGO2 WHERE OpaAnio=" + str(OpaAnio) + " AND OpaNro=" + str(
             OpaNro) + " AND jurcod='" + str(jurcod) + "' AND repudo='" + str(repudo) + "'"
@@ -167,10 +167,11 @@ def op_pagadas_ajax(request):
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
-    cursor = conexion.cursor(as_dict=True)
+    cursor = conexion.cursor()
     sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
                  "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
                  "AND POPAGO.repudo=OPAGO2.repudo WHERE OPAGO2.BENCUI=") + str(cuit)
+
 
 
     # FILTRAR POR EJERCICIO
