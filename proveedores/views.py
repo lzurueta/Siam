@@ -172,6 +172,31 @@ def op_pagadas_ajax(request):
     #             "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
     #            "AND POPAGO.repudo=OPAGO2.repudo WHERE OPAGO2.BENCUI=") + str(cuit)
 
+    sql_query = ("SELECT "
+                 "POPAGO.OpaAnio as 'ejercicio', "
+                 "POPAGO.OpaNro as 'nroOP',"
+                 "POPAGO.jurcod as 'juri',"
+                 "POPAGO.repudo as 'udo',"
+                 "POPAGO.Poptip as 'estadoPago',"
+                 "case "
+                 "	when POPAGO.Poptip='D' then 'Acreditación'"
+                 "	when POPAGO.Poptip='C' then 'Cheque'"
+                 "end as 'tipoPago', "
+                 "POPAGO.Popimp,"
+                 "case "
+                 "	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')"
+                 "	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy')"
+                 "end as 'fecPago',"
+                 "POPAGO.Popimp as 'importepago', "
+                 "OPAGO2.Opapgd as 'pagado',"
+                 "REPARTICIO.RepDes as 'reparticion',"
+                 "OPAGO2.BENCUI as 'cuit'"
+                 "from POPAGO "
+                 "inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
+                 "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
+                 "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
+                 "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
+                 "where OPAGO2.BENCUI=30718402235 and POPAGO.PopEst<>'A' ")
     
 
     # FILTRAR POR EJERCICIO
