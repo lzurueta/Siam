@@ -197,7 +197,6 @@ def op_pagadas_ajax(request):
                  "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
                  "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
                  "where OPAGO2.BENCUI=30718402235 and POPAGO.PopEst<>'A' ")
-    
 
     # FILTRAR POR EJERCICIO
     if request.POST.get('ejer_ajax'):
@@ -208,9 +207,9 @@ def op_pagadas_ajax(request):
     # FILTRAR POR UNIDAD DE JURISDICCION
     if request.POST.get('udo_ajax'):
         sql_query = sql_query + " AND POPAGO.repudo=" + request.POST.get('udo_ajax')
-    # FILTRAR POR UNIDAD NUMERO DE OP
+    # FILTRAR POR NRO DE OP
     if request.POST.get('nro_op_ajax'):
-        sql_query = sql_query + " AND POPAGO.OpaNro=" + request.POST.get('nro_op_ajax')
+        sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
     # FILTRAR POR FECHA DESDE
     if request.POST.get('desde_ajax'):
         sql_query = sql_query + " AND POPAGO.Popfpg>='" + request.POST.get('desde_ajax') + "'"
@@ -219,7 +218,7 @@ def op_pagadas_ajax(request):
         sql_query = sql_query + " AND POPAGO.Popfpg<='" + request.POST.get('hasta_ajax') + "'"
     # FILTRAR POR TIPOS DE CHEQUES
     if request.POST.get('cheque_ajax'):
-        #FALTA HACER
+    # FALTA HACER
         sql_query = sql_query
 
     cursor.execute(sql_query)
