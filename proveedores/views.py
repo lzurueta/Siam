@@ -166,7 +166,7 @@ def op_pagadas_ajax(request):
     cuit = 30718402235
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
-    conexion = conectarSQL()
+    conexion = conectarSQL() 
     cursor = conexion.cursor()
     sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
                  "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
