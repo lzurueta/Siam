@@ -76,7 +76,9 @@
                     <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-lg-4">
+                  
+
+                <div class="col-lg-3">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
@@ -89,7 +91,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-1">
                   <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
                 </div>
               </div>
@@ -114,10 +116,10 @@
                     <th>Jur.</th>
                     <th>UDO</th>
                     <th>Repartición</th>
-                    <th>Est. Tipo</th>
+{#                    <th>Est. Tipo</th> SACAMOS ESTA COLUMNA#}
                     <th>Tipo Pago</th>
-                    <th>Pagado</th>
-                    <th>Saldo</th>
+{#                    <th>Pagado</th>#}
+{#                    <th>Saldo</th>#}
                     <th>Imp.Pago</th>
                     <th>Cuit</th>
                     <th></th>
@@ -177,7 +179,8 @@
       "nro_op_ajax":  $("#nro_op_ajax").val(),
       "desde_ajax":  $("#desde_ajax").val(),
       "hasta_ajax":  $("#hasta_ajax").val(),
-      "cheque_ajax":  $("#cheque_ajax").val(),
+      "cheque_ajax":  $("#cheque_ajax").val(), 
+      "cuit_ajax" :  $("#cuit_ajax").val(),
     }
 
     tableOP = $('#data_table_ajax').DataTable({
@@ -198,26 +201,23 @@
         "dataSrc": ""
       },
       "columns": [
-        { "data": "Popfpg" },
-        { "data": "OpaAnio" },
-        { "data": "OpaNro" },
-        { "data": "jurcod" },
-        { "data": "repudo" },
-        { "data": "OpaNom" },
-        { "data": "Poptip" },
-        { "data": "###" },
-        { "data": "###" },
-        { "data": "###" },
-        { "data": "Popimp" },
-        { "data": "BENCUI" },
+        { "data": "fecPago" },
+        { "data": "ejercicio" },
+        { "data": "nroOP" },
+        { "data": "juri" },
+        { "data": "udo" },
+        { "data": "reparticion" },
+        { "data": "tipoPago" },
+        { "data": "importepago", "className": "text-end" },
+        { "data": "cuit" },
         {
           "data": null,
           "sortable": false,
           "width" : "2%",
           "render": function(data, type, row) {
 
-            return '<a target="_blank" href="op_pagadas_imprimir/'+data.OpaAnio+'/'+data.OpaNro+'/'+data.jurcod+'/'+data.repudo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-            '<button type="button" onclick="verDetalle('+data.OpaAnio+','+data.OpaNro+',`'+data.jurcod+'`,`'+data.repudo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
+            return '<a target="_blank" href="op_pagadas_imprimir/'+data.ejercicio+'/'+data.nroOP+'/'+data.juri+'/'+data.udo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
+            '<button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOp+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
             '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
           }

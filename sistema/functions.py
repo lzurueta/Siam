@@ -49,10 +49,10 @@ def conectarSQL():
     password = '159753'
 
     #### MAC Y LINUX
-    #conexion = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + direccion_servidor + ';INSTANCE=' + instancia + ';DATABASE=' + nombre_bd + ';UID=' + nombre_usuario + ';PWD=' + password + ';Encrypt=No;TrustServerCertificate=Yes;')
+    conexion = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + direccion_servidor + ', 1433;DATABASE=' + nombre_bd + ';UID=' + nombre_usuario + ';PWD=' + password + ';Encrypt=no;')
 
     #### WINDOWS
-    conexion = pyodbc.connect('DSN=siafprueba;UID=siafsql;PWD=159753;')
+    # conexion = pyodbc.connect('DSN=siafprueba;UID=siafsql;PWD=159753;')
 
     return conexion
 

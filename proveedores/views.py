@@ -10,7 +10,7 @@ from num2words import num2words
 from proveedores.models import CPOPAGO
 from sistema.functions import generate_pdf, conectarSQL
 
-
+import datetime
 # Create your views here.
 class proveedoresHome(View):
 
@@ -30,14 +30,37 @@ class op_pagadas(View):
 
     def get_context_data(self, **kwargs):
         cuit = 30718402235
-        anio = timezone.now().year
+        anio = datetime.datetime.now().year
 
         # ARMAR PRIMER OBJETO CON NRO DE CUIL
         conexion = conectarSQL()
         cursor = conexion.cursor()
-        sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
-                     "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
-                     "AND POPAGO.repudo=OPAGO2.repudo WHERE POPAGO.OpaAnio=" + str(anio) + " AND OPAGO2.BENCUI=") + str(cuit)
+
+        sql_query = ("SELECT "
+        "POPAGO.OpaAnio as 'ejercicio', "
+        "POPAGO.OpaNro as 'nroOP',"
+        "POPAGO.jurcod as 'juri',"
+        "POPAGO.repudo as 'udo',"
+        "POPAGO.Poptip as 'estadoPago',"
+        "case "
+        "	when POPAGO.Poptip='D' then 'Acreditación'"
+        "	when POPAGO.Poptip='C' then 'Cheque'"
+        "end as 'tipoPago', "
+        "POPAGO.Popimp,"
+        "case "
+        "	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')"
+        "	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy')"
+        "end as 'fecPago',"
+        "POPAGO.Popimp as 'importepago', "
+        "OPAGO2.Opapgd as 'pagado',"
+        "REPARTICIO.RepDes as 'reparticion',"
+        "OPAGO2.BENCUI as 'cuit'"
+        "from POPAGO "
+        "inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
+        "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
+        "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
+        "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
+        "where POPAGO.PopEst<>'A' AND POPAGO.OpaAnio= " + str(anio) + " AND OPAGO2.BENCUI= " + str(cuit) )
         cursor.execute(sql_query)
 
         context = {
@@ -123,8 +146,8 @@ class op_pagadas_imprimir(View):
         conexion = conectarSQL()
         cursor = conexion.cursor()
 
-        sql_query = "SELECT * FROM OPAGO2 WHERE OpaAnio=" + str(OpaAnio) + " AND OpaNro=" + str(
-            OpaNro) + " AND jurcod='" + str(jurcod) + "' AND repudo='" + str(repudo) + "'"
+        sql_query = ("SELECT *, format(OPAGO2.OpaEmi,'dd/MM/yyyy') as 'fecEmision' from OPAGO2 inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod where OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
+
         cursor.execute(sql_query)
         cabecera = cursor.fetchone()
 
@@ -168,9 +191,31 @@ def op_pagadas_ajax(request):
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
     cursor = conexion.cursor()
-    sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
-                 "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
-                 "AND POPAGO.repudo=OPAGO2.repudo WHERE OPAGO2.BENCUI=") + str(cuit)
+    sql_query = ("SELECT "
+    "POPAGO.OpaAnio as 'ejercicio', "
+    "POPAGO.OpaNro as 'nroOP',"
+    "POPAGO.jurcod as 'juri',"
+    "POPAGO.repudo as 'udo',"
+    "POPAGO.Poptip as 'estadoPago',"
+    "case "
+    "	when POPAGO.Poptip='D' then 'Acreditación'"
+    "	when POPAGO.Poptip='C' then 'Cheque'"
+    "end as 'tipoPago', "
+    "POPAGO.Popimp,"
+    "case "
+    "	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')"
+    "	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy')"
+    "end as 'fecPago',"
+    "POPAGO.Popimp as 'importepago', "
+    "OPAGO2.Opapgd as 'pagado',"
+    "REPARTICIO.RepDes as 'reparticion',"
+    "OPAGO2.BENCUI as 'cuit'"
+    "from POPAGO "
+    "inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
+    "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
+    "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
+    "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
+    "where OPAGO2.BENCUI=30718402235 and POPAGO.PopEst<>'A' ")
 
 
     # FILTRAR POR EJERCICIO
@@ -182,9 +227,9 @@ def op_pagadas_ajax(request):
     # FILTRAR POR UNIDAD DE JURISDICCION
     if request.POST.get('udo_ajax'):
         sql_query = sql_query + " AND POPAGO.repudo=" + request.POST.get('udo_ajax')
-    # FILTRAR POR UNIDAD NUMERO DE OP
+    # FILTRAR POR NRO DE OP
     if request.POST.get('nro_op_ajax'):
-        sql_query = sql_query + " AND POPAGO.OpaNro=" + request.POST.get('nro_op_ajax')
+       sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
     # FILTRAR POR FECHA DESDE
     if request.POST.get('desde_ajax'):
         sql_query = sql_query + " AND POPAGO.Popfpg>='" + request.POST.get('desde_ajax') + "'"
