@@ -168,10 +168,11 @@ def op_pagadas_ajax(request):
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
     cursor = conexion.cursor()
-    sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
-                 "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
-                 "AND POPAGO.repudo=OPAGO2.repudo WHERE OPAGO2.BENCUI=") + str(cuit)
+    #sql_query = ("SELECT * FROM POPAGO INNER JOIN OPAGO2 ON POPAGO.OpaAnio=OPAGO2.OpaAnio "
+    #             "AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod "
+    #            "AND POPAGO.repudo=OPAGO2.repudo WHERE OPAGO2.BENCUI=") + str(cuit)
 
+    
 
     # FILTRAR POR EJERCICIO
     if request.POST.get('ejer_ajax'):
