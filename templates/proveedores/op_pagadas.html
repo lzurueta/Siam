@@ -217,8 +217,8 @@
           "render": function(data, type, row) {
 
             return '<a target="_blank" href="op_pagadas_imprimir/'+data.ejercicio+'/'+data.nroOP+'/'+data.juri+'/'+data.udo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-            '<button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOp+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
-            '<button type="button" onclick="verComprobante('+data.id+')" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
+            '<button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
+            '<button type="button" onclick="verComprobante('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`, `'+data.popnro+'`)" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
           }
         },
@@ -237,24 +237,27 @@
 
   function verDetalle(OpaAnio,OpaNro,jurcod,repudo){
 
+    var valores = {
+        "csrfmiddlewaretoken" : '{{csrf_token }}',
+        "OpaAnio": OpaAnio,
+        "OpaNro": OpaNro,
+        "jurcod": jurcod,
+        "repudo": repudo,
+    }
+
     $.ajax({
-      url: '{% url 'op_pagadas_detalle' %}',
-      type: 'get',
-      data: {
-                OpaAnio: OpaAnio,
-                OpaNro: OpaNro,
-                jurcod: jurcod,
-                repudo: repudo, 
-            },
-      dataType: 'json',
-      beforeSend: function () {
-        $("#modal-detalle .modal-content").html("");
-        $("#modal-detalle").modal("show");
-      },
-      success: function (data) {
-        $("#modal-detalle .modal-content").html(data.html_form);
-      }
+    url: '{% url 'op_pagadas_detalle' %}',
+    type: 'POST',
+    data: valores,
+    dataType: 'json',
+    success: function(data) {
+
+         $("#modal-detalle .modal-content").html(data.html_form);
+         $("#modal-detalle").modal("show");
+    },
+
     });
+
 
   }
 
@@ -267,22 +270,32 @@
   /************************ FUNCION PARA EL BOTON VER COMPROBANTE ***************************/
   /******************************************************************************************/
 
-  function verComprobante(id){
-    $.ajax({
-      url: '{% url 'op_pagadas_comprobante' %}',
-      type: 'get',
-      data: {id: id},
-      dataType: 'json',
-      beforeSend: function () {
-        $("#modal-detalle .modal-content").html("");
-        $("#modal-detalle").modal("show");
-      },
-      success: function (data) {
-        $("#modal-detalle .modal-content").html(data.html_form);
-      }
-    });
-  }
+  function verComprobante(OpaAnio,OpaNro,jurcod,repudo,popnro){
 
+    var valores = {
+        "csrfmiddlewaretoken" : '{{csrf_token }}',
+        "OpaAnio": OpaAnio,
+        "OpaNro": OpaNro,
+        "jurcod": jurcod,
+        "repudo": repudo,
+        "popnro": popnro
+    }
+
+    $.ajax({
+    url: '{% url 'op_pagadas_comprobante' %}',
+    type: 'POST',
+    data: valores,
+    dataType: 'json',
+    success: function(data) {
+
+         $("#modal-detalle .modal-content").html(data.html_form);
+         $("#modal-detalle").modal("show");
+    },
+
+    });
+
+
+  }
   /******************************************************************************************/
   /******************************************************************************************/
   /******************************************************************************************/

@@ -22724,3 +22724,9 @@ ul.list-connected-app>li:last-child .connected-app {
         text-align:center
     }
 }
+
+
+.modal-body{
+    max-height: 500px;
+    overflow-y:  auto
+}
