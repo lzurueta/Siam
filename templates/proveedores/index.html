@@ -4,39 +4,149 @@
 {% block main %}
 {% load static %}
 <div id="main-content" class="profilepage_2 blog-page">
-        <div class="container-fluid">
-            <div class="block-header">
-                <div class="row g-3">
-                    <div class="col-lg-5 col-md-8 col-sm-12">
-                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
-                            {{ titulo }}</h2>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'proveedoresHome' %}"><i class="icon-home"></i></a></li>
-                            <li class="breadcrumb-item active">{{ titulo }}</li>
-                        </ul>
-                    </div>
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row g-3">
+        <div class="col-lg-5 col-md-8 col-sm-12">
+          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
+            {{ titulo }}</h2>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'proveedoresHome' %}"><i class="icon-home"></i></a></li>
+              <li class="breadcrumb-item active">{{ titulo }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="row clearfix g-3">
+
+        <div class="col-lg-12 col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <p class="h5 fw-bold">CUIT DE CONSULTA: {{ cuit }}</p>
                 </div>
-            </div>
+              </div>
 
-            <div class="row clearfix g-3">
+              <div class="row">
+                <div class="col-lg-12">
 
-                <div class="col-lg-12 col-md-12">
-                    <div class="card">
-                        <div class="body">
-                            Datos Personales<br>
-                            Datos Comerciales<br>
-                            Cedula Fiscal<br>
-                            Formulario de Declaración Jurada<br>
-                            Descargar Nota Modelo<br>
-                            Autorización para el Retiro de Valores<br>
-                            Actualizar MAIL/Nro.Celular para recibir Notificaciones de Pagos<br>
+                  <div class="accordion accordion-flush" id="accordion">
+                    <div class="accordion-item">
+
+                      <div class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" id="btnDatosProveedor" data-bs-toggle="collapse" data-bs-target="#divDatosProveedor" aria-expanded="false" aria-controls="#divDatosProveedor">
+                          Datos del Proveedor
+                        </button>
+                      </div>
+                      <div id="divDatosProveedor" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                        <div class="accordion-body" id="body-datosProveedor">
 
                         </div>
+                      </div>
+
+
+                      <div class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" id="btnCedulaFiscal" data-bs-toggle="collapse" data-bs-target="#divCedulaFiscal" aria-expanded="false" aria-controls="#divCedulaFiscal">
+                          Cédula Fiscal
+                        </button>
+                      </div>
+                      <div id="divCedulaFiscal" class="accordion-collapse collapse" data-bs-parent="#accordion">
+                        <div class="accordion-body">
+
+                        </div>
+                      </div>
+
+                      <div class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" id="btnDeclaracionJurada" onclick="cargarDeclaracionJurada('30718402235')" >
+                          Formulario de Declaración Jurada
+                        </button>
+                      </div>
+
+                        <form id="formDeclaracion" action="{% url 'declaracion_jurada' %}" target="_blank" method="POST" hidden>
+                            {% csrf_token %}
+                            <input name="cuit" id="cuit">
+                        </form>
+
+                      <div class="accordion-header">
+                        <button class="accordion-button collapsed" onclick="window.open('/static/documents/AUTORIZACION PARA EL RETIRO DE VALORES.pdf', '_blank')" type="button" id="btnAutorizacion">
+                          Autorización para el Retiro de Valores
+                        </button>
+                      </div>
+
                     </div>
+                  </div>
+
                 </div>
+              </div>
+
             </div>
+          </div>
         </div>
+      </div>
     </div>
-{% endblock %}
-{% block extraJS %}
-{% endblock %}
+  </div>
+  {% endblock %}
+  {% block extraJS %}
+
+  <script>
+   $(document).ready(function(){
+       verDatosProveedor('30718402235');
+   });
+
+  /******************************************************************************************/
+  /************************************ FUNCION PROVEEODR ***********************************/
+  /******************************************************************************************/
+
+  function verDatosProveedor(cuit){
+
+          var valores = {
+              "csrfmiddlewaretoken" : '{{csrf_token }}',
+              "cuit": cuit
+          }
+
+          $("#body-datosProveedor").html('');
+
+          $.ajax({
+              url: '{% url 'datos_proveedor' %}',
+              type: 'POST',
+              async:false,
+              data: valores,
+              dataType: 'json',
+              beforeSend: function () {
+                  $("#body-datosProveedor").html('<div class="row"><div class="col-lg-12 text-center mt-1"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></div>');
+              },
+              success: function(data) {
+
+                  $("#body-datosProveedor").html(data.html_form);
+
+              },
+
+          });
+  }
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  /******************************************************************************************/
+  /************************************ FUNCION PROVEEODR ***********************************/
+  /******************************************************************************************/
+
+  function cargarDeclaracionJurada(cuit){
+      $("#cuit").val(cuit);
+      $("#formDeclaracion").submit();
+      $("#cuit").val('');
+  }
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+   
+
+  </script>
+
+
+  {% endblock %}

@@ -3,12 +3,53 @@ import tempfile
 
 import pymssql
 import pyodbc
+import openpyxl
+import io
+
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
+
+from openpyxl import Workbook
+from django.template.loader import render_to_string
+from bs4 import BeautifulSoup
+
 #import logging
 #logger = logging.getLogger('weasyprint')
 #logger.addHandler(logging.FileHandler('/var/log/weasyprint.log'))
+
+
+def generate_excel(request, template, texto):
+
+    html_string = render_to_string(template, texto)
+
+    print(texto)
+
+    workbook = Workbook()
+    sheet = workbook.active
+
+    soup = BeautifulSoup(html_string, 'html.parser')
+
+    tables = soup.find_all('table')
+
+    for table in tables:
+        rows = table.find_all('tr')
+        for row_index, row in enumerate(rows, start=1):
+            cells = row.find_all(['th', 'td'])
+            for col_index, cell in enumerate(cells, start=1):
+                sheet.cell(row=row_index, column=col_index, value=cell.get_text(strip=True))
+
+    excel_data = io.BytesIO()
+    workbook.save(excel_data)
+
+    excel_data.seek(0)
+
+    response = HttpResponse(excel_data.getvalue(),
+                            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=excel.xlsx'
+
+    return response
+
 
 def generate_pdf(request, template, texto, attachments=None):
     # Rendered
@@ -27,9 +68,6 @@ def generate_pdf(request, template, texto, attachments=None):
         response.write(output.read())
 
     return response
-
-
-
 
 
 def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None):

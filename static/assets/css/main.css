@@ -4801,12 +4801,12 @@ textarea.form-control-lg {
 }
 
 .accordion-header {
-    margin-bottom: 0
+    margin-bottom: 0;
+    border-bottom: solid 1px #ddd;
 }
 
 .accordion-item {
     background-color: #fff;
-    border: 1px solid rgba(0,0,0,0.125)
 }
 
 .accordion-item:first-of-type {
@@ -22729,4 +22729,32 @@ ul.list-connected-app>li:last-child .connected-app {
 .modal-body{
     max-height: 500px;
     overflow-y:  auto
+}
+
+.accordion-collapse{
+    border-bottom: solid 1px #ddd !important;
+    border-left: solid 1px #ddd !important;
+    border-right: solid 1px #ddd !important;
+    border-top: solid 0px transparent !important;
+}
+
+.accordion-collapse:focus{
+    border-top: solid 0px transparent !important;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+
+@media screen and (min-width: 768px) {
+
+    div.dataTables_paginate {
+    margin-top: -30px !important;
+    }
+
+}
+
+.swal-text {
+    text-align: center !important;
 }

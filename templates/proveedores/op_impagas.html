@@ -11,8 +11,8 @@
           <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
             {{ titulo }}</h2>
             <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="{% url 'proveedoresHome' %}"><i class="icon-home"></i></a></li>
-              <li class="breadcrumb-item active">{{ titulo }}</li>
+                <li class="breadcrumb-item"><a href="{% url 'proveedoresHome' %}"><i class="icon-home"></i></a></li>
+                <li class="breadcrumb-item active">{{ titulo }}</li>
             </ul>
           </div>
         </div>
@@ -28,7 +28,7 @@
             <!-- --------------------------------------------------------------------------------- -->
 
               <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
@@ -36,7 +36,7 @@
                     <input type="text" class="form-control" value="{{ anio }}" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
@@ -44,7 +44,7 @@
                     <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
@@ -52,7 +52,7 @@
                     <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
@@ -60,34 +60,16 @@
                     <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
-                    </div>
-                    <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
-                  </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
-                    </div>
-                    <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
-                  </div>
-                </div>
 
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Estado</span>
                     </div>
-                    <select class="form-control" id="cheque_ajax" name="cheque_ajax">
-                      <option value="T" selected="selected">Todos</option>
-                      <option value="C">En Cartera</option>
-                      <option value="P">Pagados</option>
-                      <option value="E">En Proceso de Pago</option>
+                    <select class="form-control" id="estado_ajax" name="estado_ajax">
+                      <option value="T" selected="selected">Habilitadas</option>
+                      <option value="S">Habilitadas</option>
+                      <option value="Null">No Habilitadas</option>
                     </select>
                   </div>
                 </div>
@@ -113,18 +95,16 @@
               <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
                 <thead>
                   <tr>
-                    <th>Fec.Pago</th>
                     <th>Ejer.</th>
                     <th>Nro. OP</th>
                     <th>Jur.</th>
                     <th>UDO</th>
                     <th>Repartición</th>
-{#                    <th>Est. Tipo</th> SACAMOS ESTA COLUMNA#}
-                    <th>Tipo Pago</th>
-{#                    <th>Pagado</th>#}
-{#                    <th>Saldo</th>#}
-                    <th>Imp.Pago</th>
-                    <th>Cuit</th>
+                    <th>Estado</th>
+                    <th>Pagado</th>
+                    <th>Saldo</th>
+                    <th>Imp. Pago</th>
+                    <th>Opa. Emi.</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -159,7 +139,7 @@
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
 
-   <div class="aux"></div>
+  <div class="aux"></div>
 
   {% endblock %}
   {% block extraJS %}
@@ -182,10 +162,7 @@
       "jur_ajax":  $("#jur_ajax").val(),
       "udo_ajax":  $("#udo_ajax").val(),
       "nro_op_ajax":  $("#nro_op_ajax").val(),
-      "desde_ajax":  $("#desde_ajax").val(),
-      "hasta_ajax":  $("#hasta_ajax").val(),
-      "cheque_ajax":  $("#cheque_ajax").val(),
-      "cuit_ajax" :  $("#cuit_ajax").val(),
+      "estado_ajax":  $("#estado_ajax").val(),
     }
 
     tableOP = $('#data_table_ajax').DataTable({
@@ -199,22 +176,23 @@
         url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
       },
       "ajax": {
-        "url": "{% url 'op_pagadas_ajax' %}",
+        "url": "{% url 'op_impagas_ajax' %}",
         "data": valores,
         "async": true,
         "type": "POST",
         "dataSrc": ""
       },
       "columns": [
-        { "data": "fecPago" },
         { "data": "ejercicio" },
         { "data": "nroOP" },
-        { "data": "juri" },
-        { "data": "udo" },
-        { "data": "reparticion" },
-        { "data": "tipoPago" },
-        { "data": "importepago", "className": "text-end" },
-        { "data": "cuit" },
+        { "data": "jurisdiccion" },
+          { "data": "udo" },
+          { "data": "reparticion" },
+          { "data": "estadoOPC" },
+          { "data": "pagado", "className" : "text-end" },
+          { "data": "saldo", "className" : "text-end" },
+          { "data": "importeTotal", "className" : "text-end" },
+          { "data": "fecEmision" },
         {
           "data": null,
           "sortable": false,
@@ -222,8 +200,7 @@
           "render": function(data, type, row) {
 
             return '<a target="_blank" href="op_imprimir/'+data.ejercicio+'/'+data.nroOP+'/'+data.juri+'/'+data.udo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
-            ' <button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
-            ' <button type="button" onclick="verComprobante('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`, `'+data.popnro+'`)" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
+            ' <button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>';
 
           }
         },
@@ -236,7 +213,7 @@
   /******************************************************************************************/
 
 
-  /******************************************************************************************/
+   /******************************************************************************************/
   /*************************** FUNCION PARA EL BOTON VER DETALLES ***************************/
   /******************************************************************************************/
 
@@ -272,40 +249,6 @@
 
 
   /******************************************************************************************/
-  /************************ FUNCION PARA EL BOTON VER COMPROBANTE ***************************/
-  /******************************************************************************************/
-
-  function verComprobante(OpaAnio,OpaNro,jurcod,repudo,popnro){
-
-    var valores = {
-        "csrfmiddlewaretoken" : '{{csrf_token }}',
-        "OpaAnio": OpaAnio,
-        "OpaNro": OpaNro,
-        "jurcod": jurcod,
-        "repudo": repudo,
-        "popnro": popnro
-    }
-
-    $.ajax({
-    url: '{% url 'op_pagadas_comprobante' %}',
-    type: 'POST',
-    data: valores,
-    dataType: 'json',
-    success: function(data) {
-
-         $("#modal-detalle .modal-content").html(data.html_form);
-         $("#modal-detalle").modal("show");
-    },
-
-    });
-
-
-  }
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-  /******************************************************************************************/
   /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
   /******************************************************************************************/
 
@@ -330,9 +273,10 @@
   /******************************************************************************************/
   /******************************************************************************************/
 
-    /****************************************************************************************/
+  /****************************************************************************************/
   /************************** FUNCION PARA EL BOTON EXCEL ***********************************/
   /******************************************************************************************/
+
   $("#btnExcel").click(function(){
 
     swal({
@@ -371,15 +315,13 @@
 
    function op_pagadas_excel(tipo){
 
-    $(".aux").html('<form id="explortarExcel" action="{% url 'op_pagadas_excel' %}" method="POST">{%  csrf_token %}' +
+    $(".aux").html('<form id="explortarExcel" action="{% url 'op_impagas_excel' %}" method="POST">{%  csrf_token %}' +
         '<input name="tipo" value="'+tipo+'"/>' +
         '<input name="ejer_ajax" value="'+$("#ejer_ajax").val()+'"/>' +
         '<input name="jur_ajax" value="'+$("#jur_ajax").val()+'"/>' +
         '<input name="udo_ajax" value="'+$("#udo_ajax").val()+'"/>' +
         '<input name="nro_op_ajax" value="'+$("#nro_op_ajax").val()+'"/>' +
-        '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
-        '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
-        '<input name="cheque_ajax" value="'+$("#cheque_ajax").val()+'"/>' +
+        '<input name="estado_ajax" value="'+$("#estado_ajax").val()+'"/>' +
         '</form>');
 
     $("#explortarExcel").submit();

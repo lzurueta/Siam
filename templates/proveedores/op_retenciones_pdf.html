@@ -1,0 +1,553 @@
+{% if tipo != '1' and tipo != '4' %}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>PDF</title>
+  <style type="text/css">
+    @page {
+      size: a4;
+      margin-top: 3.5cm;
+      margin-bottom: 2cm;
+    }
+    @page :first {
+      margin-top: 1cm;
+    }
+
+
+    .cabecera {
+      font-family: Arial;
+      font-size: 12px;
+      text-align: center;
+      font-weight: normal;
+    }
+
+    .texto {
+      text-align: justify;
+      text-justify: inter-word;
+      font-family: "Arial";
+      font-size: 14px;
+      position: fixed;
+      width: 100%;
+    }
+
+    .text-left {
+      text-align: left !important;
+    }
+
+    .text-right {
+      text-align: right !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+
+    .box {
+      display: inline-block;
+      vertical-align: top;
+      height: auto;
+      padding: 0px;
+      {#border: solid 1px red;#}
+    }
+
+    .div, p{
+      width: 100%;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 12px;
+      text-align: justify;
+    }
+
+    body{
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="cabecera" style=" border-bottom:  3px double #000;">
+    {% load static %}
+    <div class="div">
+    <div class="box text-center" style="width: 76.9% !important;padding-top: 20px">
+      <span class="text-center" style="font-size:25px">Tesorería de la Provincia</span><br>
+      <span style="font-size:18px">San Martín 450 - Provincia de Jujuy - C.U.I.T. 30-67150911-7</span>
+    </div>
+    <div class="box text-center" style="width: 21.4% !important;">
+      <img src="{% static 'assets/images/escudoJujuy.png' %}"  width="40px" alt="Logo"><br>
+      <span style="font-size:8px">Gobierno de la Provincia de Jujuy</span><br>
+      <span style="font-size:8px">Ministerio de Hacienda</span><br>
+      <span style="font-size:8px">Tesorería de la Provincia</span><br>
+    </div>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="width: 70.9% !important;">
+      <p style="font-size: 18px;text-decoration:underline">Para el CONTRIBUYENTE</p>
+    </div>
+    <div class="box" style="width: 28% !important;">
+      <p class="text-right" style="font-size: 16px;text-decoration:underline">COMP.N° 00-  {{ comprobante.nroConstancia }} / {{ comprobante.ejerConstancia }}</p>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="width: 99.9% !important;">
+      <span>Apellido y Nombre o Denominación: {{ comprobante.contribuyente }}</span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="margin-top:20px;width: 99.9% !important;">
+      <span>Domicilio: {{ comprobante.domicilio }} </span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="margin-top:20px;width: 99.9% !important;">
+      <span>C.U.I.T. / C.U.I.L.: {{ comprobante.cuit }} </span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="width: 99.9% !important;margin-top:20px">
+      <p>Concepto de la Retención: </p>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="margin-top:5px;width: 99.9%">
+      <span>Alícuota: {{ comprobante.alicuota }} </span>
+    </div>
+    <div class="box" style="margin-top:20px;width: 48.9% !important;">
+      <span>Importe de la Operación: $ {{ comprobante.importeOper }}</span>
+    </div>
+    <div class="box" style="margin-top:20px;width: 49.9% !important;">
+      <span>Fecha de la Retención: {{ comprobante.fecRetencion }}</span>
+    </div>
+    <div class="box" style="margin-top:20px;width: 99.9%">
+      <span>Los comprobantes corresponden a la Liquidación Nro.: {{ comprobante.nroLiquidacion }} / {{ comprobante.ejerLiquidacion }} </span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box text-center" style="margin-top:20px;width: 45.9%">
+      <img src="{% static 'assets/images/firma.jpeg' %}"  width="150px" alt="Logo"><br>
+      <span>Cra. Galian Laura Graciela </span><br>
+      <span>TESORERA</span><br>
+      <span>DE LA PROVINCIA DE JUJUY</span><br>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box text-center" style="border-top: solid 1px black;width: 45.9%">
+      <span>Firma y Sello del Agente de Retención</span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="margin-top:20px;width: 99.9% !important;">
+      <span>Para el Contribuyente</span>
+    </div>
+  </div>
+
+
+</body>
+</html>
+
+
+{% endif %}
+
+{% if tipo == '1' %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>PDF</title>
+  <style type="text/css">
+    @page {
+      size: a4;
+      margin-top: 3.5cm;
+      margin-bottom: 2cm;
+    }
+    @page :first {
+      margin-top: 1cm;
+    }
+
+
+    .cabecera {
+      font-family: Arial;
+      font-size: 12px;
+      text-align: center;
+      font-weight: normal;
+    }
+
+    .texto {
+      text-align: justify;
+      text-justify: inter-word;
+      font-family: "Arial";
+      font-size: 14px;
+      position: fixed;
+      width: 100%;
+    }
+
+    .text-left {
+      text-align: left !important;
+    }
+
+    .text-right {
+      text-align: right !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+
+    .box {
+      display: inline-block;
+      vertical-align: top;
+      height: auto;
+      padding: 0px;
+      {#border: solid 1px red;#}
+    }
+
+    .div, p{
+      width: 100%;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 12px;
+      text-align: justify;
+    }
+
+    @page {
+      margin-left: 1cm;
+      margin-right: 1cm;
+    }
+
+    body{
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="cabecera" style=" border-bottom:  3px double #000;">
+    {% load static %}
+    <div class="div">
+     <div class="box text-center" style="width: 100% !important;">
+        <img src="{% static 'assets/images/renta.png' %}" width="250px" alt="Logo"><br>
+     </div>
+    </div>
+  </div>
+
+  <div class="div" style="width: 100% !important;">
+     <div class="box" style="width: 59% !important;">
+        <span><b>AGENTE DE RETENCION: </b>R-023</span>
+     </div>
+       <div class="box text-right" style="width: 38.5% !important;">
+        <span><b>CUIT: </b> 30671509117</span>
+     </div>
+  </div>
+
+ <div class="div" style="width: 100% !important;">
+     <div class="box" style="width: 100% !important;">
+        <b>TESORERÍA DE LA PROVINCIA DE JUJUY </b>
+     </div>
+  </div>
+
+<div class="div" style="margin-top:10px;width: 100% !important;border-bottom:  3px double #000;">
+     <div class="box" style="width: 100% !important;">
+        <span><b>Nº CONSTANCIA </b> {{ comprobante.nroConstancia }}  / {{ comprobante.ejerConstancia }}</span>
+     </div>
+  </div>
+
+ <div class="div" style="width: 100% !important;border-bottom:  3px double #000;">
+     <div class="box text-center" style="width: 59% !important;">
+        <b>CONTRIBUYENTE </b> </br>
+         {{ comprobante.contribuyente }}
+     </div>
+       <div class="box text-right" style="width: 38.5% !important;">
+        <b>CUIT </b>{{ comprobante.cuit }}
+     </div>
+  </div>
+
+ <div class="div" style="width: 100% !important;border-bottom:  1px solid #000;">
+     <div class="box" style="width: 59% !important;">
+        <span>FECHA PAGO</span> {{ comprobante.fecRetencion }}</br>
+        <span class="text-center">COMPROBANTE</span>
+     </div>
+       <div class="box" style="width: 38.5% !important;">
+        <span>N° </span> {{ comprobante.nroLiquidacion }}<br>
+        <span>IMPORTE </span>
+     </div>
+  </div>
+
+ <div class="div" style="width: 100% !important;border-bottom:  1px solid #000;">
+     <div class="box" style="width: 59% !important;padding-top: 5px !important; padding-bottom: 5px !important">
+        <span>{{ comprobante.tipoCbpte }} - {{ comprobante.letraCpbte }} - {{ comprobante.sucursalCpbte }}</span>
+     </div>
+       <div class="box" style="width: 38.5% !important;padding-top: 5px !important; padding-bottom: 5px !important">
+        <span>{{ comprobante.importeCpbte }}</span>
+     </div>
+  </div>
+
+<div class="div" style="width: 100% !important;margin-top: 20px;">
+     <div class="box" style="width: 59% !important;">
+        <span>MONTO DE LA OPERACIÓN</span>
+     </div>
+       <div class="box" style="width: 38.5% !important;">
+        <span>{{ comprobante.importeOper }} </span>
+     </div>
+  </div>
+
+<div class="div" style="width: 100% !important;margin-top: 20px;">
+     <div class="box" style="width: 59% !important;">
+        <span>ALICUOTA</span>
+     </div>
+       <div class="box" style="width: 38.5% !important;">
+        <span>{{ comprobante.alicuota }} </span>
+     </div>
+  </div>
+
+<div class="div" style="width: 100% !important;margin-top: 10px;">
+     <div class="box" style="width: 59% !important;">
+        <span>IMPORTE RETENCIÓN</span>
+     </div>
+       <div class="box" style="width: 38.5% !important;">
+        <span>{{ comprobante.importeReten }} </span>
+     </div>
+  </div>
+
+
+<div class="div" style="width: 100% !important;margin-top: 10px;">
+     <div class="box" style="width: 100% !important;">
+        <span>Impuesto sobre los Ingresos Brutos</span>
+     </div>
+  </div>
+
+<div class="div" style="width: 100% !important;margin-top: 20px;">
+     <div class="box" style="width: 100% !important;">
+        <span>Para el contribuyente</span>
+     </div>
+  </div>
+
+
+<div class="div text-center" style="width: 100%">
+    <div class="box text-center" style="margin-top:20px;width: 50%; text-align: center !important;">
+      <img src="{% static 'assets/images/firma.jpeg' %}"  width="150px" alt="Logo"><br>
+      <span>Cra. Galian Laura Graciela </span><br>
+      <span>TESORERA</span><br>
+      <span>DE LA PROVINCIA DE JUJUY</span><br>
+    </div>
+  </div>
+
+  <div class="div text-center" style="width: 100%">
+    <div class="box text-center" style="border-top: solid 1px black;width: 30%">
+      <span>Firma y Sello del Agente de Retención</span>
+    </div>
+  </div>
+
+</body>
+</html>
+
+
+{% endif %}
+
+
+{% if tipo == '4' %}
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>PDF</title>
+  <style type="text/css">
+    @page {
+      size: a4;
+      margin-top: 1cm;
+      margin-left: 1cm;
+      margin-right: 1cm;
+      margin-bottom: 1cm;
+    }
+
+
+    .cabecera {
+      font-family: Arial;
+      font-size: 12px;
+      text-align: center;
+      font-weight: normal;
+    }
+
+    .texto {
+      text-align: justify;
+      text-justify: inter-word;
+      font-family: "Arial";
+      font-size: 14px;
+      position: fixed;
+      width: 100%;
+    }
+
+    .text-left {
+      text-align: left !important;
+    }
+
+    .text-right {
+      text-align: right !important;
+    }
+
+    .text-center {
+      text-align: center !important;
+    }
+
+
+    .box {
+      display: inline-block;
+      vertical-align: top;
+      height: auto;
+      padding: 0px;
+      {#border: solid 1px red;#}
+    }
+
+    .div, p{
+      width: 100%;
+      font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+      font-size: 10px;
+      text-align: justify;
+    }
+
+    body{
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="cabecera" style=" border-bottom:  3px double #000;">
+    {% load static %}
+    <div class="div">
+     <div class="box text-center" style="width: 20% !important;padding-top: 20px;">
+      <img src="{% static 'assets/images/afip.png' %}"  width="120px" alt="Logo"><br>
+    </div>
+    <div class="box text-center" style="width: 57.6% !important;"><br>
+      <span class="text-center" style="font-size:20px">Sistema de Control de Retenciones Ganancias</span><br>
+    </div>
+    <div class="box text-center" style="width: 20% !important;">
+      <img src="{% static 'assets/images/escudoJujuy.png' %}"  width="40px" alt="Logo"><br>
+      <p  class="text-center" style="font-size:8px;margin-top: 2px; !important;">Gobierno de la Provincia de Jujuy</p>
+      <p  class="text-center" style="font-size:8px;margin-top: -5px !important;">Ministerio de Hacienda</p>
+      <p  class="text-center" style="font-size:8px;margin-top: -5px !important;">Tesorería de la Provincia</p>
+    </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="div" style="border-bottom: solid 1px black">
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Certificado Nº : {{ comprobante.nroConstancia }}  /  {{ comprobante.ejerConstancia }}</span>
+    </div>
+     <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Fecha : {{ comprobante.fecha }}</span>
+    </div>
+  </div>
+
+
+  <div class="div" style="margin-left: 10px;margin-top: 10px">
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span style="font-size: 16px">A. - Datos Agente de Retención</span>
+    </div>
+     <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Denominación: TESORERÍA DE LA PROVINCIA</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>C.U.I.T. Nº: 30-67150911-7</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Domicilio: San Martín 450 - San Salvador de Jujuy - Prov. de Jujuy - C/P 4600</span>
+    </div>
+  </div>
+
+  <div class="div" style="margin-left: 10px;margin-top: 10px">
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span style="font-size: 16px">B. - Datos del Sujeto Retenido</span>
+    </div>
+     <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Denominación: {{ comprobante.contribuyente }}</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>C.U.I.T. Nº: {{ comprobante.cuit }}</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Domicilio: {{ comprobante.domicilio }}</span>
+    </div>
+  </div>
+
+  <div class="div" style="margin-left: 10px;margin-top: 10px">
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span style="font-size: 16px">C. - Datos de la Retención Practicada</span>
+    </div>
+     <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Impuesto: {{ comprobante.impuesto }}</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Régimen: {{ comprobante.regimen }}</span>
+    </div>
+    <div class="box" style="width: 100% !important;margin-top: 5px">
+      <span>Importe de Operación: {{ comprobante.importeOper }}</span>
+    </div>
+  </div>
+
+  <div class="div" style="margin-left: 10px;margin-top: 20px">
+     <div class="box" style="width: 31% !important;">
+      <span>Comprobante:</span>
+    </div>
+    <div class="box" style="width: 31% !important;">
+      <span>Importe:</span>
+    </div>
+    <div class="box" style="width: 31% !important;">
+      <span>Concepto de Retención:</span>
+    </div>
+  </div>
+
+  <div class="div" style="margin-left: 10px;margin-top: 10px">
+     <div class="box" style="width: 31% !important;">
+      <span>{{ comprobante.tipoCbpte }} - {{ comprobante.letraCpbte }} - {{ comprobante.sucursalCpbte }} - {{ comprobante.nroCpbte }}</span>
+    </div>
+    <div class="box" style="width: 31% !important;">
+      <span>{{ comprobante.importeCpbte }}</span>
+    </div>
+    <div class="box" style="width: 31% !important;">
+      <span></span>
+    </div>
+  </div>
+
+  <div class="div" style="margin-top: 10px">
+     <div class="box text-right" style="width: 100% !important;">
+      <span>Monto de la Retención: {{ comprobante.importeReten }}</span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box text-center" style="margin-top:20px;width: 45.9%">
+      <img src="{% static 'assets/images/firma.jpeg' %}"  width="150px" alt="Logo"><br>
+      <span>Cra. Galian Laura Graciela </span><br>
+      <span>TESORERA</span><br>
+      <span>DE LA PROVINCIA DE JUJUY</span><br>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box text-center" style="border-top: solid 1px black;width: 45.9%">
+      <span>Firma y Sello del Agente de Retención</span>
+    </div>
+  </div>
+
+  <div class="div">
+    <div class="box" style="margin-top:20px;width: 99.9% !important;">
+      <span>Para el Contribuyente</span>
+    </div>
+  </div>
+
+
+</body>
+</html>
+
+
+{% endif %}

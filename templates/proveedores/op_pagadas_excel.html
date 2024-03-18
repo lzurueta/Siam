@@ -1,0 +1,58 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Excel</title>
+
+</head>
+<body>
+
+<table>
+<TR>
+    <TD>FEC.PAGO</TD>
+    <TD>EJER.PAGO</TD>
+    <TD>NRO.</TD>
+    <TD>EJER.OP</TD>
+    <TD>NRO.OP</TD>
+    <TD>JUR</TD>
+    <TD>UDO</TD>
+    <TD>REPARTICION</TD>
+    <TD>FORMA DE PAGO</TD>
+    <TD>NRO.</TD>
+    <TD>IMPORTE</TD>
+    {% if tipo == 'con' %}
+    <TD>LETRA COMP.</TD>
+    <TD>SUCURSAL COMP.</TD>
+    <TD>N° COMP.</TD>
+    <TD>IMPORTE COMP.</TD>
+    {% endif %}
+</TR>
+
+
+{% for c in comprobante %}
+    <tr>
+    <TD>{{ c.fecPago }}</TD>
+    <TD>{{ c.ejerOP }}</TD>
+    <TD>{{ c.nroLiq }}</TD>
+    <TD>{{ c.nroOP }}</TD>
+    <TD>{{ c.ejerOP }}</TD>
+    <TD>{{ c.jur }}</TD>
+    <TD>{{ c.udo }}</TD>
+    <TD>{{ c.reparticion }}</TD>
+    <TD>{{ c.formaPago }}</TD>
+    <TD>{{ c.nroCpbtePago }}</TD>
+    <TD>{{ c.importe }}</TD>
+    {% if tipo == 'con' %}
+    <td>{{ c.letraCpbte}}</td>
+    <td>{{ c.sucursalCpbte}}</td>
+    <td>{{ c.nroCpbte }}</td>
+    <td>{{ c.importeCpbte }}</td>
+    {% endif %}
+    </tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

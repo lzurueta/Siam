@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% block extraCss %}
+{% endblock %}
+{% block main %}
+{% load static %}
+<div id="main-content" class="profilepage_2 blog-page">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row g-3">
+        <div class="col-lg-5 col-md-8 col-sm-12">
+          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
+            {{ titulo }}</h2>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'proveedoresHome' %}"><i class="icon-home"></i></a></li>
+              <li class="breadcrumb-item active">{{ titulo }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row clearfix">
+        <div class="card">
+          <div class="card-body">
+            <div class="col-lg-12">
+
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+              <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-5">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Tipo Descuento</span>
+                    </div>
+                    <select class="form-control" id="tipo_ajax" name="tipo_ajax">
+                      <option value="56">ANTICIPOS</option>
+                      <option value="60">ART.411 5%</option>
+                      <option value="75">BONIFICACIÓN ANSES</option>
+                      <option value="55">C.JUJ.DE LA CONST.</option>
+                      <option value="62">CESIONES</option>
+                      <option value="98">CHEQUE -NETO</option>
+                      <option value="0" selected="selected">COD.INFORMATIVO</option>
+                      <option value="72">CONSTANCIAS DE DEUDA</option>
+                      <option value="80">CONTRATO DE ASISTENCIA TECNICA,ING.</option>
+                      <option value="51">DEPOSITO DE GARANTIA</option>
+                      <option value="73">DESACOPIO POR ANTICIPO</option>
+                      <option value="59">DEVOLUCION AL BENEFICIARIO</option>
+                      <option value="79">DIFERENCIA TIPO DE CAMBIO</option>
+                      <option value="57">EMBARGOS</option>
+                      <option value="64">F.B.JUJUY S.A. 260411/03</option>
+                      <option value="76">FONDO LABORATORIO - D.P.V.</option>
+                      <option value="85">GAN.BENEFICIARIOS EXT.OBRAS</option>
+                      <option value="4">GANANCIAS</option>
+                      <option value="84">GANANCIAS CERT.OBR.</option>
+                      <option value="66">HORAS EXTRAS</option>
+                      <option value="58">IMP.A LOS SELLOS</option>
+                      <option value="5">IMPUESTO AL VALOR AGREGADO</option>
+                      <option value="1">INGRESOS BRUTOS</option>
+                      <option value="3">INGRESOS BRUTOS R-835</option>
+                      <option value="63">INT. S/CONVENIOS</option>
+                      <option value="61">INTERESES</option>
+                      <option value="53">LEY 5118</option>
+                      <option value="70">LEY 5118/98 VIALIDAD</option>
+                      <option value="69">LEY 5239/00 ART.33 D.G.ARQUITECTURA</option>
+                      <option value="65">MULTA</option>
+                      <option value="67">OTROS</option>
+                      <option value="99">REDONDEO</option>
+                      <option value="78">RET EARPUJ DECR. 175-G-2012</option>
+                      <option value="71">RETENCION 20% TICKETS CANASTA</option>
+                      <option value="68">RETENCIONES MUNICIPIOS Y COMISIONES</option>
+                      <option value="54">SEG.SOC.(C)</option>
+                      <option value="52">SEG.SOC.(I)</option>
+                      <option value="77">SEGURIDAD SOCIAL 6%</option>
+                      <option value="74">TRANSFERENCIA INMUEBLES</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
+                    </div>
+                    <input type="date" class="form-control"  name="desde_ajax" id="desde_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
+                    </div>
+                    <input type="date" class="form-control"  name="hasta_ajax" id="hasta_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-lg-1">
+                  <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+            </div>
+
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- ------------------------------- TABLA OPS --------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+
+            <div class="table-responsive col-lg-12">
+              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                <thead>
+                  <tr>
+                    <th>Año Const.</th>
+                    <th>N° Const.</th>
+                    <th>Trenro</th>
+                    <th>Fec.</th>
+                    <th>Est.</th>
+                    <th>N° OP</th>
+                    <th>UDO</th>
+                    <th>Jurisdicción</th>
+                    <th>popanio</th>
+                    <th>Per.Mes</th>
+                    <th>Per.Año</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+  <div class="aux"></div>
+
+  {% endblock %}
+  {% block extraJS %}
+  <script>
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
+  /******************************************************************************************/
+
+  var tableOP;
+
+  function cargarTabla(){
+
+
+      $('#data_table_ajax').dataTable().fnClearTable();
+      $('#data_table_ajax').dataTable().fnDestroy();
+
+      var valores = {
+        "csrfmiddlewaretoken" : '{{ csrf_token }}',
+        "tipo_ajax": $("#tipo_ajax").val(),
+        "desde_ajax": $("#desde_ajax").val(),
+        "hasta_ajax": $("#hasta_ajax").val(),
+      }
+
+      tableOP = $('#data_table_ajax').DataTable({
+        autoWidth: false,
+        searching: false,
+        dom: 'Bfrtip',
+        buttons: [
+        'csv', 'print',
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+        },
+        "ajax": {
+          "url": "{% url 'op_retenciones_ajax' %}",
+          "data": valores,
+          "async": true,
+          "type": "POST",
+          "dataSrc": ""
+        },
+        "columns": [
+        { "data": "ejerConstancia" },
+        { "data": "nroConstancia" },
+        { "data": "tipoRetencion" },
+        { "data": "fecRetencion" },
+        { "data": "estado" },
+        { "data": "nroOP" },
+        { "data": "udo" },
+        { "data": "jur" },
+        {"data": "ejer"},
+        { "data": "anio" },
+        { "data": "mes" },
+        {
+          "data": null,
+          "sortable": false,
+          "width" : "2%",
+          "className": "text-center",
+          "render": function(data, type, row) {
+
+            return  '<button type="button" onclick="verPdf(`'+data.TReNro+'`,'+data.ejerConstancia+',`'+data.nroConstancia+'`,`'+data.tipoRetencion+'`)" class="btn btn-outline-secondary js-detalle" title="Comprobante"><i class="fa fa-file-pdf-o"></i></button>'
+          }
+        },
+
+        ],
+        order: [[8, 'desc']]
+      });
+
+  }
+
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+  /******************************************************************************************/
+  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
+  /******************************************************************************************/
+
+  $(document).ready(function(){
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
+  /******************************************************************************************/
+
+  $("#btnBuscar").click(function(){
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+     function verPdf(tipo, anio, cons, trenro){
+
+    $(".aux").html('<form id="verPdf" action="{% url 'op_retenciones_pdf' %}" target="_blank" method="POST">{%  csrf_token %}' +
+        '<input name="tipo" value="'+tipo+'"/>' +
+        '<input name="anio" value="'+anio+'"/>' +
+        '<input name="cons" value="'+cons+'"/>' +
+        '<input name="trenro" value="'+trenro+'"/>' +
+        '</form>');
+
+    $("#verPdf").submit();
+
+    $(".aux").html('');
+
+   }
+  </script>
+  {% endblock %}
