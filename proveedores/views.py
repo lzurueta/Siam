@@ -1256,3 +1256,51 @@ def op_retenciones_pdf(request):
     }
 
     return generate_pdf(request, template_name, context)
+
+def op_retenciones_excel(request):
+        """ EXPORTADOR A EXCEL DE RETENCIONES """
+        template_name = 'proveedores/op_retenciones_excel.html'
+
+        cuit = 30718402235
+
+        conexion = conectarSQL()
+        cursor = conexion.cursor()
+
+        sql_query = (" SELECT "
+                     " ACRE001.Ac1CAn as 'ejerConstancia', "
+                     " ACRE001.Ac1CNu as 'nroConstancia', "
+                     " ACRE001.TReNro as 'tipoRetencion', "
+                     " format( ACRE001.Ac1fec ,'dd/MM/yyyy') as 'fecRetencion', "
+                     " ACRE001.Ac1Est as 'estado', "
+                     " ACRE001.Ac1opa as 'nroOP', "
+                     " ACRE001.Ac1jur as 'jur', "
+                     " ACRE001.Ac1udo as 'udo', "
+                     " ACRE001.PopAnio as 'ejer', "
+                     " ACRE001.Popnro as 'nroLiquidacion', "
+                     " ACRE00.Acrmes as 'mes', "
+                     " ACRE00.Acrano as 'anio', "
+                     "ACRE001.TReNro"
+                     " from ACRE001 "
+                     " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro "
+                     " where ACRE001.RfcBenCUI=20175029185 AND ACRE001.Ac1Est<>'A' ")
+
+        # FILTRAR POR TIPO
+        if request.POST.get('tipo_ajax'):
+            sql_query = sql_query + " AND ACRE001.TReNro=" + request.POST.get('tipo_ajax')
+
+        # FILTRAR POR FECHA DESDE
+        if request.POST.get('desde_ajax'):
+            sql_query = sql_query + " AND ACRE001.Ac1fec>='" + request.POST.get('desde_ajax') + "'"
+        # FILTRAR POR FECHA HASTA
+        if request.POST.get('hasta_ajax'):
+            sql_query = sql_query + " AND ACRE001.Ac1fec<='" + request.POST.get('hasta_ajax') + "'"
+
+
+        cursor.execute(sql_query)
+        datos = cursor.fetchall()
+
+        context = {
+            "datos": datos,
+        }
+
+        return generate_excel(request, template_name, context)

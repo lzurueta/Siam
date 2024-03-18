@@ -48,7 +48,7 @@
                       </div>
 
 
-                      <div class="accordion-header">
+                      <div class="accordion-header" hidden>
                         <button class="accordion-button collapsed" type="button" id="btnCedulaFiscal" data-bs-toggle="collapse" data-bs-target="#divCedulaFiscal" aria-expanded="false" aria-controls="#divCedulaFiscal">
                           Cédula Fiscal
                         </button>
@@ -144,6 +144,32 @@
   /******************************************************************************************/
 
 
+$(document).ready(function(){
+    // Número de CUIT a consultar
+    var cuit = '30718402235'; // Reemplaza esto con el CUIT que deseas consultar
+
+    // Objeto con los datos a enviar al servicio web
+    var requestData = {
+        CUIT: cuit,
+        op: 'Estado'
+        // Otros parámetros que el servicio web pueda requerir
+    };
+
+    $.ajax({
+        url: 'https://www.rentasjujuyonline.gob.ar/consultacuit/ConsultaConstancia.asmx',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: requestData,
+        dataType: 'json',
+        success: function(data) {
+            // Manejo de la respuesta del servicio web
+            console.log('Respuesta del servicio web:', data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al realizar la solicitud:', error);
+        }
+    });
+});
    
 
   </script>

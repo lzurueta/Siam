@@ -1,0 +1,47 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Excel</title>
+
+</head>
+<body>
+
+<table>
+<TR>
+<th>Año Const.</th>
+<th>N° Const.</th>
+<th>Trenro</th>
+<th>Fec.</th>
+<th>Est.</th>
+<th>N° OP</th>
+<th>UDO</th>
+<th>Jurisdicción</th>
+<th>popanio</th>
+<th>Per.Mes</th>
+<th>Per.Año</th>
+</TR>
+
+
+{% for d in datos %}
+<tr>
+    <td>{{ d.ejerConstancia }}</td>
+    <td>{{ d.nroConstancia }}</td>
+    <td>{{ d.tipoRetencion }}</td>
+    <td>{{ d.fecRetencion }}</td>
+    <td>{{ d.estado }}</td>
+    <td>{{ d.nroOP }}</td>
+    <td>{{ d.udo }}</td>
+    <td>{{ d.jur }}</td>
+    <td>{{ d.ejer }}</td>
+    <td>{{ d.mes }}</td>
+    <td>{{ d.anio }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

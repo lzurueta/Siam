@@ -50,13 +50,13 @@
                                 {% csrf_token %}
                                 <div class="form-group mb-2">
                                     <label for="id_username" class="control-label sr-only">{{ form.username.label_tag }}</label>
-                                    <input class="form-control" placeholder="Username" type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username">
+                                    <input class="form-control" placeholder="Usuario" type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username">
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="id_password" class="control-label sr-only">{{ form.password.label_tag }}</label>
-                                    <input type="password" class="form-control" name="password" autocomplete="current-password" required id="id_password" placeholder="Password">
+                                    <input type="password" class="form-control" name="password" autocomplete="current-password" required id="id_password" placeholder="Constraseña">
                                 </div>
-                                <input type="submit" class="btn btn-primary btn-lg btn-block" value="LOGIN">
+                                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Ingresar">
                                 <input type="hidden" name="next" value="{{ next }}">
                                 <div class="bottom">
                                     <span class="helper-text m-b-10"><i class="fa fa-lock"></i> <a href="{% url 'password_reset' %}">Olvido su contraseña?</a></span>

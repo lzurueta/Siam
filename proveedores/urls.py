@@ -25,5 +25,6 @@ urlpatterns = [
     path('op_retenciones', login_required(views.op_retenciones.as_view()), name="op_retenciones"),
     path('op_retenciones_ajax', login_required(views.op_retenciones_ajax), name="op_retenciones_ajax"),
     path('op_retenciones_pdf', login_required(views.op_retenciones_pdf), name="op_retenciones_pdf"),
+    path('op_retenciones_excel', login_required(views.op_retenciones_excel), name="op_retenciones_excel"),
 
 ]

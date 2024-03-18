@@ -28,7 +28,7 @@
               <!-- --------------------------------------------------------------------------------- -->
 
               <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-5">
+                <div class="col-sm-6 col-md-6 col-lg-4">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Tipo Descuento</span>
@@ -98,6 +98,9 @@
 
                 <div class="col-lg-1">
                   <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
+                </div>
+                <div class="col-lg-1">
+                  <button class="btn btn-success w-100" type="button" onclick="op_retenciones_excel()" id="btnExcel" title="Exportar Excel"><i class="fa fa-file-excel-o"></i></button>
                 </div>
               </div>
 
@@ -202,8 +205,8 @@
         { "data": "udo" },
         { "data": "jur" },
         {"data": "ejer"},
-        { "data": "anio" },
         { "data": "mes" },
+        { "data": "anio" },
         {
           "data": null,
           "sortable": false,
@@ -263,6 +266,21 @@
         '</form>');
 
     $("#verPdf").submit();
+
+    $(".aux").html('');
+
+   }
+   
+   
+  function op_retenciones_excel(){
+
+    $(".aux").html('<form id="explortarExcel" action="{% url 'op_retenciones_excel' %}" method="POST">{%  csrf_token %}' +
+        '<input name="tipo_ajax" value="'+$("#tipo_ajax").val()+'"/>' +
+        '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
+        '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
+        '</form>');
+
+    $("#explortarExcel").submit();
 
     $(".aux").html('');
 

@@ -60,7 +60,7 @@
                     <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-5">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
@@ -68,7 +68,7 @@
                     <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
                   </div>
                 </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-5">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
@@ -77,20 +77,7 @@
                   </div>
                 </div>
 
-
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Cheque</span>
-                    </div>
-                    <select class="form-control" id="cheque_ajax" name="cheque_ajax">
-                      <option value="T" selected="selected">Todos</option>
-                      <option value="C">En Cartera</option>
-                      <option value="P">Pagados</option>
-                      <option value="E">En Proceso de Pago</option>
-                    </select>
-                  </div>
-                </div>
+                  
                 <div class="col-lg-1">
                   <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
                 </div>
@@ -184,8 +171,6 @@
       "nro_op_ajax":  $("#nro_op_ajax").val(),
       "desde_ajax":  $("#desde_ajax").val(),
       "hasta_ajax":  $("#hasta_ajax").val(),
-      "cheque_ajax":  $("#cheque_ajax").val(),
-      "cuit_ajax" :  $("#cuit_ajax").val(),
     }
 
     tableOP = $('#data_table_ajax').DataTable({
@@ -379,7 +364,6 @@
         '<input name="nro_op_ajax" value="'+$("#nro_op_ajax").val()+'"/>' +
         '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
         '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
-        '<input name="cheque_ajax" value="'+$("#cheque_ajax").val()+'"/>' +
         '</form>');
 
     $("#explortarExcel").submit();
