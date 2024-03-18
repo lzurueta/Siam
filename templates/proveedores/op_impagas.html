@@ -199,7 +199,7 @@
           "width" : "2%",
           "render": function(data, type, row) {
 
-            return '<a target="_blank" href="op_imprimir/'+data.ejercicio+'/'+data.nroOP+'/'+data.juri+'/'+data.udo+'" class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></a>' +
+            return '<button type="button" onclick="verPdf('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)"  class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></button>' +
             ' <button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>';
 
           }
@@ -325,6 +325,23 @@
         '</form>');
 
     $("#explortarExcel").submit();
+
+    $(".aux").html('');
+
+   }
+
+
+
+  function verPdf(ejercicio,nroOP,juri,udo){
+
+    $(".aux").html('<form id="verPdf" action="{% url 'op_imprimir' %}" target="_blank" method="POST">{%  csrf_token %}' +
+        '<input name="ejercicio" value="'+ejercicio+'"/>' +
+        '<input name="nroOP" value="'+nroOP+'"/>' +
+        '<input name="juri" value="'+juri+'"/>' +
+        '<input name="udo" value="'+udo+'"/>' +
+        '</form>');
+
+    $("#verPdf").submit();
 
     $(".aux").html('');
 

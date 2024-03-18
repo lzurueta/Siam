@@ -45,21 +45,21 @@ class op_pagadas(View):
         return render(request, self.template_name, self.get_context_data())
 
 
-class op_imprimir(View):
+def op_imprimir(request):
     """ IMPRESOR DE OP """
     template_name = 'proveedores/op_pagadas_pdf.html'
 
-    def get(self, request, *args, **kwargs):
+    OpaAnio = request.POST.get('ejercicio')
+    OpaNro = request.POST.get('nroOP')
+    jurcod = request.POST.get('juri')
+    repudo = request.POST.get('udo')
 
-        OpaAnio = kwargs['OpaAnio']
-        OpaNro = kwargs['OpaNro']
-        jurcod = kwargs['jurcod']
-        repudo = kwargs['repudo']
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
 
-        sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
+    conexion = conectarSQL()
+    cursor = conexion.cursor()
+
+    sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
                      "OPAGO2.OpaNro as 'nroOP',"
                      "JURISDICCI.JurDes, "
                      "REPARTICIO.RepDes as 'reparticion',"
@@ -74,10 +74,10 @@ class op_imprimir(View):
                      "inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod "
                      "where OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
 
-        cursor.execute(sql_query)
-        cabecera = cursor.fetchone()
+    cursor.execute(sql_query)
+    cabecera = cursor.fetchone()
 
-        sql_query = ("SELECT "
+    sql_query = ("SELECT "
                      "CPBTES3.OcpNro as 'nroOrdCompra',"
                      "CPBTES3.OcpAnio as 'anioOrdCompra',"
                      "MOVIMIE1.nomp1 as 'partidaN1',"
@@ -103,20 +103,20 @@ class op_imprimir(View):
                      " INNER join NOMENCLADO on MOVIMIE1.nomp1=NOMENCLADO.nomp1 and MOVIMIE1.nomp2=NOMENCLADO.nomp2 and MOVIMIE1.nomp3=NOMENCLADO.nomp3 and MOVIMIE1.nomp4=NOMENCLADO.nomp4  and MOVIMIE1.scccod=NOMENCLADO.scccod and MOVIMIE1.sctcod=NOMENCLADO.sctcod "
                      " WHERE OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
 
-        cursor.execute(sql_query)
-        detalle = cursor.fetchall()
+    cursor.execute(sql_query)
+    detalle = cursor.fetchall()
 
-        sql_query = ("SELECT "
+    sql_query = ("SELECT "
                      "SUM(OPAGO1.OpaImp) as 'importeCpbte'"
                      "from OPAGO1"
                      " INNER join OPAGO2 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo"
                      " WHERE OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'"
                      " GROUP BY OPAGO2.OpaAnio,OPAGO2.OpaNro,OPAGO2.jurcod,OPAGO2.repudo")
 
-        cursor.execute(sql_query)
-        total = cursor.fetchone()
+    cursor.execute(sql_query)
+    total = cursor.fetchone()
 
-        sql_query = (" SELECT  "
+    sql_query = (" SELECT  "
                     " POPAGO.Popnro as 'nroLiq',  "
                     " case  "
                     " 	when POPAGO.Poptip='D' then 'NOTA DÉBITO' "
@@ -156,21 +156,21 @@ class op_imprimir(View):
                     " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
                     " where POPAGO.popEst <> 'A' AND POPAGO.OpaAnio="+ str(OpaAnio) +" AND POPAGO.OpaNro="+ str(OpaNro) +" AND POPAGO.jurcod='"+ str(jurcod) +"' AND POPAGO.repudo='"+ str(repudo) +"' ")
 
-        cursor.execute(sql_query)
-        pagosAsociados = cursor.fetchall()
+    cursor.execute(sql_query)
+    pagosAsociados = cursor.fetchall()
 
-        sql_query = (" SELECT "
+    sql_query = (" SELECT "
                      " SUM(POPAGO.Popimp) as 'total' "
                      " FROM POPAGO  "
                      " where POPAGO.popEst <> 'A' AND POPAGO.OpaAnio=" + str(OpaAnio) + " AND POPAGO.OpaNro=" + str(OpaNro) + " AND POPAGO.jurcod='" + str(jurcod) + "' AND POPAGO.repudo='" + str(repudo) + "' "
                      " GROUP BY POPAGO.OpaAnio,POPAGO.OpaNro,POPAGO.jurcod,POPAGO.repudo ")
 
-        cursor.execute(sql_query)
-        totalPagosAsoc = cursor.fetchone()
+    cursor.execute(sql_query)
+    totalPagosAsoc = cursor.fetchone()
 
-        saldo = total[0] - totalPagosAsoc[0]
+    saldo = total[0] - totalPagosAsoc[0]
 
-        context = {
+    context = {
             'cabecera': cabecera,
             'detalle': detalle,
             'importeTexto': decimal_a_texto(total[0]),
@@ -180,7 +180,7 @@ class op_imprimir(View):
 
         }
 
-        return generate_pdf(request, self.template_name, context)
+    return generate_pdf(request, template_name, context)
 
 
 def decimal_a_texto(numero):

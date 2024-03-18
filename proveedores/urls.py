@@ -8,7 +8,7 @@ urlpatterns = [
     path('op_pagadas', login_required(views.op_pagadas.as_view()), name="op_pagadas"),
     path('op_detalle', login_required(views.op_detalle), name="op_detalle"),
     path('op_pagadas_comprobante', login_required(views.op_pagadas_comprobante), name="op_pagadas_comprobante"),
-    path('op_imprimir/<int:OpaAnio>/<int:OpaNro>/<str:jurcod>/<str:repudo>', login_required(views.op_imprimir.as_view()), name="op_imprimir"),
+    path('op_imprimir', login_required(views.op_imprimir), name="op_imprimir"),
     path('op_pagadas_ajax', login_required(views.op_pagadas_ajax), name="op_pagadas_ajax"),
     path('op_pagadas_excel', login_required(views.op_pagadas_excel), name="op_pagadas_excel"),
 
