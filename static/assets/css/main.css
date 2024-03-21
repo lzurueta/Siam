@@ -22758,3 +22758,22 @@ ul.list-connected-app>li:last-child .connected-app {
 .swal-text {
     text-align: center !important;
 }
+
+#btn-back-to-top {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 55px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
+    display: none;
+    font-size: 35px;
+}
+
+.btn-circle {
+    text-align: center;
+    border-radius: 50px;
+}
+

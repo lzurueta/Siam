@@ -8,10 +8,13 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
 
-from sistema.forms import NewUserForm
+from sistema.forms import NewUserForm, registroUsuario
+from django.contrib.auth.models import User
+from .models import Profile
 
-
+from sistema.functions import generate_pdf
 # Create your views here.
+
 class SistemaHome(View):
 
     def get_context_data(self, **kwargs):
@@ -28,16 +31,23 @@ class SistemaHome(View):
 
 
 def registerUser(request):
-    if request.method == "POST":
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registración Exitosa.")
-            return redirect("index")
-        messages.error(request, form.errors)
-    form = NewUserForm()
-    return render(request=request, template_name="registration/register.html", context={"register_form": form})
+    # if request.method == "POST":
+    form = registroUsuario(request.POST  or None)
+    if request.method == "POST" and form.is_valid():
+        username = form.cleaned_data.get('username')
+        nombre = form.cleaned_data.get('nombre')
+        direccion = form.cleaned_data.get('direccion')
+        telefono = str(form.cleaned_data.get('telefono'))
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password')
+
+        usuario = User.objects.create_user(username=username, first_name=nombre, email=email, password=password, is_active=False)
+        if usuario:
+            profile = Profile.objects.create(user=usuario, nombre=nombre, direccion=direccion, email=email, telefono=telefono)
+            template_name = 'registration/declaracion_jurada_pdf.html'
+            return generate_pdf(request, template_name, {})
+
+    return render(request, "registration/register.html", {'form' : form})
 
 
 class ProfileView(View):

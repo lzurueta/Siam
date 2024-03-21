@@ -8,6 +8,10 @@ Group.add_to_class('icon', models.CharField(max_length=150, null=True, blank=Tru
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=150, null=False, blank=True)
+    direccion = models.CharField(max_length=150, null=False, blank=True)
+    email = models.EmailField(null=False, blank=True)
+    telefono = models.CharField(max_length=50, null=True, blank=True)
     foto = models.ImageField(null=True, blank=True, upload_to='sistema/profile_images')
 
     def __str__(self):

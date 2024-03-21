@@ -10,10 +10,14 @@ from proveedores.models import CPOPAGO
 from sistema.functions import generate_pdf,generate_excel, conectarSQL
 
 import datetime
+
+from zeep import Client
+import json
+
 # Create your views here.
 class proveedoresHome(View):
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = self.request.user.username
         context = {
             'titulo': "Proveedores",
             'cuit': cuit
@@ -29,7 +33,7 @@ class op_pagadas(View):
     template_name = 'proveedores/op_pagadas.html'
 
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = self.request.user.username
         anio = datetime.datetime.now().year
 
         context = {
@@ -198,7 +202,7 @@ def decimal_a_texto(numero):
 
 def op_pagadas_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
-    cuit = 30718402235
+    cuit = request.user.username
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
@@ -228,7 +232,7 @@ def op_pagadas_ajax(request):
     "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
     "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
     "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
-    "where OPAGO2.BENCUI=30718402235 and POPAGO.PopEst<>'A' ")
+    "where OPAGO2.BENCUI="+cuit+" and POPAGO.PopEst<>'A' ")
 
 
     # FILTRAR POR EJERCICIO
@@ -541,7 +545,7 @@ def datos_declaracion_jurada_imprimir(request):
     """ IMPRESOR DE DECLARACION JURADA """
     template_name = 'proveedores/datos_declaracion_jurada_pdf.html'
 
-    cuit = request.POST.get('cuit')
+    cuit = request.user.username
 
     conexion = conectarSQL()
     cursor = conexion.cursor()
@@ -673,7 +677,7 @@ class op_impagas(View):
     template_name = 'proveedores/op_impagas.html'
 
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = self.request.user.username
         anio = datetime.datetime.now().year
 
         context = {
@@ -691,7 +695,7 @@ class op_impagas(View):
 
 def op_impagas_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
-    cuit = 30718402235
+    cuit = request.user.username
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
@@ -762,7 +766,7 @@ class op_comprobantes(View):
     template_name = 'proveedores/op_comprobantes.html'
 
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = self.request.user.username
 
         context = {
             'titulo': "Comprobantes",
@@ -777,7 +781,7 @@ class op_comprobantes(View):
 
 def op_comprobantes_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
-    cuit = 30718402235
+    cuit = request.user.username
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
@@ -844,7 +848,7 @@ def op_pagadas_excel(request):
         """ EXPORTADOR A EXCEL DE OPs PAGADAS """
         template_name = 'proveedores/op_pagadas_excel.html'
 
-        cuit = 30718402235
+        cuit = request.user.username
 
         conexion = conectarSQL()
         cursor = conexion.cursor()
@@ -987,7 +991,7 @@ def op_impagas_excel(request):
     """ EXPORTADOR A EXCLE DE OPs IMPAGAS """
     template_name = 'proveedores/op_impagas_excel.html'
 
-    cuit = 30718402235
+    cuit = request.user.username
 
     conexion = conectarSQL()
     cursor = conexion.cursor()
@@ -1097,7 +1101,7 @@ class op_retenciones(View):
     template_name = 'proveedores/op_retenciones.html'
 
     def get_context_data(self, **kwargs):
-        cuit = 30718402235
+        cuit = self.request.user.username
 
         context = {
             'titulo': "Retenciones",
@@ -1112,7 +1116,7 @@ class op_retenciones(View):
 
 def op_retenciones_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
-    cuit = 30718402235
+    cuit = request.user.username
 
     # ARMAR PRIMER OBJETO CON NRO DE CUIL
     conexion = conectarSQL()
@@ -1134,7 +1138,7 @@ def op_retenciones_ajax(request):
     "ACRE001.TReNro"
     " from ACRE001 "
     " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro " 
-    " where ACRE001.RfcBenCUI=20175029185 AND ACRE001.Ac1Est<>'A' ")
+    " where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' ")
 
     # FILTRAR POR TIPO
     if request.POST.get('tipo_ajax'):
@@ -1163,7 +1167,7 @@ def op_retenciones_ajax(request):
 def op_retenciones_pdf(request):
     """ IMPRESOR DE RETENCIONES """
     template_name = 'proveedores/op_retenciones_pdf.html'
-    cuit = 20175029185
+    cuit = request.user.username
     tipo = request.POST.get('tipo')
     anio = request.POST.get('anio')
     cons = request.POST.get('cons')
@@ -1261,7 +1265,7 @@ def op_retenciones_excel(request):
         """ EXPORTADOR A EXCEL DE RETENCIONES """
         template_name = 'proveedores/op_retenciones_excel.html'
 
-        cuit = 30718402235
+        cuit = request.user.username
 
         conexion = conectarSQL()
         cursor = conexion.cursor()
@@ -1282,7 +1286,7 @@ def op_retenciones_excel(request):
                      "ACRE001.TReNro"
                      " from ACRE001 "
                      " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro "
-                     " where ACRE001.RfcBenCUI=20175029185 AND ACRE001.Ac1Est<>'A' ")
+                     " where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' ")
 
         # FILTRAR POR TIPO
         if request.POST.get('tipo_ajax'):
@@ -1304,3 +1308,53 @@ def op_retenciones_excel(request):
         }
 
         return generate_excel(request, template_name, context)
+
+
+
+def consultar_estado(request):
+    """ TRAER DATOS DE CEDULA FISCAL """
+
+    cuit = request.user.username
+    template_name = 'proveedores/op_proveedores_cedulas.html'
+
+    client = Client('http://www.rentasjujuyonline.gob.ar/consultacuit/ConsultaConstancia.asmx?WSDL')
+
+    # Realizar la llamada al método "Estado" del servicio con el parámetro cuit
+    response = client.service.Estado(cuit=cuit)
+
+    if response != 'No existen datos':
+
+        data = json.loads(response)
+
+        numero = data['Numero']
+        anio = data['Anio']
+        fecha_vigencia = data['FechaVigencia']
+        nombre = data['Nombre']
+        estado = data['Estado']
+        tipo = data['Tipo']
+        resultado = 'con'
+    else:
+
+        numero = ''
+        anio = ''
+        fecha_vigencia = ''
+        nombre = ''
+        estado = ''
+        tipo = ''
+        resultado = 'sin'
+
+    context =  {
+
+        'numero' : numero,
+        'anio' : anio,
+        'fecha_vigencia' :  fecha_vigencia,
+        'nombre' : nombre,
+        'estado' : estado,
+        'tipo' : tipo,
+        'resultado' : resultado
+    }
+
+    data = dict()
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+

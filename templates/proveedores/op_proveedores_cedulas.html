@@ -1,0 +1,27 @@
+
+    {% if resultado == 'con' %}
+    <div class="row">
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Número:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ numero }}</p></div>
+
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Año:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ anio }}</p></div>
+
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Fecha de Vigencia:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ fecha_vigencia }}</p></div>
+
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Nombre:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ nombre }}</p></div>
+
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Estado:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ estado }}</p></div>
+
+    <div class="col-sm-6 col-md-6 col-lg-2"><p class="fw-bold">Tipo:</p></div>
+    <div class="col-sm-6 col-md-6 col-lg-10"><p>{{ tipo }}</p></div>
+    </div>
+
+    {% else %}
+    <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12"><p class="fw-bold text-center">Sin resultados para mostrar!</p></div>
+    </div>
+    {% endif %}

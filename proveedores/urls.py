@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('proveedoresHome', login_required(views.proveedoresHome.as_view()), name="proveedoresHome"),
+    path('', login_required(views.proveedoresHome.as_view()), name="proveedoresHome"),
     path('op_pagadas', login_required(views.op_pagadas.as_view()), name="op_pagadas"),
     path('op_detalle', login_required(views.op_detalle), name="op_detalle"),
     path('op_pagadas_comprobante', login_required(views.op_pagadas_comprobante), name="op_pagadas_comprobante"),
@@ -27,4 +27,5 @@ urlpatterns = [
     path('op_retenciones_pdf', login_required(views.op_retenciones_pdf), name="op_retenciones_pdf"),
     path('op_retenciones_excel', login_required(views.op_retenciones_excel), name="op_retenciones_excel"),
 
+    path('consultar_estado/', login_required(views.consultar_estado), name='consultar_estado'),
 ]

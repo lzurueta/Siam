@@ -19,10 +19,9 @@
 
             <div class="row clearfix g-3">
 
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-12 col-md-12">
                     <div class="card profile-header mb-3">
                         <div class="body">
-                            <div class="profile-image"> <img src="{% if user.profile.foto %}{{ user.profile.foto.url }}{% else %} {% static 'assets/images/user.png' %} {% endif %}" class="rounded-circle" alt="" width="50"> </div>
                             <div>
                                 <h4 class="mb-0">{{ user.get_full_name }}</h4>
                             </div>

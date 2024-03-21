@@ -26,7 +26,7 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-lg-12">
-                  <p class="h5 fw-bold">CUIT DE CONSULTA: {{ cuit }}</p>
+                  <p class="h5 fw-bold">CUIT DE CONSULTA: {{ request.user.username }}</p>
                 </div>
               </div>
 
@@ -48,14 +48,13 @@
                       </div>
 
 
-                      <div class="accordion-header" hidden>
-                        <button class="accordion-button collapsed" type="button" id="btnCedulaFiscal" data-bs-toggle="collapse" data-bs-target="#divCedulaFiscal" aria-expanded="false" aria-controls="#divCedulaFiscal">
+                      <div class="accordion-header">
+                        <button onclick="verCF()" class="accordion-button collapsed" type="button" id="btnCedulaFiscal" data-bs-toggle="collapse" data-bs-target="#divCedulaFiscal" aria-expanded="false" aria-controls="#divCedulaFiscal">
                           Cédula Fiscal
                         </button>
                       </div>
                       <div id="divCedulaFiscal" class="accordion-collapse collapse" data-bs-parent="#accordion">
-                        <div class="accordion-body">
-
+                        <div class="accordion-body" id="body-CF">
                         </div>
                       </div>
 
@@ -93,7 +92,7 @@
 
   <script>
    $(document).ready(function(){
-       verDatosProveedor('30718402235');
+       verDatosProveedor('{{ request.user.username }}');
    });
 
   /******************************************************************************************/
@@ -144,35 +143,37 @@
   /******************************************************************************************/
 
 
-$(document).ready(function(){
-    // Número de CUIT a consultar
-    var cuit = '30718402235'; // Reemplaza esto con el CUIT que deseas consultar
+   /******************************************************************************************/
+  /************************************ FUNCION CF *******************************************/
+  /******************************************************************************************/
 
-    // Objeto con los datos a enviar al servicio web
-    var requestData = {
-        CUIT: cuit,
-        op: 'Estado'
-        // Otros parámetros que el servicio web pueda requerir
-    };
+  function verCF(){
 
-    $.ajax({
-        url: 'https://www.rentasjujuyonline.gob.ar/consultacuit/ConsultaConstancia.asmx',
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        data: requestData,
-        dataType: 'json',
-        success: function(data) {
-            // Manejo de la respuesta del servicio web
-            console.log('Respuesta del servicio web:', data);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al realizar la solicitud:', error);
-        }
-    });
-});
-   
+          var valores = {
+              "csrfmiddlewaretoken" : '{{csrf_token }}',
+          }
 
-  </script>
+          $("#body-CF").html('');
+
+          $.ajax({
+              url: '{% url 'consultar_estado' %}',
+              type: 'POST',
+              async:false,
+              data: valores,
+              dataType: 'json',
+              beforeSend: function () {
+                  $("#body-CF").html('<div class="row"><div class="col-lg-12 text-center mt-1"><i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div></div>');
+              },
+              success: function(data) {
+
+                  $("#body-CF").html(data.html_form);
+
+              },
+
+          });
+  }
+
+</script>
 
 
-  {% endblock %}
+{% endblock %}
