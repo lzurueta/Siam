@@ -207,6 +207,7 @@
           "render": function(data, type, row) {
 
             return '<button type="button" onclick="verPdf('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)"  class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></button>' +
+            ' <button type="button" onclick="verRetenciones('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Retenciones de la OP"><i class="fa fa-calculator"></i></button>'+
             ' <button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
             ' <button type="button" onclick="verComprobante('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`, `'+data.popnro+'`)" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
@@ -214,6 +215,40 @@
         },
       ]
     });
+  }
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  /******************************************************************************************/
+  /************************ FUNCION PARA EL BOTON VER RETENCIONES ***************************/
+  /******************************************************************************************/
+
+  function verRetenciones(OpaAnio,OpaNro,jurcod,repudo){
+
+    var valores = {
+        "csrfmiddlewaretoken" : '{{csrf_token }}',
+        "OpaAnio": OpaAnio,
+        "OpaNro": OpaNro,
+        "jurcod": jurcod,
+        "repudo": repudo,
+    }
+
+    $.ajax({
+    url: '{% url 'op_pagadas_retenciones' %}',
+    type: 'POST',
+    data: valores,
+    dataType: 'json',
+    success: function(data) {
+
+         $("#modal-detalle .modal-content").html(data.html_form);
+         $("#modal-detalle").modal("show");
+    },
+
+    });
+
+
   }
 
   /******************************************************************************************/

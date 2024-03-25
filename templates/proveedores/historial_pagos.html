@@ -99,9 +99,7 @@
                 <div class="col-lg-1">
                   <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
                 </div>
-                <div class="col-lg-1">
-                  <button class="btn btn-success w-100" type="button" onclick="op_retenciones_excel()" id="btnExcel" title="Exportar Excel"><i class="fa fa-file-excel-o"></i></button>
-                </div>
+
               </div>
 
               <!-- --------------------------------------------------------------------------------- -->
@@ -120,16 +118,13 @@
                   <tr>
                     <th>Año Const.</th>
                     <th>N° Const.</th>
-                    <th>Cod.Oper.</th>
+                    <th>Trenro</th>
                     <th>Fec.</th>
                     <th>Est.</th>
                     <th>N° OP</th>
                     <th>UDO</th>
                     <th>Jurisdicción</th>
-                    <th>Per.Mes</th>
-                    <th>Per.Año</th>
-                    <th>Imp.Oper.</th>
-                    <th></th>
+                    <th>popanio</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -149,141 +144,9 @@
   </div>
 
 
-  <!-- --------------------------------------------------------------------------------- -->
-  <!-- --------------------------------------------------------------------------------- -->
-  <!-- --------------------------------------------------------------------------------- -->
-
-  <div class="aux"></div>
-
   {% endblock %}
   {% block extraJS %}
   <script>
 
-  /******************************************************************************************/
-  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
-  /******************************************************************************************/
-
-  var tableOP;
-
-  function cargarTabla(){
-
-
-      $('#data_table_ajax').dataTable().fnClearTable();
-      $('#data_table_ajax').dataTable().fnDestroy();
-
-      var valores = {
-        "csrfmiddlewaretoken" : '{{ csrf_token }}',
-        "tipo_ajax": $("#tipo_ajax").val(),
-        "desde_ajax": $("#desde_ajax").val(),
-        "hasta_ajax": $("#hasta_ajax").val(),
-      }
-
-      tableOP = $('#data_table_ajax').DataTable({
-        autoWidth: false,
-        searching: false,
-        dom: 'Bfrtip',
-        buttons: [
-        'csv', 'print',
-        ],
-        language: {
-          url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
-        },
-        "ajax": {
-          "url": "{% url 'op_retenciones_ajax' %}",
-          "data": valores,
-          "async": true,
-          "type": "POST",
-          "dataSrc": ""
-        },
-        "columns": [
-        { "data": "ejerConstancia" },
-        { "data": "nroConstancia" },
-        { "data": "tipoRetencion" },
-        { "data": "fecRetencion" },
-        { "data": "estado" },
-        { "data": "nroOP" },
-        { "data": "udo" },
-        { "data": "jur" },
-        { "data": "mes" },
-        { "data": "anio" },
-        {"data" : "ImporteRetenido", "className": "text-right" },
-        {
-          "data": null,
-          "sortable": false,
-          "width" : "2%",
-          "className": "text-center",
-          "render": function(data, type, row) {
-
-            return  '<button type="button" onclick="verPdf(`'+data.TReNro+'`,'+data.ejerConstancia+',`'+data.nroConstancia+'`,`'+data.tipoRetencion+'`)" class="btn btn-outline-secondary js-detalle" title="Comprobante"><i class="fa fa-file-pdf-o"></i></button>'
-          }
-        },
-
-        ],
-        order: [[8, 'desc']]
-      });
-
-  }
-
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  /******************************************************************************************/
-  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
-  /******************************************************************************************/
-
-  $(document).ready(function(){
-    cargarTabla();
-  });
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  /******************************************************************************************/
-  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
-  /******************************************************************************************/
-
-  $("#btnBuscar").click(function(){
-    cargarTabla();
-  });
-
-  /******************************************************************************************/
-  /******************************************************************************************/
-  /******************************************************************************************/
-
-
-  function verPdf(tipo, anio, cons, trenro){
-
-    $(".aux").html('<form id="verPdf" action="{% url 'op_retenciones_pdf' %}" target="_blank" method="POST">{%  csrf_token %}' +
-        '<input name="tipo" value="'+tipo+'"/>' +
-        '<input name="anio" value="'+anio+'"/>' +
-        '<input name="cons" value="'+cons+'"/>' +
-        '<input name="trenro" value="'+trenro+'"/>' +
-        '</form>');
-
-    $("#verPdf").submit();
-
-    $(".aux").html('');
-
-   }
-   
-   
-  function op_retenciones_excel(){
-
-    $(".aux").html('<form id="explortarExcel" action="{% url 'op_retenciones_excel' %}" method="POST">{%  csrf_token %}' +
-        '<input name="tipo_ajax" value="'+$("#tipo_ajax").val()+'"/>' +
-        '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
-        '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
-        '</form>');
-
-    $("#explortarExcel").submit();
-
-    $(".aux").html('');
-
-   }
   </script>
   {% endblock %}

@@ -31,7 +31,6 @@ class SistemaHome(View):
 
 
 def registerUser(request):
-    # if request.method == "POST":
     form = registroUsuario(request.POST  or None)
     if request.method == "POST" and form.is_valid():
         username = form.cleaned_data.get('username')
@@ -49,6 +48,8 @@ def registerUser(request):
 
     return render(request, "registration/register.html", {'form' : form})
 
+def recuperarConstrasena(request):
+    return render(request, "registration/recPassword.html", {})
 
 class ProfileView(View):
 

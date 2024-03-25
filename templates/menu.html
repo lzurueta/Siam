@@ -1,9 +1,9 @@
 <nav id="left-sidebar-nav" class="sidebar-nav">
     <ul id="main-menu" class="metismenu">
         {% for grupo in user.groups.all %}
-        <li>
+        <li class="active">
             <a href="#" class="has-arrow"><i class="{{ grupo.icon }}"></i> <span>{{ grupo }}</span></a>
-            <ul>
+            <ul class="collapse in">
                 <li><a href="{% url 'proveedoresHome' %}">Inicio</a></li>
                 {% for menu in grupo.menugrupo_set.all %}
                     <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>

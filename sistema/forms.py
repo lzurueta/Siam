@@ -74,11 +74,11 @@ class registroUsuario(forms.Form):
             print('El número de CUIT ya se encuentra registrado.')
         return username
 
-        def clean_correo(self):
-            correo = self.cleaned_data.get('correo')
-            if User.objects.filter(email=correo).exists():
-                raise forms.ValidationError('El email ya se encuentra registrado.')
-            return correo
+    def clean_email(self):
+        correo = self.cleaned_data.get('email')
+        if User.objects.filter(email=correo).exists():
+         raise forms.ValidationError('El mail ya se encuentra registrado.')
+        return correo
 
     def clean_password2(self):
             password = self.cleaned_data.get('password')

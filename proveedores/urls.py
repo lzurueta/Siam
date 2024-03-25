@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path('', login_required(views.proveedoresHome.as_view()), name="proveedoresHome"),
     path('op_pagadas', login_required(views.op_pagadas.as_view()), name="op_pagadas"),
+    path('op_pagadas_retenciones', login_required(views.op_pagadas_retenciones), name="op_pagadas_retenciones"),
     path('op_detalle', login_required(views.op_detalle), name="op_detalle"),
     path('op_pagadas_comprobante', login_required(views.op_pagadas_comprobante), name="op_pagadas_comprobante"),
     path('op_imprimir', login_required(views.op_imprimir), name="op_imprimir"),
@@ -28,4 +29,6 @@ urlpatterns = [
     path('op_retenciones_excel', login_required(views.op_retenciones_excel), name="op_retenciones_excel"),
 
     path('consultar_estado/', login_required(views.consultar_estado), name='consultar_estado'),
+
+    path('historial_pagos', login_required(views.historial_pagos.as_view()), name="historial_pagos"),
 ]

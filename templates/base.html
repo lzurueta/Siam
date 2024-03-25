@@ -73,7 +73,7 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs">
                 <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#menu">Menu</a></li>
-                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#question"><i class="icon-question"></i></a></li>
+                <li class="nav-item" hidden><a class="nav-link" data-bs-toggle="tab" href="#question"><i class="icon-question"></i></a></li>
             </ul>
                 
             <!-- Tab panes -->
@@ -81,7 +81,7 @@
                 <div class="tab-pane active" id="menu">
                     {%  include 'menu.html' %}
                 </div>
-                <div class="tab-pane px-2" id="question">
+                <div class="tab-pane px-2" id="question" hidden>
                     {%  include 'menuAyuda.html' %}
                 </div>                
             </div>          

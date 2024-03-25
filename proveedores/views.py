@@ -232,7 +232,7 @@ def op_pagadas_ajax(request):
     "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
     "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
     "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
-    "where OPAGO2.BENCUI="+cuit+" and POPAGO.PopEst<>'A' ")
+    "where OPAGO2.BENCUI="+cuit+" and POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
 
 
     # FILTRAR POR EJERCICIO
@@ -343,6 +343,77 @@ def op_detalle(request):
         # Si la solicitud no es POST, devolver un error
         respuesta = {'error': 'Solicitud no permitida'}
         return JsonResponse(respuesta, status=405)
+
+
+def op_pagadas_retenciones(request):
+    """ VISTA DE RETENCIONES DE ORDEN DE COMPRA """
+    template_name = 'proveedores/op_pagadas_retenciones.html'
+    cuit = request.user.username
+    if request.method == 'POST':
+
+        OpaAnio = request.POST.get('OpaAnio')
+        OpaNro = request.POST.get('OpaNro')
+        jurcod = request.POST.get('jurcod')
+        repudo = request.POST.get('repudo')
+
+        conexion = conectarSQL()
+        cursor = conexion.cursor()
+
+        sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
+                     "OPAGO2.OpaNro as 'nroOP',"
+                     "OPAGO2.jurcod, "
+                     "OPAGO2.repudo,"
+                     " OPAGO2.OpaLug as 'lugar',"
+                     "format(OPAGO2.OpaEmi,'dd/MM/yyyy') as 'fecEmision',"
+                     " BENEFICIAR.BenNom as 'nombreProveedor',"
+                     " OPAGO2.BENCUI as 'cuit',"
+                     " OPAGO2.OpaNom as 'paguese'"
+                     " FROM OPAGO2 "
+                     "inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
+                     "where OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'")
+
+        cursor.execute(sql_query)
+        cabecera = cursor.fetchone()
+
+        sql_query = (" SELECT  "
+" ACRE001.Ac1CAn as 'ejerConstancia', "
+" ACRE001.Ac1CNu as 'nroConstancia', "
+" ACRE001.TReNro as 'tipoRetencion', "
+" format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
+" ACRE001.Ac1Est as 'estado', "
+" acre001.Ac1anio as 'ejerOP', "
+" ACRE001.Ac1opa as 'nroOP', "
+" ACRE001.Ac1jur as 'jur', "
+" ACRE001.Ac1udo as 'udo', "
+" ACRE001.PopAnio as 'ejer', "
+" ACRE001.Popnro as 'nroLiquidacion', "
+" ACRE00.Acrmes as 'mes', "
+" ACRE00.Acrano as 'anio', "
+" ACRE001.Ac1Ire as 'ImporteRetenido', "
+" ACRE001.Ac1Ali as 'ImporteAlicuota' "
+" from ACRE001 "
+" inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro  "
+" where ACRE001.RfcBenCUI='"+cuit+"' AND ACRE001.Ac1Est<>'A' and ACRE001.Ac1Ire>0 and ACRE001.Ac1opa="+OpaNro+" and ACRE001.Ac1anio="+OpaAnio+" and ACRE001.Ac1jur='"+jurcod+"' and ACRE001.Ac1udo='"+repudo+"' ")
+        cursor.execute(sql_query)
+        detalle = cursor.fetchall()
+
+        context = {
+            'titulo': 'Retenciones de la OP N° '+OpaNro,
+            'cabecera': cabecera,
+            "detalle": detalle
+
+        }
+
+
+        data = dict()
+        data['html_form'] = render_to_string(template_name, context, request=request)
+        return JsonResponse(data)
+
+    else:
+        # Si la solicitud no es POST, devolver un error
+        respuesta = {'error': 'Solicitud no permitida'}
+        return JsonResponse(respuesta, status=405)
+
 
 def op_pagadas_comprobante(request):
     """ VISTA DE DETALLE DE ORDEN DE COMPRA """
@@ -907,7 +978,7 @@ def op_pagadas_excel(request):
             " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
             " inner join OPAGO1 on OPAGO1.OpaAnio=POPAGO.OpaAnio AND OPAGO1.OpaNro=POPAGO.OpaNro AND OPAGO1.jurcod=POPAGO.jurcod AND OPAGO1.repudo=POPAGO.repudo "
             " inner join BENEFICIAR on OPAGO1.CpbBenCUI=BENEFICIAR.BENCUI "
-            " where OPAGO1.CpbBenCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' ")
+            " where OPAGO1.CpbBenCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
         else:
          sql_query = (" SELECT  "
             " case  "
@@ -954,7 +1025,7 @@ def op_pagadas_excel(request):
             " inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
             " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
             " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-            " WHERE OPAGO2.BENCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' ")
+            " WHERE OPAGO2.BENCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
 
 
         # FILTRAR POR EJERCICIO
@@ -1122,23 +1193,23 @@ def op_retenciones_ajax(request):
     conexion = conectarSQL()
     cursor = conexion.cursor()
 
-    sql_query = (" SELECT "
-    " ACRE001.Ac1CAn as 'ejerConstancia', "
-    " ACRE001.Ac1CNu as 'nroConstancia', "
-    " ACRE001.TReNro as 'tipoRetencion', "
-    " format( ACRE001.Ac1fec ,'dd/MM/yyyy') as 'fecRetencion', "
-    " ACRE001.Ac1Est as 'estado', "
-    " ACRE001.Ac1opa as 'nroOP', "
-    " ACRE001.Ac1jur as 'jur', "
-    " ACRE001.Ac1udo as 'udo', "
-    " ACRE001.PopAnio as 'ejer', "
-    " ACRE001.Popnro as 'nroLiquidacion', "
-    " ACRE00.Acrmes as 'mes', "
-    " ACRE00.Acrano as 'anio', "
-    "ACRE001.TReNro"
-    " from ACRE001 "
-    " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro " 
-    " where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' ")
+    sql_query = ("SELECT  "
+"  ACRE001.Ac1CAn as 'ejerConstancia', "
+"  ACRE001.Ac1CNu as 'nroConstancia', "
+"  ACRE001.TReNro as 'tipoRetencion', "
+"  format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
+"  ACRE001.Ac1Est as 'estado', "
+"  ACRE001.Ac1opa as 'nroOP', "
+"  ACRE001.Ac1jur as 'jur', "
+"  ACRE001.Ac1udo as 'udo', "
+"  ACRE001.PopAnio as 'ejer', "
+"  ACRE001.Popnro as 'nroLiquidacion', "
+"  ACRE00.Acrmes as 'mes', "
+"  ACRE00.Acrano as 'anio', "
+"  ACRE001.Ac1Ire as 'ImporteRetenido' "
+"  from ACRE001 "
+"  inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro "
+"  where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' and ACRE001.Ac1Ire > 0 ")
 
     # FILTRAR POR TIPO
     if request.POST.get('tipo_ajax'):
@@ -1357,4 +1428,23 @@ def consultar_estado(request):
     data = dict()
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
+
+class historial_pagos(View):
+    template_name = 'proveedores/historial_pagos.html'
+
+    def get_context_data(self, **kwargs):
+        cuit = self.request.user.username
+        anio = datetime.datetime.now().year
+
+        context = {
+            'titulo': "Historial de Pagos",
+            'anio': anio,
+        }
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
 
