@@ -35,16 +35,26 @@ def registerUser(request):
     if request.method == "POST" and form.is_valid():
         username = form.cleaned_data.get('username')
         nombre = form.cleaned_data.get('nombre')
+        nombreResponsable = form.cleaned_data.get('nombreResponsable')
+        apellidoResponsable = form.cleaned_data.get('apellidoResponsable')
+        dni = form.cleaned_data.get('dni')
+        caracter = form.cleaned_data.get('caracter')
         direccion = form.cleaned_data.get('direccion')
         telefono = str(form.cleaned_data.get('telefono'))
+        telefono_str = telefono if telefono != 'None' else '-'
         email = form.cleaned_data.get('email')
         password = form.cleaned_data.get('password')
 
         usuario = User.objects.create_user(username=username, first_name=nombre, email=email, password=password, is_active=False)
         if usuario:
-            profile = Profile.objects.create(user=usuario, nombre=nombre, direccion=direccion, email=email, telefono=telefono)
+            profile = Profile.objects.create(user=usuario, nombre=nombre, nombreResponsable=nombreResponsable, apellidoResponsable=apellidoResponsable, dni=dni, caracter=caracter, direccion=direccion, email=email, telefono=telefono)
             template_name = 'registration/declaracion_jurada_pdf.html'
-            return generate_pdf(request, template_name, {})
+
+            context = {
+                'profile': profile
+            }
+
+            return generate_pdf(request, template_name, context)
 
     return render(request, "registration/register.html", {'form' : form})
 

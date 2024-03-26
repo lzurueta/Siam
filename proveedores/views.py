@@ -4,6 +4,8 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.views import View
 
+from sistema.models import Profile
+
 from num2words import num2words
 
 from proveedores.models import CPOPAGO
@@ -614,134 +616,16 @@ def datos_proveedor(request):
 
 def datos_declaracion_jurada_imprimir(request):
     """ IMPRESOR DE DECLARACION JURADA """
-    template_name = 'proveedores/datos_declaracion_jurada_pdf.html'
 
-    cuit = request.user.username
+    template_name = 'registration/declaracion_jurada_pdf.html'
 
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
-
-    sql_query = ("SELECT "
-                 " BENEFICIAR.BENCUI as 'cuit', "
-                 " BENEFICIAR.BenDni as 'dni', "
-
-                 " BENEFICIAR.BenNom as 'apellidoNombre', "
-                 " BENEFICIAR.BenTpo as 'tipoSoc', "
-
-                 " BENEFICIAR.BenNo1 as 'nombreFantasia', "
-
-                 " format(BENEFICIAR.BenAlt, 'dd/MM/yyyy') as 'fecAlta', "
-                 " BENEFICIAR.BenTel as 'tel', "
-
-                 " BENEFICIAR.BenCel as 'cel', "
-
-                 " BENEFICIAR.BenMail as 'mail', "
-                 " case "
-
-                 " 	when BENEFICIAR.BenWap='S' then 'SI' "
-
-                 " 	when BENEFICIAR.BenWap='N' then 'NO' "
-                 " end as 'wappAsociado', "
-
-                 " BENEFICIAR.BenDom as 'domicilio', "
-
-                 " BENEFICIAR.BenNro as 'nroDomicilio', "
-                 " BENEFICIAR.PosCod as 'codPostal', "
-                 " POSTAL.PosLoc as 'localidad', "
-
-                 " POSTAL.PosPro as 'provincia', "
-                 " BENEFICIAR.BenPAl as 'pais', "
-
-                 " BENEFICIAR.BenDLe as 'domicilioLegal', "
-
-                 " BENEFICIAR.BenNLe as 'nroDomicilioLegal', "
-                 " BENEFICIAR.BenCPLe as 'codPostalLegal', "
-                 " BENEFICIAR.BenLLe as 'localidadLegal', "
-                 " BENEFICIAR.BenPLe as 'provinciaLegal', "
-                 " BENEFICIAR.BenPaLe as 'paisLegal', "
-
-                 " BENEFICIAR.BenDAl as 'domicilioAlternativo', "
-                 " BENEFICIAR.BenNAl as 'nroDomicilioAlternativo', "
-                 " BENEFICIAR.BenCPAl as 'codPostalAlternativo', "
-                 " BENEFICIAR.BenLAl as 'localidadAlternativo', "
-                 " BENEFICIAR.BenPAl as 'paisAlternativo', "
-
-                 " BENEFICIAR.BenCt3 as 'codRegistro',	 "
-
-                 " format(BENEFICIAR.BenSuF, 'dd/MM/yyyy') as 'vigenciaReg', "
-                 " case  "
-
-                 " 	when BENEFICIAR.BenIva='1' then 'Responsable Inscripto' "
-
-                 " 	when BENEFICIAR.BenIva='2' then 'Responsable No Inscripto' "
-                 " 	when BENEFICIAR.BenIva='3' then 'Exento' "
-
-                 " 	when BENEFICIAR.BenIva='4' then  'Responsable Monotributo' "
-                 " end as 'iva', "
-                 " case "
-
-                 " 	when BENEFICIAR.BenIva='4' then  BENEFICIAR.BenCat "
-                 " end as 'categoria', "
-                 " case  "
-
-                 " 	when BENEFICIAR.BenIbt='S' then 'Ingresos Brutos' "
-                 " 	when BENEFICIAR.BenIbt='N' then 'No Inscripto' "
-
-                 " 	when BENEFICIAR.BenIbt='M' then 'Convenio Multilateral' "
-                 " 	when BENEFICIAR.BenIbt='E' then 'Exento' "
-                 " end as 'ib', "
-
-                 " BENEFICIAR.BenIBr as 'nroIb', "
-
-                 " BENEFICIAR.BenNRes as 'resolucionIb', "
-
-                 " format(BENEFICIAR.BenVigR, 'dd/MM/yyyy' ) as 'vigenciaHasta', "
-                 " case  "
-
-                 " 	when BENEFICIAR.BenIgn='S' then 'Inscripto' "
-
-                 " 	when BENEFICIAR.BenIgn='I' then 'No Inscripto' "
-                 " 	when BENEFICIAR.BenIgn='N' then 'Exento' "
-                 " end as 'gan', "
-
-                 " BENEFICIAR.BenMcie as 'mesCierre', "
-
-                 " format(BENEFICIAR.BenFCS,'dd/MM/yyyy' ) as 'fecContrato', "
-                 " BENEFICIAR.BenRpu as 'regComercio', "
-                 " case "
-
-                 " 	when BENEFICIAR.BenEpl='S' then 'SI' "
-
-                 " 	when BENEFICIAR.BenEpl='N' then 'NO' "
-                 " end as 'empleador', "
-
-                 " BENEFICIAR.BenCGP as 'codCgp' "
-                 " from BENEFICIAR  "
-
-                 " inner join POSTAL on POSTAL.PosCod=BENEFICIAR.PosCod "
-                 " where BENEFICIAR.BENCUI= " + str(cuit))
-
-    cursor.execute(sql_query)
-    detalle = cursor.fetchone()
-
-    sql_query = ("SELECT "
-                 " BFACT00.ActCod as 'codActividad', "
-                 " ACTIVIDAD.ActDes as 'actividad' "
-                 " from BFACT00 "
-                 " inner join ACTIVIDAD on ACTIVIDAD.ActCod= BFACT00.ActCod"
-                 " where BFACT00.BENCUI=" + str(cuit))
-
-    cursor.execute(sql_query)
-    actividad = cursor.fetchall()
+    profile = Profile.objects.get(user=request.user)
 
     context = {
-        'detalle': detalle,
-        'actividad': actividad
+        'profile': profile
     }
 
-
     return generate_pdf(request, template_name, context)
-
 
 
 class op_impagas(View):

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db import models
 import re
 
 
@@ -20,19 +21,56 @@ class NewUserForm(UserCreationForm):
 
 
 class registroUsuario(forms.Form):
+
+    OPCIONES = (
+        ('T', 'TITULAR'),
+        ('R', 'RESPONSABLE'),
+    )
+
     username = forms.CharField(required=True, widget=forms.TextInput(attrs={
-        'placeholder': 'CUIL',
+        'placeholder': 'CUIL/CUIT',
         'autocomplete': 'off',
         'required': True,
         'class': 'form-control',
-        # 'type': 'number'
+        'type': 'number'
     }))
+
     nombre = forms.CharField(required=True, widget=forms.TextInput(attrs={
-        'placeholder': 'Nombre Proveedor',
+        'placeholder': 'Razón Social',
         'autocomplete': 'off',
         'required': True,
         'class': 'form-control'
     }))
+
+    nombreResponsable = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'Nombre Responsable',
+        'autocomplete': 'off',
+        'required': True,
+        'class': 'form-control'
+    }))
+
+    apellidoResponsable = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'Apellido Responsable',
+        'autocomplete': 'off',
+        'required': True,
+        'class': 'form-control'
+    }))
+
+    dni = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'placeholder': 'DNI',
+        'autocomplete': 'off',
+        'required': True,
+        'class': 'form-control',
+        'type': 'number'
+    }))
+
+    caracter = forms.ChoiceField(choices=OPCIONES, widget=forms.Select(attrs={
+        'placeholder': 'Carácter',
+        'autocomplete': 'off',
+        'required': True,
+        'class': 'form-control',
+    }))
+
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
         'class': 'form-control',
         'autocomplete': 'off',
@@ -42,14 +80,14 @@ class registroUsuario(forms.Form):
     direccion = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'autocomplete': 'off',
-        'placeholder': 'Dirección',
+        'placeholder': 'Dirección y C.P.',
         'required': True
     }))
     telefono = forms.IntegerField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'type': 'number',
         'autocomplete': 'off',
-        'placeholder': 'Teléfono',
+        'placeholder': 'Celular',
         'required': False,
         'max_length': 20
     }))

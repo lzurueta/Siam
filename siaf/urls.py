@@ -24,8 +24,7 @@ from siaf import settings
 
 urlpatterns = [
     path('', login_required(sistema.views.SistemaHome.as_view()), name="index"),
-    path("registerUser", sistema.views.registerUser, name="registerUser"),
-    path('admin/', admin.site.urls),
+    path('admin/panel_administrativo', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('sistema/', include('sistema.urls')),
     path('proveedores/', include('proveedores.urls')),

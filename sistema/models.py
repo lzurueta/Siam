@@ -7,9 +7,18 @@ Group.add_to_class('home', models.CharField(max_length=150, null=True, blank=Tru
 Group.add_to_class('icon', models.CharField(max_length=150, null=True, blank=True, verbose_name="Icono"))
 
 class Profile(models.Model):
+    OPCIONES = (
+        ('T', 'TITULAR'),
+        ('R', 'RESPONSABLE'),
+    )
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=150, null=False, blank=True)
+    nombreResponsable = models.CharField(max_length=150, null=False, blank=True)
+    apellidoResponsable = models.CharField(max_length=150, null=False, blank=True)
+    dni = models.IntegerField(null=True, default=None)
     direccion = models.CharField(max_length=150, null=False, blank=True)
+    caracter = models.CharField(max_length=10, choices=OPCIONES)
     email = models.EmailField(null=False, blank=True)
     telefono = models.CharField(max_length=50, null=True, blank=True)
     foto = models.ImageField(null=True, blank=True, upload_to='sistema/profile_images')
