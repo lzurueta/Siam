@@ -11,5 +11,6 @@ urlpatterns = [
     path('logout_view', login_required(views.logout_view.as_view()), name="logout_view"),
     path('registrarse', views.registerUser, name="registrarUsuario"),
     path('recuperarConstrasena', views.recuperarConstrasena, name="recuperarConstrasena"),
+    path('home', views.home.as_view(), name="home"),
 ]
 

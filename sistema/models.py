@@ -22,7 +22,9 @@ class Profile(models.Model):
     email = models.EmailField(null=False, blank=True)
     telefono = models.CharField(max_length=50, null=True, blank=True)
     foto = models.ImageField(null=True, blank=True, upload_to='sistema/profile_images')
-
+    create_at = models.DateTimeField(auto_now_add=True)
+    activate_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    disabled_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     def __str__(self):
         return self.user.username
 
@@ -31,7 +33,7 @@ class MenuGrupo(models.Model):
     grupo = models.ForeignKey(Group, verbose_name='Grupo', on_delete=models.CASCADE)
     url = models.CharField(max_length=150, null=True, blank=True, verbose_name="url")
     nombre = models.CharField(max_length=150, null=True, blank=True, verbose_name="nombre")
-
+    orden = models.IntegerField(null=False, default=0)
     def __str__(self):
         return self.grupo.name + ' ' + self.nombre
 

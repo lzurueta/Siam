@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.views import View
 
 from sistema.forms import NewUserForm, registroUsuario
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .models import Profile
 
 from sistema.functions import generate_pdf
@@ -25,9 +25,8 @@ class SistemaHome(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.groups.first():
-            return redirect(request.user.groups.first().home)
-        template_name = 'sistema/profile.html'
-        return render(request, template_name, self.get_context_data())
+            return redirect('/sistema/home')
+
 
 
 def registerUser(request):
@@ -46,6 +45,9 @@ def registerUser(request):
         password = form.cleaned_data.get('password')
 
         usuario = User.objects.create_user(username=username, first_name=nombre, email=email, password=password, is_active=False)
+        grupo = Group.objects.get(name='Proveedores')
+        usuario.groups.add(grupo)
+
         if usuario:
             profile = Profile.objects.create(user=usuario, nombre=nombre, nombreResponsable=nombreResponsable, apellidoResponsable=apellidoResponsable, dni=dni, caracter=caracter, direccion=direccion, email=email, telefono=telefono)
             template_name = 'registration/declaracion_jurada_pdf.html'
@@ -227,3 +229,21 @@ class abmEliminar(View):
         data = dict()
         data['html_form'] = "OK"
         return JsonResponse(data)
+
+class home(View):
+
+    template_name = 'sistema/home.html'
+
+    def get_context_data(self, **kwargs):
+
+
+        context = {
+            'titulo': "Inicio",
+        }
+        return context
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())
+
+    def post(self, request, *args, **kwargs):
+        return render(request, self.template_name, self.get_context_data())

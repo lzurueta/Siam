@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block extraCss %}
+{% endblock %}
+{% block main %}
+{% load static %}
+<div id="main-content" class="profilepage_2 blog-page">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row g-3">
+        <div class="col-lg-5 col-md-8 col-sm-12">
+          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
+            {{ titulo }}</h2>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'home' %}"><i class="icon-home"></i></a></li>
+              <li class="breadcrumb-item active">{{ titulo }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row clearfix">
+        <div class="card">
+          <div class="card-body">
+            <div class="col-lg-12">
+
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+              <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">CUIT/CUIL</span>
+                    </div>
+                      <input type="number" class="form-control"  name="cuit_ajax" id="cuit_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Razón Social</span>
+                    </div>
+                    <input type="text" class="form-control"  name="rs_ajax" id="rs_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Mail</span>
+                    </div>
+                    <input type="text" class="form-control"  name="mail_ajax" id="mail_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Cel.</span>
+                    </div>
+                    <input type="number" class="form-control"  name="celular_ajax" id="celular_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+                    </div>
+                    <input type="text" class="form-control"  name="nombre_ajax" id="nombre_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Apellido</span>
+                    </div>
+                    <input type="text" class="form-control"  name="apellido_ajax" id="apellido_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">DNI</span>
+                    </div>
+                    <input type="number" class="form-control"  name="dni_ajax" id="dni_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-2">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Domicilio</span>
+                    </div>
+                    <input type="text" class="form-control"  name="domicilio_ajax" id="domicilio_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-lg-1">
+                  <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+            </div>
+
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- ---------------------------------- TABLA  --------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+
+            <div class="table-responsive col-lg-12">
+              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                <thead>
+                  <tr>
+                    <th width="10%">CUIT</th>
+                    <th width="12%">Razón Social</th>
+                    <th width="10%">Nombre Resp.</th>
+                    <th width="10%">Apellido Resp.</th>
+                    <th width="10%">DNI</th>
+                    <th width="12%">Dirección</th>
+                    <th width="10%">Caracter</th>
+                    <th width="10%">Mail</th>
+                    <th width="10%">Cel</th>
+                    <th width="10%">Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+            <!-- --------------------------------------------------------------------------------- -->
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+  <div class="aux"></div>
+
+  {% endblock %}
+  {% block extraJS %}
+  <script>
+    /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
+  /******************************************************************************************/
+
+  var table;
+
+  function cargarTabla(){
+
+
+      $('#data_table_ajax').dataTable().fnClearTable();
+      $('#data_table_ajax').dataTable().fnDestroy();
+
+      var valores = {
+        "csrfmiddlewaretoken" : '{{ csrf_token }}',
+        "cuit_ajax": $("#cuit_ajax").val(),
+        "rs_ajax": $("#rs_ajax").val(),
+        "mail_ajax": $("#mail_ajax").val(),
+        "cel_ajax": $("#cel_ajax").val(),
+        "nombre_ajax": $("#nombre_ajax").val(),
+        "apellido_ajax": $("#apellido_ajax").val(),
+        "dni_ajax": $("#dni_ajax").val(),
+        "domicilio_ajax": $("#domicilio_ajax").val(),
+      }
+
+      table = $('#data_table_ajax').DataTable({
+        autoWidth: false,
+        searching: false,
+        dom: 'Bfrtip',
+        buttons: [
+        'csv', 'print',
+        ],
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+        },
+        "ajax": {
+          "url": "{% url 'administracion_usuarios_ajax' %}",
+          "data": valores,
+          "async": true,
+          "type": "POST",
+          "dataSrc": ""
+        },
+        "columns": [
+        { "data": "user__username" },
+        { "data": "nombre" },
+        { "data": "nombreResponsable" },
+        { "data": "apellidoResponsable" },
+        { "data": "dni" },
+        { "data": "direccion" },
+        {
+          "data": null,
+          "sortable": false,
+          "render": function(data, type, row) {
+            if (data.caracter == "T"){
+              return '<span>TITULAR</span>';
+            }else{
+              return '<span>RESPONSABLE</span>';
+            }
+          }
+        },
+        { "data": "email" },
+        { "data": "telefono" },
+        {
+          "data": null,
+          "sortable": false,
+          "width" : "2%",
+          "className": "text-center",
+          "render": function(data, type, row) {
+            if (data.user__is_active == true){
+              return '<span class="text-success fw-bold">ACTIVO</span>';
+            }else{
+              return '<span class="text-danger fw-bold">INACTIVO</span>';
+            }
+          }
+        },
+        {
+          "data": null,
+          "sortable": false,
+          "width" : "2%",
+          "className": "text-center",
+          "render": function(data, type, row) {
+
+            if (data.user__is_active == true){
+              return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Desactivar Usuario"><i class="fa fa-close"></i></button>'
+            }else{
+                return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button>'
+            }
+          }
+        },
+
+        ],
+        order: [[0, 'desc']]
+      });
+
+  }
+
+  /******************************************************************************************/
+  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
+  /******************************************************************************************/
+
+  $(document).ready(function(){
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
+  /******************************************************************************************/
+
+  $("#btnBuscar").click(function(){
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  function cambiarEstado(user, estado){
+
+    if(estado == true){
+      var nuevoEstado = 'ACTIVO';
+    }else{
+      var nuevoEstado = 'INACTIVO';
+    }
+
+    swal({
+      title: "Atención!",
+      text: "Está por cambiar el estado del usuario a "+nuevoEstado+".",
+      icon: "warning",
+      buttons: {
+        cancelar : {
+            text: "Cancelar",
+            className: "swal-button--cancel"
+        },
+        confirmar:  {
+            text: "Confirmar",
+            className: "swal-button--confirm"
+        },
+
+
+      },
+    }).then((value) => {
+      switch (value) {
+
+        case "confirmar":
+
+          var valores = {
+            "csrfmiddlewaretoken" : '{{csrf_token }}',
+            "user": user,
+            "estado": estado
+          }
+
+          $.ajax({
+           url: '{% url 'administracion_usuarios_estado' %}',
+           type: 'POST',
+           data: valores,
+           success: function(data) {
+
+               table.ajax.reload(null, false);
+
+           },
+         });
+
+        break;
+
+        case "cancelar":
+            swal.close()
+        break;
+
+      }
+    });
+
+  }
+
+  </script>
+  {% endblock %}
