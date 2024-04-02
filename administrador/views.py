@@ -4,6 +4,10 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from sistema.models import Profile
+import random
+import string
+from django.core.mail import send_mail
+
 class administracion_usuarios(View):
     template_name = 'administrador/administrador_usuarios.html'
 
@@ -75,3 +79,33 @@ def administracion_usuarios_estado(request):
     profile.save()
 
     return HttpResponse()
+
+
+def administracion_usuarios_actualizar_clave(request):
+    """GENERADOR DE NUEVA CLAVE DE USUARIO"""
+
+    user = request.POST.get('user')
+    letras_mayusculas = string.ascii_uppercase
+    letras_minusculas = string.ascii_lowercase
+    digitos = string.digits
+    caracteres_especiales = './?@#$%&*()-_+'
+
+    cadena = (random.choice(letras_mayusculas) +
+              random.choice(letras_minusculas) +
+              random.choice(digitos))
+
+    cadena += ''.join(random.choice(letras_mayusculas + letras_minusculas + digitos) for _ in range(8))
+
+
+    posicion_caracter_especial = random.randint(0, len(cadena) - 1)
+    cadena = cadena[:posicion_caracter_especial] + random.choice(caracteres_especiales) + cadena[ posicion_caracter_especial + 0:]
+
+    cadena_lista = list(cadena)
+    random.shuffle(cadena_lista)
+    cadena = ''.join(cadena_lista)
+
+    usuario = User.objects.get(id=user)
+    usuario.set_password(cadena)
+    usuario.save()
+
+    return JsonResponse({'clave': cadena})

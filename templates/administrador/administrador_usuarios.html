@@ -239,10 +239,14 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
+                console.log(data)
             if (data.user__is_active == true){
-              return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Desactivar Usuario"><i class="fa fa-close"></i></button>'
+              return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Desactivar Usuario"><i class="fa fa-close"></i></button> ' +
+                  '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button>'
+
             }else{
-                return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button>'
+                return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button> ' +
+                    '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button>'
             }
           }
         },
@@ -334,5 +338,54 @@
 
   }
 
+  function cambiarClave(user, username){
+
+    swal({
+      title: "Atención!",
+      text: "Está por actualizar la contraseña del usuario "+username+",  esta operación no se puede deshacer, la contraseña anterior se perderá. ¿Actualizar de todos modos?",
+      icon: "warning",
+      buttons: {
+        cancelar : {
+            text: "Cancelar",
+            className: "swal-button--cancel"
+        },
+        actualizar:  {
+            text: "Actualizar",
+            className: "swal-button--confirm"
+        },
+
+
+      },
+    }).then((value) => {
+      switch (value) {
+
+        case "actualizar":
+
+          var valores = {
+            "csrfmiddlewaretoken" : '{{csrf_token }}',
+            "user": user,
+          }
+
+          $.ajax({
+           url: '{% url 'administracion_usuarios_actualizar_clave' %}',
+           type: 'POST',
+           data: valores,
+           success: function(data) {
+               
+               swal('Operación Exitosa!', 'La nueva contraseña generada es: '+ data.clave , 'success');
+
+           },
+         });
+
+        break;
+
+        case "cancelar":
+            swal.close()
+        break;
+
+      }
+    });
+
+  }
   </script>
   {% endblock %}

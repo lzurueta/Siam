@@ -66,10 +66,18 @@ def recuperarConstrasena(request):
 class ProfileView(View):
 
     def get_context_data(self, **kwargs):
+
+        profile = Profile.objects.get(user=self.request.user)
+
         context = {
-            'titulo': "Profile",
+            'titulo': "Mis Datos",
+            'profile': profile
         }
         return context
+
+    def post(self, request, *args, **kwargs):
+        template_name = 'sistema/profile.html'
+        return render(request, template_name, self.get_context_data())
 
     def get(self, request, *args, **kwargs):
         template_name = 'sistema/profile.html'

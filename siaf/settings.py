@@ -27,7 +27,14 @@ SECRET_KEY = 'django-insecure-xlc9ygf7mpji)x!b1q$=b=20rj3!=^zlx+(nc_d+1rq+8s^wm_
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# Configuracion de correo
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp-mail.outlook.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'tesoreria@jujuy.gob.ar'
+# EMAIL_HOST_PASSWORD = 'T2s4r2r31$$'
 
 # Application definition
 
