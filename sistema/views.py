@@ -25,7 +25,7 @@ class SistemaHome(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.groups.first():
-            return redirect('/sistema/home')
+            return redirect('/sistema/')
 
 
 
