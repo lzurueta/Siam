@@ -54,7 +54,8 @@ def generate_excel(request, template, texto):
 def generate_pdf(request, template, texto, attachments=None):
     # Rendered
     html_string = render_to_string(template, texto)
-    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    #html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    html = HTML(string=html_string, base_url='.')
     result = html.write_pdf(presentational_hints=True, attachments=attachments)
 
     # Creating http response
@@ -73,7 +74,8 @@ def generate_pdf(request, template, texto, attachments=None):
 def generate_pdf_save(request, template, texto, nombre_archivo, attachments=None):
     # Rendered
     html_string = render_to_string(template, texto)
-    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    #html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    html = HTML(string=html_string, base_url='.')
     html.write_pdf(nombre_archivo, presentational_hints=True, attachments=attachments)
     return True
 
