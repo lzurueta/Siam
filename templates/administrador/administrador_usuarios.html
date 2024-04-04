@@ -241,14 +241,15 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
-                console.log(data)
             if (data.user__is_active == true){
               return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Desactivar Usuario"><i class="fa fa-close"></i></button> ' +
-                  '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button>'
+                  '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button> ' +
+                  '<button type="button" onclick="imprimirDJ('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Reimprimir Declaración Jurada"><i class="fa fa-print"></i></button>'
 
             }else{
-                return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button> ' +
-                    '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button>'
+              return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button> ' +
+                  '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button> ' +
+                  '<button type="button" onclick="imprimirDJ('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Reimprimir Declaración Jurada"><i class="fa fa-print"></i></button>'
             }
           }
         },
@@ -389,5 +390,17 @@
     });
 
   }
+
+
+  function imprimirDJ(user){
+
+    $(".aux").html('<form id="verPdf" action="{% url 'imprimir_dj' %}" target="_blank" method="POST">{%  csrf_token %}<input name="user" value="'+user+'"/></form>');
+
+    $("#verPdf").submit();
+
+    $(".aux").html('');
+
+  }
+
   </script>
   {% endblock %}

@@ -113,7 +113,7 @@ def op_imprimir(request):
     detalle = cursor.fetchall()
 
     sql_query = ("SELECT "
-                     "SUM(OPAGO1.OpaImp) as 'importeCpbte'"
+                     "SUM(OPAGO1.OpaImp) as 'importeCpbte' "
                      "from OPAGO1"
                      " INNER join OPAGO2 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo"
                      " WHERE OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'"
@@ -156,7 +156,7 @@ def op_imprimir(request):
                     " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
                     " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
                     " end as 'fecPago', "
-                    " POPAGO.Popimp as 'importeLiq' "
+                    " FORMAT(CAST(POPAGO.Popimp AS MONEY), '#,0.00', 'es-ES') as 'importeLiq' "
                     " FROM POPAGO  "
                     " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
                     " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
@@ -174,7 +174,7 @@ def op_imprimir(request):
     cursor.execute(sql_query)
     totalPagosAsoc = cursor.fetchone()
 
-    saldo = total[0] - totalPagosAsoc[0]
+    saldo = float(total[0]) - float(totalPagosAsoc[0])
 
     context = {
             'cabecera': cabecera,

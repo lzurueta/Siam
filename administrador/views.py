@@ -8,6 +8,8 @@ import random
 import string
 from django.core.mail import send_mail
 
+from sistema.functions import generate_pdf
+
 class administracion_usuarios(View):
     template_name = 'administrador/administrador_usuarios.html'
 
@@ -109,3 +111,15 @@ def administracion_usuarios_actualizar_clave(request):
     usuario.save()
 
     return JsonResponse({'clave': cadena})
+
+
+def imprimir_dj(request):
+
+    template_name = 'registration/declaracion_jurada_pdf.html'
+    profile = Profile.objects.get(user=request.POST.get('user'))
+
+    context = {
+        'profile': profile
+    }
+
+    return generate_pdf(request, template_name, context)

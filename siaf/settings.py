@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'tesoreria@jujuy.gob.ar'
-# EMAIL_HOST_PASSWORD = 'T2s4r2r31$$'
+# EMAIL_HOST_PASSWORD = 'Kuqu1104'
 
 # Application definition
 
