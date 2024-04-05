@@ -73,7 +73,9 @@ def op_imprimir(request):
                      "format(OPAGO2.OpaEmi,'dd/MM/yyyy') as 'fecEmision',"
                      " BENEFICIAR.BenNom as 'nombreProveedor',"
                      " OPAGO2.BENCUI as 'cuit',"
-                     " OPAGO2.OpaNom as 'paguese'"
+                     " OPAGO2.OpaNom as 'paguese',"
+                     "OPAGO2.jurcod,"
+                     "OPAGO2.repudo"
                      " FROM OPAGO2 "
                      "inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
                      "inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
@@ -156,7 +158,7 @@ def op_imprimir(request):
                     " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
                     " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
                     " end as 'fecPago', "
-                    " FORMAT(CAST(POPAGO.Popimp AS MONEY), '#,0.00', 'es-ES') as 'importeLiq' "
+                    " POPAGO.Popimp as 'importeLiq' "
                     " FROM POPAGO  "
                     " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
                     " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
@@ -174,7 +176,17 @@ def op_imprimir(request):
     cursor.execute(sql_query)
     totalPagosAsoc = cursor.fetchone()
 
-    saldo = float(total[0]) - float(totalPagosAsoc[0])
+    if total:
+        totalAux = float(total[0])
+    else:
+        totalAux = 0
+
+    if totalPagosAsoc:
+        totalPagosAsocAux = float(totalPagosAsoc[0])
+    else:
+        totalPagosAsocAux = 0
+
+    saldo = float(totalAux) - float(totalPagosAsocAux)
 
     context = {
             'cabecera': cabecera,
@@ -224,8 +236,8 @@ def op_pagadas_ajax(request):
     "	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')"
     "	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy')"
     "end as 'fecPago',"
-    "POPAGO.Popimp as 'importepago', "
-    "OPAGO2.Opapgd as 'pagado',"
+    "FORMAT(CAST( POPAGO.Popimp, '#,0.00', 'es-ES') as 'importepago', "
+    "FORMAT(CAST( OPAGO2.Opapgd, '#,0.00', 'es-ES') as 'pagado',"
     "REPARTICIO.RepDes as 'reparticion',"
     "OPAGO2.BENCUI as 'cuit', "
     "POPAGO.Popnro as 'popnro' "
@@ -666,11 +678,11 @@ def op_impagas_ajax(request):
      " OPAGO2.OpaEst as 'estadoOPC', "
      " OPAGO2.OpaHaT as 'estadoOPT', "
      " OPAGO2.Opapgd as 'pagado', "
-     " (select "
+     " FORMAT(CAST((select "
      " sum(OPAGO1.opaimp) "
      " from OPAGO1 "
      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-     " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) as 'importeTotal', "
+     " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo), '#,0.00', 'es-ES') as 'importeTotal', "
      "((select "
      " sum(OPAGO1.opaimp) "
      " from OPAGO1 "

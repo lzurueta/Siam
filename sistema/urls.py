@@ -11,5 +11,6 @@ urlpatterns = [
     path('registrarse', views.registerUser, name="registrarUsuario"),
     # path('recuperarConstrasena', views.recuperarConstrasena, name="recuperarConstrasena"),
     path('', login_required(views.home.as_view()), name="home"),
+   
 ]
 

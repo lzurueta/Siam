@@ -22,6 +22,8 @@ from django.urls import path, include
 import sistema.views
 from siaf import settings
 
+from . import views
+
 urlpatterns = [
     path('', login_required(sistema.views.SistemaHome.as_view()), name="index"),
     path('admin/panel_administrativo', admin.site.urls),
@@ -29,6 +31,7 @@ urlpatterns = [
     path('sistema/', include('sistema.urls')),
     path('proveedores/', include('proveedores.urls')),
     path('administrador/', include('administrador.urls')),
+    path('sistema/declaracionJurada', views.enviarDeclaracionJurada, name="enviarDeclaracionJurada"),
 
 ]
 

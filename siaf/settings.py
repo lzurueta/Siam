@@ -16,7 +16,6 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -25,6 +24,11 @@ SECRET_KEY = 'django-insecure-xlc9ygf7mpji)x!b1q$=b=20rj3!=^zlx+(nc_d+1rq+8s^wm_
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+
+
+USE_L10N = True
+LANGUAGE_CODE = 'es-es'
 
 ALLOWED_HOSTS = ['*']
 # Configuracion de correo
@@ -159,3 +163,12 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_HOST = "smtp.office365.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "tesoreria@jujuy.gob.ar"
+SERVER_EMAIL = "tesoreria@jujuy.gob.ar"
+DEFAULT_FROM_EMAIL = "tesoreria@jujuy.gob.ar"
+EMAIL_HOST_PASSWORD = "XVaaQ1342!asdf!?"
+EMAIL_USE_TLS = True
+EMAIL_TIMEOUT = 60
