@@ -205,7 +205,7 @@
       <p style="text-align: center">{{ i.expediente}}</p>
     </div>
     <div class="box" style="width: 13.8% !important;">
-      <p style="text-align: right">{{ i.importeCpbte|floatformat:2|currency }}</p>
+      <p style="text-align: right">{{ i.importeCpbte }}</p>
     </div>
   </div>
 
@@ -258,7 +258,7 @@
          <p style="text-align: center">{{ j.fecPago}}</p>
         </div>
         <div class="box" style="width: 12.5% !important;">
-         <p style="text-align: right">{{ j.importeLiq|floatformat:2|currency}}</p>
+         <p style="text-align: right">{{ j.importeLiq}}</p>
         </div>
       </div>
 
@@ -276,11 +276,11 @@
     <div class="box text-right" style="width: 21.9% !important;">
       <div class="div">
         <div class="box text-left" style="width: 25% !important;"><p>Total</p></div>
-        <div class="box" style="width: 69.9% !important;"><p class="text-right">{{importe|floatformat:2|currency}}</p></div>
+        <div class="box" style="width: 69.9% !important;"><p class="text-right">{{importe}}</p></div>
       </div>
       <div class="div">
         <div class="box text-left" style="width: 25% !important;"><p>Saldo</p></div>
-        <div class="box" style="width: 69.9% !important;"><p class="text-right">{{saldo|floatformat:2|currency}}</p></div>
+        <div class="box" style="width: 69.9% !important;"><p class="text-right">{{saldo}}</p></div>
       </div>
     </div>
   </div>
