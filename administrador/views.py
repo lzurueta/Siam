@@ -139,9 +139,11 @@ def imprimir_dj(request):
 
     template_name = 'registration/declaracion_jurada_pdf.html'
     profile = Profile.objects.get(user=request.POST.get('user'))
+    user = User.objects.get(id=request.POST.get('user'))
 
     context = {
-        'profile': profile
+        'profile': profile,
+        'user': user
     }
 
     return generate_pdf(request, template_name, context)
