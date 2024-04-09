@@ -15617,7 +15617,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .auth-box {
-    width: 380px;
+    width: 450px;
     height: auto;
     margin-left: 130px
 }
@@ -22778,13 +22778,13 @@ ul.list-connected-app>li:last-child .connected-app {
 }
 
 .navbar-fixed-top .navbar-right {
-    width: calc(100% - 50%) !important;
+    width: calc(100% - 70%) !important;
 }
 
 .navbar-fixed-top .navbar-brand img {
-    width: 250px !important;
+    width: 300px !important;
 }
 
-.auth-box .top img {
-    width: 250px !important;
+.img-login {
+    width: 100% !important;
 }

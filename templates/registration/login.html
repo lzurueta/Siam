@@ -25,13 +25,11 @@
 		<div class="vertical-align-wrap">
 			<div class="vertical-align-middle auth-main">
 				<div class="auth-box">
-                    <div class="top">
-                        <img  src="{% static 'assets/images/logo-blanco.png' %}" alt="Lucid">
-                    </div>
+
                     {% include 'messages.html' %}
 					<div class="card">
                         <div class="header">
-                            <p class="lead">Ingrese a su cuenta</p>
+                            <img class="img-login img-fluid"  src="{% static 'assets/images/logo-azul.png' %}" alt="Lucid">
                         </div>
                         <div class="body">
                               {% if form.errors %}
