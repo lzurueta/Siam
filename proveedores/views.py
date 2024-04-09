@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.views import View
+from requests import Session
 
 from sistema.models import Profile
 
@@ -13,7 +14,7 @@ from sistema.functions import generate_pdf,generate_excel, conectarSQL
 
 import datetime
 
-from zeep import Client
+from zeep import Client, Transport
 import json
 
 # Create your views here.
@@ -1283,8 +1284,11 @@ def consultar_estado(request):
 
     cuit = request.user.username
     template_name = 'proveedores/op_proveedores_cedulas.html'
-
-    client = Client('http://www.rentasjujuyonline.gob.ar/consultacuit/ConsultaConstancia.asmx?WSDL')
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://www.rentasjujuyonline.gob.ar/consultacuit/ConsultaConstancia.asmx?WSDL', transport=transport)
+    client.transport.session.verify = False
 
     # Realizar la llamada al método "Estado" del servicio con el parámetro cuit
     response = client.service.Estado(cuit=cuit)
