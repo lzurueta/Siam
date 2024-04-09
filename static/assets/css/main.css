@@ -22777,3 +22777,14 @@ ul.list-connected-app>li:last-child .connected-app {
     border-radius: 50px;
 }
 
+.navbar-fixed-top .navbar-right {
+    width: calc(100% - 50%) !important;
+}
+
+.navbar-fixed-top .navbar-brand img {
+    width: 250px !important;
+}
+
+.auth-box .top img {
+    width: 250px !important;
+}
