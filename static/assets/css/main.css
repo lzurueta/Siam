@@ -22788,3 +22788,8 @@ ul.list-connected-app>li:last-child .connected-app {
 .img-login {
     width: 100% !important;
 }
+
+
+.font-weight-bold{
+    font-weight: 400;
+}

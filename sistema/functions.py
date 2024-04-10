@@ -14,6 +14,7 @@ from openpyxl import Workbook
 from django.template.loader import render_to_string
 from bs4 import BeautifulSoup
 
+
 #import logging
 #logger = logging.getLogger('weasyprint')
 #logger.addHandler(logging.FileHandler('/var/log/weasyprint.log'))

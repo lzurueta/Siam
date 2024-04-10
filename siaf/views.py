@@ -1,14 +1,19 @@
 from sistema.models import Profile
 from sistema.functions import generate_pdf
+from django.contrib.auth.models import User
 
 def enviarDeclaracionJurada(request):
-    user = request.GET.get('a')
-
 
     template_name = 'registration/declaracion_jurada_pdf.html'
+
+    user = User.objects.get(id=request.GET.get('a'))
     profile = Profile.objects.get(user=user)
+
+
+
     context = {
-        'profile': profile
+        'profile': profile,
+        'user': user
     }
 
     return generate_pdf(request, template_name, context)

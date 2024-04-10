@@ -66,7 +66,7 @@ def registerUser(request):
 
             html = ('<p style="font-size:12px;">Estimada/o Proveedor</p>'
                     '<p style="font-size:12px;">Se registró el alta de su cuenta de Usuario de Proveedor. Para reimprimir su Declaración Jurada haga clic en el siguiente botón.'
-                    '<form method="GET" action="http://45.186.124.66/sistema/declaracionJurada"><input name="a" value="' + str(aux.pk) + '" hidden/><button type="submit">Reimprimir Declaración Jurada</button></form>.<br> </p>'
+                    '<form method="GET" action="http://45.186.124.66/sistema/declaracionJurada"><input name="a" value="' + str(aux.pk) + '" style="display:none"/><button type="submit">Reimprimir Declaración Jurada</button></form><br> </p>'
                     '<p style="font-size:12px;margin-top:20px"><img src="' + srcImg + '" width="110px" alt=""><br><br>Secretaria de Informática<br>Ministerio de Hacienda y Finanzas</p>'
                     '<p><hr style="width:100%"></p>'
                     '<p style="font-size:8px;">*Este es un mensaje automático. Por favor, no responda a este correo electrónico.</p>'
@@ -85,8 +85,6 @@ def registerUser(request):
 
     return render(request, "registration/register.html", {'form' : form})
 
-def recuperarConstrasena(request):
-    return render(request, "registration/recPassword.html", {})
 
 class ProfileView(View):
 
@@ -280,4 +278,5 @@ class home(View):
 
     def post(self, request, *args, **kwargs):
         return render(request, self.template_name, self.get_context_data())
+
 

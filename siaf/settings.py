@@ -162,6 +162,8 @@ MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_HOST = "smtp.office365.com"
@@ -171,4 +173,3 @@ SERVER_EMAIL = "tesoreria@jujuy.gob.ar"
 DEFAULT_FROM_EMAIL = "tesoreria@jujuy.gob.ar"
 EMAIL_HOST_PASSWORD = "XVaaQ1342!asdf!?"
 EMAIL_USE_TLS = True
-EMAIL_TIMEOUT = 60
