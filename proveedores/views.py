@@ -1292,7 +1292,7 @@ def consultar_estado(request):
 
     # Realizar la llamada al método "Estado" del servicio con el parámetro cuit
     response = client.service.Estado(cuit=cuit)
-
+    
     if response != 'No existen datos':
 
         data = json.loads(response)

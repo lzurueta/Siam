@@ -22770,6 +22770,8 @@ ul.list-connected-app>li:last-child .connected-app {
     padding-right: 1px;
     display: none;
     font-size: 35px;
+    background: #0cc144;
+    border: solid 1px #0cc144;
 }
 
 .btn-circle {
