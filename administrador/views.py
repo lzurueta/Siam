@@ -127,7 +127,7 @@ def administracion_usuarios_actualizar_clave(request):
     send_mail(
         'Actualización de Contraseña - Sistema de Proveedores.',
         '',
-        'tesoreria@jujuy.gob.ar',
+        'noreply@jujuy.gob.ar',
         [profile.email],
         html_message=html,
     )

@@ -82,7 +82,7 @@ def registerUser(request):
             send_mail(
                 'Alta de Usuario - Sistema de Proveedores.',
                 '',
-                'tesoreria@jujuy.gob.ar',
+                'noreply@jujuy.gob.ar',
                 [email],
                 html_message=html,
             )
