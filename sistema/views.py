@@ -206,3 +206,4 @@ class abmEliminar(View):
         data = dict()
         data['html_form'] = "OK"
         return JsonResponse(data)
+    
