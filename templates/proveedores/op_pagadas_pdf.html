@@ -255,7 +255,7 @@
          <p style="text-align: center">{{ j.fecAplic}}</p>
         </div>
         <div class="box" style="width: 13% !important;">
-         <p style="text-align: center">{{ j.fecPago}}</p>
+         <p style="text-align: center"> {% if j.fecPago is None %} - {% else %} {{ j.fecPago }} {% endif %}</p>
         </div>
         <div class="box" style="width: 12.5% !important;">
          <p style="text-align: right">{{ j.importeLiq}}</p>
