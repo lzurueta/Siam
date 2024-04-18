@@ -252,13 +252,13 @@ def op_pagadas_ajax(request):
 
     # FILTRAR POR EJERCICIO
     if request.POST.get('ejer_ajax'):
-        sql_query = sql_query + " AND POPAGO.OpaAnio=" + request.POST.get('ejer_ajax')
+        sql_query = sql_query + " AND POPAGO.OpaAnio='" + request.POST.get('ejer_ajax') + "'"
     # FILTRAR POR JURISDICCION
     if request.POST.get('jur_ajax'):
-        sql_query = sql_query + " AND POPAGO.jurcod=" + request.POST.get('jur_ajax')
+        sql_query = sql_query + " AND POPAGO.jurcod='" + request.POST.get('jur_ajax') + "'"
     # FILTRAR POR UNIDAD DE JURISDICCION
     if request.POST.get('udo_ajax'):
-        sql_query = sql_query + " AND POPAGO.repudo=" + request.POST.get('udo_ajax')
+        sql_query = sql_query + " AND POPAGO.repudo='" + request.POST.get('udo_ajax') + "'"
     # FILTRAR POR NRO DE OP
     if request.POST.get('nro_op_ajax'):
        sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
@@ -704,10 +704,10 @@ def op_impagas_ajax(request):
         sql_query = sql_query + " AND OPAGO2.OpaAnio=" + request.POST.get('ejer_ajax')
     # FILTRAR POR JURISDICCION
     if request.POST.get('jur_ajax'):
-        sql_query = sql_query + " AND POPAGO2.jurcod='" + str(request.POST.get('jur_ajax')) + "' "
+        sql_query = sql_query + " AND OPAGO2.jurcod='" + str(request.POST.get('jur_ajax')) + "' "
     # FILTRAR POR UNIDAD DE JURISDICCION
     if request.POST.get('udo_ajax'):
-        sql_query = sql_query + " AND POPAGO2.repudo='" + str(request.POST.get('udo_ajax')) + "' "
+        sql_query = sql_query + " AND OPAGO2.repudo='" + str(request.POST.get('udo_ajax')) + "' "
     # FILTRAR POR NRO DE OP
     if request.POST.get('nro_op_ajax'):
         sql_query = sql_query + " AND POPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
