@@ -710,7 +710,7 @@ def op_impagas_ajax(request):
         sql_query = sql_query + " AND OPAGO2.repudo='" + str(request.POST.get('udo_ajax')) + "' "
     # FILTRAR POR NRO DE OP
     if request.POST.get('nro_op_ajax'):
-        sql_query = sql_query + " AND POPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
+        sql_query = sql_query + " AND OPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
     # FILTRAR POR ESTADO
     if request.POST.get('estado_ajax') != 'T':
         if request.POST.get('estado_ajax') == 'S':
