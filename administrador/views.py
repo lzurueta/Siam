@@ -14,6 +14,7 @@ from sistema.functions import generate_pdf
 class administracion_usuarios(View):
     template_name = 'administrador/administrador_usuarios.html'
 
+
     def get_context_data(self, **kwargs):
 
         context = {
@@ -147,3 +148,4 @@ def imprimir_dj(request):
     }
 
     return generate_pdf(request, template_name, context)
+

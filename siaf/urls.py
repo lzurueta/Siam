@@ -31,6 +31,8 @@ urlpatterns = [
     path('sistema/', include('sistema.urls')),
     path('proveedores/', include('proveedores.urls')),
     path('administrador/', include('administrador.urls')),
+    path('tablero/', include('tablero.urls')),
+    path('prensa/', include('prensa.urls')),
     path('sistema/declaracionJurada', views.enviarDeclaracionJurada, name="enviarDeclaracionJurada"),
 
 ]

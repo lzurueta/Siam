@@ -97,3 +97,16 @@ def conectarSQL():
 
     return conexion
 
+def traerIndex(request):
+    grupos_usuario = request.user.groups.all()
+
+    if grupos_usuario.filter(name='Tablero').exists():
+        index = '/tablero/'
+
+    elif grupos_usuario.filter(name='Prensa').exists():
+        index = '/prensa/'
+
+    else:
+        index = '/sistema/'
+
+    return index

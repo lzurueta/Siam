@@ -35,7 +35,7 @@
                         </div>
                         <div class="body">
                         <p class="lead font-weight-bold mb-3">Usuario Nuevo</p>
-                            <form method="POST" action="{% url 'registrarUsuario' %}" class="form-auth-small">
+                            <form method="POST" action="{% url 'registrarUsuario' %}" class="form-auth-small" novalidate>
                                 {% csrf_token %}
 
                                 {% for m in form %}

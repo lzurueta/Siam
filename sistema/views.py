@@ -16,7 +16,7 @@ from django.core.mail import send_mail
 
 import base64
 
-from sistema.functions import generate_pdf
+from sistema.functions import generate_pdf, traerIndex
 # Create your views here.
 
 class SistemaHome(View):
@@ -28,7 +28,15 @@ class SistemaHome(View):
         return context
 
     def get(self, request, *args, **kwargs):
-            return redirect('/sistema/')
+
+            grupos_usuario = request.user.groups.all()
+
+            if grupos_usuario.filter(name='Tablero').exists():
+                return redirect('/tablero/')
+            else:
+                return redirect('/sistema/')
+
+
 
 
 
@@ -100,7 +108,8 @@ class ProfileView(View):
 
         context = {
             'titulo': "Mis Datos",
-            'profile': profile
+            'profile': profile,
+            'index': traerIndex(self.request)
         }
         return context
 

@@ -2361,7 +2361,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   // This is included with the Parsley library itself,
   // thus there is no use in adding it to your project.
   Parsley.addMessages('en', {
-    defaultMessage: "This value seems to be invalid.",
+    defaultMessage: "Este valor no es válido.",
     type: {
       email: "This value should be a valid email.",
       url: "This value should be a valid url.",
@@ -2371,8 +2371,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       alphanum: "This value should be alphanumeric."
     },
     notblank: "This value should not be blank.",
-    required: "This value is required.",
-    pattern: "This value seems to be invalid.",
+    required: "Este valor es obligstorio.",
+    pattern: "Este valor no es válido.",
     min: "This value should be greater than or equal to %s.",
     max: "This value should be lower than or equal to %s.",
     range: "This value should be between %s and %s.",

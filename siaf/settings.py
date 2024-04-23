@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "sistema",
     "proveedores",
     "administrador",
+    "tablero",
+    "prensa"
 ]
 
 MIDDLEWARE = [
