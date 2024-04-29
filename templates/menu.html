@@ -5,7 +5,26 @@
             <a href="#" class="has-arrow"><i class="{{ grupo.icon }}"></i> <span>{{ grupo }}</span></a>
             <ul class="collapse in">
                 {% for menu in grupo.menugrupo_set.all|dictsort:"orden" %}
-                    <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>
+                    {%  if menu.grupo.id == 4 %}
+
+                        {% if menu.nombre == 'Auditoría' %}
+                           {% if 'prensa.admin_prensa' in user.get_all_permissions %}
+                            <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>
+                           {% endif %}
+                        {% else %}
+
+                            <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <li><a href="{{ menu.url }}">{{ menu.nombre }}</a></li>
+
+                    {% endif %}
+
+
+
                 {% endfor %}
             </ul>
         </li>

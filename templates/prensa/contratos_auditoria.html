@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% block extraCss %}
+{% endblock %}
+{% block main %}
+{% load static %}
+<div id="main-content" class="profilepage_2 blog-page">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row g-3">
+        <div class="col-lg-5 col-md-8 col-sm-12">
+          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a>
+            {{ titulo }}</h2>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{{ index }}"><i class="icon-home"></i></a></li>
+              <li class="breadcrumb-item active">{{ titulo }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12">
+
+          <div class="card">
+            <div class="card-body">
+
+                <div class="row mt-3">
+
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Título</span>
+      </div>
+      <input type="text" class="form-control" name="titulo_ajax" id="titulo_ajax" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Desc.</span>
+      </div>
+      <input type="text" class="form-control" name="desc_ajax" id="desc_ajax" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Detalle</span>
+      </div>
+      <input type="text" class="form-control" name="detalle_ajax" id="detalle_ajax" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">usuario</span>
+      </div>
+      <select class="form-control" name="usuario_ajax" id="usuario_ajax">
+          <option value="" selected></option>
+         {% for u in usuarios %}
+              <option value="{{ u.id }}">{{ u.username }} - {{ u.first_name }} {{ u.last_name }}</option>
+         {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
+      </div>
+      <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-3 col-lg-3">
+    <div class="input-group input-group-sm mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
+      </div>
+      <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="col-lg-1">
+    <button class="btn btn-primary w-100" type="button" onclick="cargarTabla()" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
+  </div>
+
+</div>
+
+
+                <div class="row mt-3">
+                <div class="table-responsive col-lg-12">
+                  <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                    <thead>
+                      <tr>
+                        <th width="20%">Título</th>
+                        <th width="20%">Descripción</th>
+                        <th width="20%">Detalle</th>
+                        <th width="20%">Usuario</th>
+                        <th width="20%">Fecha y Hora</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+
+  {% endblock %}
+  {% block extraJS %}
+  <script>
+
+  $(document).ready(function(){
+      cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
+  /******************************************************************************************/
+
+  var table;
+
+  function cargarTabla(){
+
+    $('#data_table_ajax').dataTable().fnClearTable();
+    $('#data_table_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "titulo" : $("#titulo_ajax").val(),
+      "desc" : $("#desc_ajax").val(),
+      "detalle" :  $("#detalle_ajax").val(), 
+      "usuario" :  $("#usuario_ajax").val(), 
+      "desde" :  $("#desde_ajax").val(),
+      "hasta" :  $("#hasta_ajax").val(),  
+    }
+
+    table = $('#data_table_ajax').DataTable({
+      dom: 'Bfrtip',
+      "deferRender": true,
+      "pageLength": 10,
+      "autoWidth": false,
+      "processing": false,
+      "searching" : false,
+
+      buttons: [],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+      },
+      "ajax": {
+        "url": "{% url 'auditoria_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+        "dataSrc": ""
+      },
+      'createdRow': function(row, data, rowIndex) {
+        // Per-cell function to do whatever needed with cells
+        $.each($('td', row), function(colIndex) {
+          // For example, adding data-* attributes to the cell
+          $(this).attr('title', $(this).text());
+        });
+      },
+      "columns": [
+
+        { "data": "title", "width": "20%" },
+        { "data": "description", "width": "20%" },
+        { "data": "detail", "width": "20%" },
+        {
+          "data": null,
+          "sortable": false,
+          "render": function(data, type, row) {
+            return data.user__first_name+', '+data.user__last_name;
+          }
+        },
+        { "data": "fecha_formateada", "width": "20%" },
+
+      ],
+      order: [[4, 'desc']]
+    });
+
+
+
+  }
+
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+
+  </script>
+
+{% endblock %}

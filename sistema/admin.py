@@ -5,7 +5,7 @@ from sistema.models import Profile, MenuGrupo, Ayuda
 
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'create_at', 'activate_at', 'disabled_at')
+    list_display = ('id', 'user', 'create_at', 'activate_at', 'disabled_at', 'observaciones')
 
 
 admin.site.register(Profile, ProfileAdmin)

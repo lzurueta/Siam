@@ -47,7 +47,7 @@
                   </div>
                 </div>
 
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Mail</span>
@@ -56,12 +56,25 @@
                   </div>
                 </div>
 
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Cel.</span>
                     </div>
                     <input type="number" class="form-control"  name="celular_ajax" id="celular_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                 <div class="col-sm-6 col-md-6 col-lg-2">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Estado</span>
+                    </div>
+                    <select class="form-control"  name="estado_ajax" id="estado_ajax">
+                        <option value=""></option>
+                        <option value="True">Activo</option>
+                        <option value="False">Inactivo</option>
+                    </select>
                   </div>
                 </div>
 
@@ -151,6 +164,24 @@
   </div>
 
 
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- ------------------------------ MODAL LG VACIO ----------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+
+  <div class="modal fade" id="modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+  <!-- --------------------------------------------------------------------------------- -->
+
+
+
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
@@ -182,6 +213,7 @@
         "apellido_ajax": $("#apellido_ajax").val(),
         "dni_ajax": $("#dni_ajax").val(),
         "domicilio_ajax": $("#domicilio_ajax").val(),
+        "estado_ajax" : $("#estado_ajax").val()
       }
 
       table = $('#data_table_ajax').DataTable({
@@ -244,18 +276,20 @@
             if (data.user__is_active == true){
               return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Desactivar Usuario"><i class="fa fa-close"></i></button> ' +
                   '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button> ' +
+                  '<button type="button" onclick="observacionUsuario('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Observación del usuario"><i class="fa fa-comment-o"></i></button> ' +
                   '<button type="button" onclick="imprimirDJ('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Reimprimir Declaración Jurada"><i class="fa fa-print"></i></button>'
 
             }else{
               return  '<button type="button" onclick="cambiarEstado('+data.user+', true)" class="btn btn-outline-secondary js-detalle" title="Activar Usuario"><i class="fa fa-check"></i></button> ' +
                   '<button type="button" onclick="cambiarClave('+data.user+', `'+data.user__username+'`)" class="btn btn-outline-secondary js-detalle" title="Actualizar Contraseña"><i class="fa fa-key"></i></button> ' +
+                  '<button type="button" onclick="observacionUsuario('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Observación del usuario"><i class="fa fa-comment-o"></i></button> ' +
                   '<button type="button" onclick="imprimirDJ('+data.user+')" class="btn btn-outline-secondary js-detalle" title="Reimprimir Declaración Jurada"><i class="fa fa-print"></i></button>'
             }
           }
         },
 
         ],
-        order: [[0, 'desc']]
+        order: [[1, 'asc']]
       });
 
   }
@@ -399,6 +433,30 @@
     $("#verPdf").submit();
 
     $(".aux").html('');
+
+  }
+
+
+  function observacionUsuario(id){
+
+    var valores = {
+        "csrfmiddlewaretoken" : '{{csrf_token }}',
+        "user": id
+    }
+      
+    $.ajax({
+    url: '{% url 'administracion_observacion' %}',
+    type: 'POST',
+    data: valores,
+    async: false,
+    dataType: 'json',
+    success: function(data) {
+
+         $("#modal .modal-content").html(data.html_form);
+         $("#modal").modal("show");
+    },
+
+    });
 
   }
 

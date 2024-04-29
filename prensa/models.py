@@ -33,3 +33,8 @@ class Contrato(models.Model):
     status = models.CharField(max_length=10, default='P', choices=OPCIONES, verbose_name="Estado")
     def __str__(self):
         return self.programa
+
+    class Meta:
+        verbose_name = u"Prensa"
+        verbose_name_plural = u"Prensa"
+        permissions = (("admin_prensa", "Admin  de Prensa"),)

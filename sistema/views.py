@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
 
-from sistema.forms import NewUserForm, registroUsuario
+from sistema.forms import NewUserForm, registroUsuario, editarPerfil
 from django.contrib.auth.models import User, Group
 from .models import Profile
 
@@ -29,12 +29,7 @@ class SistemaHome(View):
 
     def get(self, request, *args, **kwargs):
 
-            grupos_usuario = request.user.groups.all()
-
-            if grupos_usuario.filter(name='Tablero').exists():
-                return redirect('/tablero/')
-            else:
-                return redirect('/sistema/')
+            return redirect(traerIndex(request))
 
 
 
@@ -90,7 +85,7 @@ def registerUser(request):
             send_mail(
                 'Alta de Usuario - Sistema de Proveedores.',
                 '',
-                'noreply@jujuy.gob.ar',
+                'tesoreria@jujuy.gob.ar',
                 [email],
                 html_message=html,
             )
@@ -105,10 +100,11 @@ class ProfileView(View):
     def get_context_data(self, **kwargs):
 
         profile = Profile.objects.get(user=self.request.user)
-
+        form = editarPerfil()
         context = {
             'titulo': "Mis Datos",
             'profile': profile,
+            'form': form,
             'index': traerIndex(self.request)
         }
         return context
@@ -295,3 +291,38 @@ class home(View):
         return render(request, self.template_name, self.get_context_data())
 
 
+def traerInfoProfile(request):
+
+    profile = Profile.objects.get(user=request.user)
+    profile_data = profile.to_json()
+    return JsonResponse({'profile': profile_data})
+
+def submitProfile(request):
+
+
+    user = User.objects.get(username=request.user.username)
+    user.email = request.POST.get('email')
+    user.save()
+
+    profile = Profile.objects.get(user=request.user)
+    profile.nombreResponsable = request.POST.get('nombreResponsable')
+    profile.apellidoResponsable = request.POST.get('apellidoResponsable')
+    profile.dni = request.POST.get('dni')
+    profile.caracter = request.POST.get('caracter')
+    profile.email = request.POST.get('email')
+    profile.direccion = request.POST.get('direccion')
+    profile.telefono = request.POST.get('telefono')
+    profile.save()
+
+    return HttpResponse()
+
+
+def validarEmailProfile(request):
+    correo = request.POST.get('correo')
+
+    if User.objects.filter(email=correo).exclude(pk=request.user.pk).exists():
+        response_data = {'status': 'MAL'}
+    else:
+        response_data = {'status': 'OK'}
+
+    return JsonResponse(response_data)

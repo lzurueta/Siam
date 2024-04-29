@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <p class="h6">Obersavión del usuario {{ user.username }} </p>
+</div>
+<form method="POST" id="formObservacion" data-parsley-validate class="form-auth-small div-form">
+{% csrf_token %}
+<div class="modal-body">
+    <input id="profile" name="profile" value="{{ profile.pk }}" hidden >
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12">
+      <textarea class="form-control w-100" name="observacion" rows="10" placeholder="Observación" >{% if profile.observaciones != None %}{{ profile.observaciones }}{% endif %}</textarea>
+  </div>
+</div>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-default">Guardar</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" data-bs-dismiss="modal">Cerrar</button>
+</div>
+</form>
+
+<script>
+
+ $('#formObservacion').submit(function(event) {
+
+     event.preventDefault();
+
+      var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'administracion_actualizar_observacion' %}",
+            data: formData,
+            success: function(response) {
+                swal("Operación Exitosa!", "Se actualizó la observación del usuario.", "success");
+                $("#modal").modal("hide");
+            },
+        });
+
+ });
+
+
+</script>

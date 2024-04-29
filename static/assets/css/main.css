@@ -14626,27 +14626,25 @@ html.fullscreen-bg,html.fullscreen-bg body,html.fullscreen-bg #wrapper {
     margin-top: 2px
 }
 
-.navbar-fixed-top .navbar-right {
-    width: calc(100% - 250px)
-}
 
-@media screen and (max-width: 1024px) {
-    .navbar-fixed-top .navbar-right {
-        width:calc(100% - 150px)
-    }
-}
 
-@media screen and (max-width: 992px) {
-    .navbar-fixed-top .navbar-right {
-        width:calc(100% - 160px)
-    }
-}
+/*@media screen and (max-width: 1024px) {*/
+/*    .navbar-fixed-top .navbar-right {*/
+/*        width:calc(100% - 150px)*/
+/*    }*/
+/*}*/
 
-@media screen and (max-width: 768px) {
-    .navbar-fixed-top .navbar-right {
-        width:calc(100% - 160px)
-    }
-}
+/*@media screen and (max-width: 992px) {*/
+/*    .navbar-fixed-top .navbar-right {*/
+/*        width:calc(100% - 160px)*/
+/*    }*/
+/*}*/
+
+/*@media screen and (max-width: 768px) {*/
+/*    .navbar-fixed-top .navbar-right {*/
+/*        width:calc(100% - 160px)*/
+/*    }*/
+/*}*/
 
 .navbar-fixed-top .navbar-right #navbar-search {
     float: left;
@@ -22752,6 +22750,18 @@ ul.list-connected-app>li:last-child .connected-app {
     margin-top: -30px !important;
     }
 
+     .navbar-fixed-top .navbar-brand img {
+    width: 300px !important;
+    }
+
+}
+
+@media screen and (max-width: 768px){
+
+    .navbar-fixed-top .navbar-brand img {
+    width: 185px !important;
+    }
+
 }
 
 .swal-text {
@@ -22778,13 +22788,13 @@ ul.list-connected-app>li:last-child .connected-app {
     border-radius: 50px;
 }
 
-.navbar-fixed-top .navbar-right {
-    width: calc(100% - 70%) !important;
-}
+/*.navbar-fixed-top .navbar-right {*/
+/*    width: calc(100% - 70%) !important;*/
+/*}*/
 
-.navbar-fixed-top .navbar-brand img {
-    width: 300px !important;
-}
+/*.navbar-fixed-top .navbar-brand img {*/
+/*    width: 300px !important;*/
+/*}*/
 
 .img-login {
     width: 100% !important;
@@ -22795,3 +22805,11 @@ ul.list-connected-app>li:last-child .connected-app {
     font-weight: 400;
 }
 
+.hidden {
+    display: none !important;
+}
+
+
+.span-btn-register{
+    height: 35px;
+}

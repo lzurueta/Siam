@@ -16,6 +16,8 @@ urlpatterns = [
 
 
     path('', login_required(views.home.as_view()), name="home"),
-
+    path('traerInfoProfile', login_required(views.traerInfoProfile), name="traerInfoProfile"),
+    path('submitProfile', login_required(views.submitProfile), name="submitProfile"),
+    path('validarEmailProfile', login_required(views.validarEmailProfile), name="validarEmailProfile"),
 ]
 

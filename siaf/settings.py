@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     "proveedores",
     "administrador",
     "tablero",
-    "prensa"
+    "prensa",
+    "auditoria"
 ]
 
 MIDDLEWARE = [

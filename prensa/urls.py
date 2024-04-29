@@ -10,4 +10,9 @@ urlpatterns = [
     path('contrato_pdf', login_required(views.contrato_pdf), name="contrato_pdf"),
     path('autorizar_contrato', login_required(views.autorizar_contrato), name="autorizar_contrato"),
     path('denegar_contrato', login_required(views.denegar_contrato), name="denegar_contrato"),
+    path('datos_graficos', login_required(views.datos_graficos), name="datos_graficos"),
+
+
+    path('auditoria', login_required(views.auditoria.as_view()), name="auditoria"),
+    path('auditoria_ajax', login_required(views.auditoria_ajax.as_view()),name="auditoria_ajax"),
 ]

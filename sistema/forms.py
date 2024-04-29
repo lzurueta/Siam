@@ -87,9 +87,11 @@ class registroUsuario(forms.Form):
         'class': 'form-control',
         'type': 'number',
         'autocomplete': 'off',
-        'placeholder': 'Celular',
+        'placeholder': 'Celular (Ej.: 3885044907)',
         'required': False,
-        'max_length': 20
+        'max_length': 12,
+        'min_length': 8,
+        'onChange': 'controlarNumeroCel()'
     }))
     password = forms.CharField(required=True, widget=forms.PasswordInput(attrs={
         'class': 'form-control',
@@ -109,7 +111,6 @@ class registroUsuario(forms.Form):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('El número de CUIT ya se encuentra registrado.')
-            print('El número de CUIT ya se encuentra registrado.')
         return username
 
     def clean_email(self):
@@ -125,11 +126,11 @@ class registroUsuario(forms.Form):
             if password != password2:
                 raise forms.ValidationError('Las contraseñas no coinciden.')
             else:
-                if validar_contrasena(password) and len(password) >= 12:
+                if validar_contrasena(password) and len(password) >= 8:
                     return password2
                 else:
                     raise forms.ValidationError(
-                        'La contraseña debe tener al menos 12 caracteres, al menos una mayúscula, una minúsculas, un número y un simbolo especial.')
+                        'La contraseña debe tener al menos 8 caracteres, al menos una mayúscula, una minúsculas, un número y un simbolo especial.')
 
 
 def validar_contrasena(contrasena):
@@ -155,3 +156,71 @@ def validar_contrasena(contrasena):
 
     return True
 
+
+class editarPerfil(forms.Form):
+
+        OPCIONES = (
+            ('T', 'TITULAR'),
+            ('R', 'RESPONSABLE'),
+        )
+
+        nombreResponsable = forms.CharField(required=True, label="Nombre Responsable", widget=forms.TextInput(attrs={
+            'placeholder': '',
+            'autocomplete': 'off',
+            'required': True,
+            'class': 'form-control'
+        }))
+
+        apellidoResponsable = forms.CharField(required=True, label="Apellido Responsable", widget=forms.TextInput(attrs={
+            'placeholder': '',
+            'autocomplete': 'off',
+            'required': True,
+            'class': 'form-control'
+        }))
+
+        dni = forms.CharField(required=True, label="DNI", widget=forms.TextInput(attrs={
+            'placeholder': '',
+            'autocomplete': 'off',
+            'required': True,
+            'class': 'form-control',
+            'type': 'number'
+        }))
+
+        caracter = forms.ChoiceField(choices=OPCIONES, label="Carácter", widget=forms.Select(attrs={
+            'placeholder': '',
+            'autocomplete': 'off',
+            'required': True,
+            'class': 'form-control',
+        }))
+
+        email = forms.EmailField(required=True, label="Mail", widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'autocomplete': 'off',
+            'placeholder': '',
+            'required': True,
+            'onChange': 'validaciónEmail(this.value)'
+        }))
+
+        direccion = forms.CharField(required=True, label="Dirección y C.P.", widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'autocomplete': 'off',
+            'placeholder': '',
+            'required': True
+        }))
+
+        telefono = forms.IntegerField(required=False, label="Celular (Ej.: 3885044907)", widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'type': 'number',
+            'autocomplete': 'off',
+            'placeholder': '',
+            'required': False,
+            'max_length': 12,
+            'min_length': 8,
+            'onChange': 'controlarNumeroCel()'
+        }))
+
+        def clean_email(self):
+            correo = self.cleaned_data.get('email')
+            if User.objects.filter(email=correo).exists():
+                raise forms.ValidationError('El mail ya se encuentra registrado.')
+            return correo

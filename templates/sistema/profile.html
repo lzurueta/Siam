@@ -4,112 +4,277 @@
 {% block main %}
 {% load static %}
 <div id="main-content" class="profilepage_2 blog-page">
-        <div class="container-fluid">
-            <div class="block-header">
-                <div class="row g-3">
-                    <div class="col-lg-5 col-md-8 col-sm-12">
-                        <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> {{ titulo }}</h2>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ index }}"><i class="icon-home"></i></a></li>
-                            <li class="breadcrumb-item active">{{ titulo }}</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row clearfix g-3">
-
-                <div class="col-lg-12 col-md-12">
-                    <div class="card profile-header mb-3">
-                        <div class="body">
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">CUIT/CUIL:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.user.username }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Razón Social:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.nombre }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Nombre Responsable:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.nombreResponsable }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Apellido Responsable:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.apellidoResponsable }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">DNI:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.dni }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Carácter:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{% if profile.caracter == 'T' %}{{ "Titulor" }}{% else %}{{ "Responsable" }}{% endif %}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Mail:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.email }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Dirección/C.P.:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.direccion }}</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                              <div class="col-sm-6 col-md-6 col-lg-2">
-                                  <p class="fw-bold">Celular:</p>
-                              </div>
-                            <div class="col-sm-6 col-md-6 col-lg-10">
-                               <p>{{ profile.telefono }}</p>
-                            </div>
-                        </div>
-
-                       </div>
-                    </div>
-                </div>
-            </div>
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row g-3">
+        <div class="col-lg-5 col-md-8 col-sm-12">
+          <h2><a href="javascript:void(0);" class="btn btn-xs btn-link btn-toggle-fullwidth"><i class="fa fa-arrow-left"></i></a> {{ titulo }}</h2>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ index }}"><i class="icon-home"></i></a></li>
+            <li class="breadcrumb-item active">{{ titulo }}</li>
+          </ul>
         </div>
+      </div>
     </div>
+
+    <div class="row clearfix g-3">
+
+      <div class="col-lg-12 col-md-12">
+        <div class="card profile-header mb-3">
+          <div class="body">
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">CUIT/CUIL:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblUsername"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Razón Social:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblRS"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Nombre Responsable:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblNombreResponsable"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Apellido Responsable:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblApellidoResponsable"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">DNI:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblDni"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Carácter:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblCaracter"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Mail:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblEmail"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Dirección/C.P.:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblDireccion"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <p class="fw-bold">Celular:</p>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-10">
+                <p id="lblTelefono"></p>
+              </div>
+            </div>
+
+            <div class="row div-datos">
+              <div class="col-sm-6 col-md-6 col-lg-2">
+                <button onclick="abrirEditar()" class="btn btn-primary"><i class="fa fa-pencil"></i> Editar</button>
+              </div>
+            </div>
+
+
+            <div class="row div-form" style="display: none">
+              <div class="col-sm-12 col-md-12 col-lg-12">
+                <p class="lead font-weight-bold mb-3">Modificar Datos</p>
+              </div>
+            </div>
+
+            <form id="formProfile"  data-parsley-validate class="form-auth-small div-form" style="display: none">
+              <div class="row" >
+
+                {% csrf_token %}
+
+                {% for m in form %}
+
+                <div class="form-group col-lg-4 form-group mb-2">
+
+                  <label>{{ m.label }}</label>
+                  {{ m }}
+
+                </div>
+
+
+                {% endfor %}
+              </div>
+              <div class="row">
+                <div class="col-sm-12 col-md-2 offset-md-4 col-lg-2 offset-lg-4">
+                  <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                </div>
+                <div class="col-sm-12 col-md-2 col-md-offset-2 col-lg-2 col-lg-offset-4">
+                  <button type="button" id="btnCancelar" class="btn btn-primary w-100">Cancelar</button>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 {% block extraJS %}
+
+<script>
+
+function cargarInfo(){
+  var valores = {
+    "csrfmiddlewaretoken" : '{{csrf_token }}',
+  }
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'traerInfoProfile' %}",
+    data: valores,
+    async: false,
+    success: function(response) {
+
+      $("#lblUsername").text(response.profile.cuit);
+      $("#lblRS").text(response.profile.rs);
+
+      $("#lblNombreResponsable").text(response.profile.nombreResponsable);
+      $("#id_nombreResponsable").val(response.profile.nombreResponsable);
+
+      $("#lblApellidoResponsable").text(response.profile.apellidoResponsable);
+      $("#id_apellidoResponsable").val(response.profile.apellidoResponsable);
+
+      $("#lblDni").text(response.profile.dni);
+      $("#id_dni").val(response.profile.dni);
+
+      $("#lblCaracter").text(response.profile.caracter == 'T' ? 'Titular' : 'Responsable');
+      $("#id_caracter").val(response.profile.caracter)
+
+      $("#lblEmail").text(response.profile.email);
+      $("#id_email").val(response.profile.email);
+
+      $("#lblDireccion").text(response.profile.direccion);
+      $("#id_direccion").val(response.profile.direccion);
+
+      $("#lblTelefono").text(response.profile.telefono);
+      $("#id_telefono").val(response.profile.telefono);
+
+      $('.div-datos').show(200);
+      $(".div-form").hide(200);
+
+    }
+  });
+
+}
+
+
+function abrirEditar(){
+
+  $("#formProfile").trigger("reset").parsley().reset();
+
+  $("#id_nombreResponsable").val($("#lblNombreResponsable").text());
+  $("#id_apellidoResponsable").val($("#lblApellidoResponsable").text());
+  $("#id_dni").val($("#lblDni").text());
+  $("#id_email").val($("#lblEmail").text());
+  $("#id_direccion").val($("#lblDireccion").text());
+  $("#id_telefono").val($("#lblTelefono").text());
+
+  $('.div-datos').hide(200);
+  $(".div-form").show(200);
+}
+
+$("#btnCancelar").click(function(){
+
+    $('.div-datos').show(200);
+    $(".div-form").hide(200);
+
+});
+
+$(document).ready(function(){
+
+  $('#formProfile').parsley();
+  cargarInfo();
+
+
+});
+
+$('#formProfile').on('submit', function(event) {
+
+   event.preventDefault();
+
+    var form = $(this);
+    form.parsley().validate();
+
+    if (form.parsley().isValid()) {
+
+      $.ajax({
+      type: 'POST',
+      async: false,
+      url: "{% url 'submitProfile' %}",
+      data: $(this).serialize(),
+      success: function(data) {
+
+       cargarInfo();
+
+       }
+      });
+
+    }
+
+  });
+
+
+  function validaciónEmail(correo){
+
+     $.ajax({
+      type: 'POST',
+      async: false,
+      url: "{% url 'validarEmailProfile' %}",
+      data: {'csrfmiddlewaretoken' : '{{csrf_token }}', 'correo': correo},
+      success: function(data) {
+
+       if (data.status != 'OK'){
+           swal("Atención!", "El mail ingresado se encuentra registrado en otro usuario.","warning")
+           $("#id_email").val("");
+       }
+
+       }
+      });
+
+  }
+
+</script>
+
 {% endblock %}

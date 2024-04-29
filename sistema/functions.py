@@ -14,6 +14,9 @@ from openpyxl import Workbook
 from django.template.loader import render_to_string
 from bs4 import BeautifulSoup
 
+from auditoria.models import Auditoria
+
+from django.contrib.auth.models import Group
 
 #import logging
 #logger = logging.getLogger('weasyprint')
@@ -100,6 +103,7 @@ def conectarSQL():
 def traerIndex(request):
     grupos_usuario = request.user.groups.all()
 
+
     if grupos_usuario.filter(name='Tablero').exists():
         index = '/tablero/'
 
@@ -110,3 +114,11 @@ def traerIndex(request):
         index = '/sistema/'
 
     return index
+
+def traerPermisos(request):
+    listPermisos = request.user.get_all_permissions()
+    return listPermisos
+
+def insertAuditoria(usuario, nameGrupo, titulo, descripcion, detalle):
+    grupo = Group.objects.get(name=nameGrupo)
+    Auditoria.objects.create(user=usuario, grupo=grupo, title=titulo, description=descripcion, detail=detalle)

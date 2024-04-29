@@ -3,6 +3,8 @@
 {% endblock %}
 {% block main %}
 {% load static %}
+
+
 <div id="main-content" class="profilepage_2 blog-page">
   <div class="container-fluid">
     <div class="block-header">
@@ -33,7 +35,7 @@
                 </div>
               </div>
 
-              <form method="POST" id="formContratos" action="{% url 'submitContrato' %}"  data-parsley-validate class="form-auth-small div-form" style="display: none">
+              <form id="formContratos"  data-parsley-validate class="form-auth-small div-form" style="display: none">
                 <div class="row" >
 
                   {% csrf_token %}
@@ -59,17 +61,33 @@
                   </div>
                 </div>
               </form>
-
-
-              <div class="row div-table" style="display: none">
-                <div class="col-sm-12 col-md-6 col-lg-2">
+              {% if admin == True %}
+              <div class="row div-table-estadistica" style="display: none">
+                <div class="col-sm-12 col-md-6 col-lg-2 offset-lg-4 mt-3">
                   <button class="btn btn-light w-100" id="btnTabla"><i class="fa fa-table"></i> Tabla</button>
                 </div>
-                <div class="col-sm-12 col-md-6 col-lg-2">
+                <div class="col-sm-12 col-md-6 col-lg-2 mt-3">
                   <button class="btn btn-light w-100" id="btnEstadistica"><i class="fa icon-pie-chart"></i> Estadísticas</button>
                 </div>
               </div>
-              <div class="row mt-3 div-table" id="div-table"  style="display: none">
+             {% endif %}
+
+            <div class="row div-table" style="display: none" >
+
+                <div class="col-lg-3 offset-lg-4 col-md-3 offset-md-4 mt-3">
+                    <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">N° de Contrato</span>
+                    </div>
+                      <input type="number" class="form-control"  id="txt-nroSearch" autocomplete="off">
+                  </div>
+                </div>
+                <div class="col-lg-1 col-md-1 mt-3">
+                  <button onclick="cargarTabla()" class="btn btn-primary text-center w-100"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+
+              <div class="row mt-3 div-table" style="display: none">
                 <div class="table-responsive col-lg-12">
                   <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
                     <thead>
@@ -79,12 +97,14 @@
                         <th width="10%">CUIT</th>
                         <th width="10%">Medio</th>
                         <th width="10%">Programa</th>
-                        <th width="15%">Reparticón</th>
+                          <th width="10%">Repartición</th>
                         <th width="10%">Monto</th>
                         <th width="10%">Inicio</th>
                         <th width="10%">Fin</th>
                         <th width="10%">Estado</th>
+                        {% if admin == True %}
                         <th align="center"></th>
+                        {% endif %}
                       </tr>
                     </thead>
                     <tbody>
@@ -93,118 +113,133 @@
                 </div>
               </div>
 
-              <div class="row clearfix mt-3">
-                <div class="col-lg-3 col-md-6">
-                    <div class="card overflowhidden">
-                        <div class="body text-center">
-                            <div class="p-15">
-                                <h3>109</h3>
-                                <span>Contratos por Proveedores</span>
-                            </div>
-                        </div>
-                        <div class="progress progress-xs progress-transparent custom-color-blue mb-0">
-                            <div class="progress-bar" data-transitiongoal="87"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card overflowhidden">
-                        <div class="body text-center">
-                            <div class="p-15">
-                                <h3>318</h3>
-                                <span>Contratos por Repartición</span>
-                            </div>
-                        </div>
-                        <div class="progress progress-xs progress-transparent custom-color-yellow mb-0">
-                            <div class="progress-bar" data-transitiongoal="54"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card overflowhidden">
-                        <div class="body text-center">
-                            <div class="p-15">
-                                <h3>520</h3>
-                                <span>Contratos por Medios</span>
-                            </div>
-                        </div>
-                        <div class="progress progress-xs progress-transparent custom-color-green mb-0">
-                            <div class="progress-bar" data-transitiongoal="67"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="card overflowhidden">
-                        <div class="body text-center">
-                            <div class="p-15">
-                                <h3>$ 87.00</h3>
-                                <span>Monto Acumulado</span>
-                            </div>
-                        </div>
-                        <div class="progress progress-xs progress-transparent custom-color-purple mb-0">
-                            <div class="progress-bar" data-transitiongoal="34"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-              <div class="row mt-3">
+
+              <div class="row div-estadistica-search" style="display: none" >
+                <div class="col-lg-3 offset-lg-4 col-md-3 offset-md-4 mt-3">
+                  <input id="txt-anioSearch" type="number" class="form-control w-100" value="{% now "Y" %}">
+                </div>
+                <div class="col-lg-1 col-md-1 mt-3">
+                  <button onclick="cargarGraficos()" class="btn btn-primary text-center w-100"><i class="fa fa-search"></i></button>
+                </div>
+              </div>
+
+            <div class="row div-estadistica-load" style="display: none" >
+                <div class="col-lg-4 offset-lg-4 col-md-4 offset-md-4 mt-3">
+                  <h6 class="text-black text-center"><i class="font-40 fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i><br>Cargando gráficos</h6>
+                </div>
+              </div>
+
+              <div class="row clearfix div-estadistica" style="display: none" >
+                <div class="col-lg-3 col-md-6 mt-3">
+                  <div class="card overflowhidden">
+                    <div class="body text-center">
+                      <div class="p-15">
+                        <h3 id="lblContratosCP"></h3>
+                        <h7><i class="fa fa-user-o"></i> Proveedores Contratados</h7>
+                      </div>
+                    </div>
+                    <div class="progress progress-xs progress-transparent custom-color-blue mb-0">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mt-3">
+                  <div class="card overflowhidden">
+                    <div class="body text-center">
+                      <div class="p-15">
+                        <h3 id="lblContratosCR"></h3>
+                        <h7><i class="fa fa-file-text-o"></i> Reparticiones Contratantes</h7>
+                      </div>
+                    </div>
+                    <div class="progress progress-xs progress-transparent custom-color-yellow mb-0">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mt-3">
+                  <div class="card overflowhidden">
+                    <div class="body text-center">
+                      <div class="p-15">
+                        <h3 id="lblContratosCM"></h3>
+                        <h7><i class="fa fa-bullhorn"></i> Medios Utilizados</h7>
+                      </div>
+                    </div>
+                    <div class="progress progress-xs progress-transparent custom-color-green mb-0">
+                      <div class="progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mt-3">
+                  <div class="card overflowhidden">
+                    <div class="body text-center">
+                      <div class="p-15">
+                        <h3 id="lblContratosTM"></h3>
+                        <h7><i class="fa fa-usd"></i> Monto Acumulado</h7>
+                      </div>
+                    </div>
+                    <div class="progress progress-xs progress-transparent custom-color-purple mb-0">
+                      <div class="progress-bar" data-transitiongoal="34"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3 div-estadistica"  style="display: none">
 
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <h5 class="text-center text-black">Ranking por cantidad de contratos</h5>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card">
-
-                        <div class="body">
-                            <div class="row text-center">
-                                <div class="col-sm-12 col-12">
-                                    <h5 class="m-0">Ranking de proveedores</h5>
-                                </div>
-                            </div>
-                            <div id="bar-proveedor" class="graph m-t-20"></div>
-                        </div>
-                    </div>
+                  <h5 class="text-center text-black">Ranking por cantidad de contratos</h5>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card">
-
-                        <div class="body">
-                            <div class="row text-center">
-                                <div class="col-sm-12 col-12">
-                                    <h5 class="m-0">Ranking de reparticiones</h5>
-                                </div>
-                            </div>
-                            <div id="bar-reparticion" class="graph m-t-20"></div>
-                        </div>
-                    </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-CP"></div>
+                  </div>
                 </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card">
-
-                        <div class="body">
-                            <div class="row text-center">
-                                <div class="col-sm-12 col-12">
-                                    <h5 class="m-0">Ranking de medios</h5>
-                                </div>
-                            </div>
-                            <div id="bar-medios" class="graph m-t-20"></div>
-                        </div>
-                    </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-CR"></div>
+                  </div>
                 </div>
 
-            </div>
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-CM"></div>
+                  </div>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+                  <h5 class="text-center text-black">Ranking por montos pagados</h5>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-MP"></div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-MR"></div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12 col-sm-12">
+                  <div class="card">
+                    <div class="body body-MM"></div>
+                  </div>
+                </div>
 
               </div>
 
             </div>
+
           </div>
         </div>
       </div>
-
     </div>
+
   </div>
 
 
@@ -225,11 +260,10 @@
 
     $('#formContratos').parsley();
 
-    {#$(".div-table").show();#}
+    $(".div-table-estadistica, .div-table").show();
 
     cargarTabla();
 
-    cargarGraficos();
 
   });
 
@@ -251,6 +285,7 @@
 
     var valores = {
       "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "nro" : $("#txt-nroSearch").val()
     }
 
     table = $('#data_table_ajax').DataTable({
@@ -262,9 +297,12 @@
       "searching" : false,
 
       buttons: [
+
+
         {
           text: '<i class="fa fa-plus"></i> <span> Nuevo Contrato</span>',
-          className: 'table-btn-create',
+          className: 'btn-contrato btn btn-light mb-2 {% if admin != True %} hidden {% endif %}',
+          visibility: false,
           action: function ( e, dt, node, config ) {
             nuevoContrato();
           }
@@ -282,16 +320,23 @@
         "type": "POST",
         "dataSrc": ""
       },
+      'createdRow': function(row, data, rowIndex) {
+        // Per-cell function to do whatever needed with cells
+        $.each($('td', row), function(colIndex) {
+          // For example, adding data-* attributes to the cell
+          $(this).attr('title', $(this).text());
+        });
+      },
       "columns": [
-        { "data": "id" },
-        { "data": "user__profile__nombre" },
-        { "data": "user__username" },
-        { "data": "medio__nombre" },
-        { "data": "programa" },
-        { "data": "reparticion__nombre" },
-        { "data": "monto_formateado", className: 'text-right' },
-        { "data": "fechaInicio_formateada" },
-        { "data": "fechaFin_formateada" },
+        { "data": "id", "width": "5%" },
+        { "data": "user__profile__nombre", "width": "10%" },
+        { "data": "user__username", "width": "10%" },
+        { "data": "medio__nombre", "width": "10%" },
+        { "data": "programa", "width": "10%" },
+        { "data": "reparticion__nombre", "width": "15%" },
+        { "data": "monto_formateado", className: 'text-right', "width": "10%" },
+        { "data": "fechaInicio_formateada" , "width": "10%"},
+        { "data": "fechaFin_formateada" , "width": "10%"},
         {
           "data": null,
           "sortable": false,
@@ -312,7 +357,7 @@
           }
         },
 
-
+        {% if admin == True %}
         {
           "data": null,
           "sortable": false,
@@ -335,10 +380,16 @@
 
           }
         },
+        {% endif %}
 
       ],
+      initComplete: function (settings, json) {
+        $(".btn-contrato").removeClass("dt-button");
+      },
       {#order: [[0, 'desc']]#}
     });
+
+
 
   }
 
@@ -347,39 +398,52 @@
   /******************************************************************************************/
   /******************************************************************************************/
 
+
+  {% if admin == True %}
+
   function nuevoContrato(){
 
-    $(".div-table").hide(200);
+    $("#formContratos").trigger("reset").parsley().reset();
+    $(".div-table, .div-table-estadistica").hide(200);
     $(".div-form").show(200);
+
   }
 
   $("#btnCancelar").click(function(){
 
     $("#formContratos").trigger("reset").parsley().reset();
     $(".div-form").hide(200);
-    $(".div-table").show(200);
+    $(".div-table, .div-table-estadistica").show(200);
 
   });
 
 
-  $('#contrato-form').on('submit', function(event) {
-    event.preventDefault(); // Evita que el formulario se envíe normalmente
+  $('#formContratos').on('submit', function(event) {
 
-    // Realizar la solicitud POST utilizando AJAX
-    $.ajax({
+   event.preventDefault();
+
+    var form = $(this);
+    form.parsley().validate();
+
+    if (form.parsley().isValid()) {
+
+        $.ajax({
       type: 'POST',
       async: false,
-      url: $(this).attr('action'),
+      url: "{% url 'submitContrato' %}",
       data: $(this).serialize(),
-      success: function(response) {
+      success: function(data) {
 
-        $("#formContratos").trigger("reset").parsley().reset();
+        swal("Operación Exitosa!", "Se cargo exitosamente el contrato N° "+data.contrato, "success");
         $(".div-form").hide(200);
         table.ajax.reload(null, false);
-        $(".div-table").show(200);
+        $(".div-table, .div-table-estadistica").show(200);
 
-      }
-    });
+       }
+      });
+
+    }
+
   });
 
 
@@ -401,12 +465,12 @@
       icon: "warning",
       buttons: {
         cancelar : {
-            text: "Cancelar",
-            className: "swal-button--cancel"
+          text: "Cancelar",
+          className: "swal-button--cancel"
         },
         autorizar:  {
-            text: "Autorizar",
-            className: "swal-button--confirm"
+          text: "Autorizar",
+          className: "swal-button--confirm"
         },
 
 
@@ -416,26 +480,26 @@
 
         case "autorizar":
 
-          var valores = {
-            "csrfmiddlewaretoken" : '{{csrf_token }}',
-            "id": id,
-          }
+        var valores = {
+          "csrfmiddlewaretoken" : '{{csrf_token }}',
+          "id": id,
+        }
 
-          $.ajax({
-           url: '{% url 'autorizar_contrato' %}',
-           type: 'POST',
-           data: valores,
-           success: function(data) {
+        $.ajax({
+          url: '{% url 'autorizar_contrato' %}',
+          type: 'POST',
+          data: valores,
+          success: function(data) {
 
-               swal('Operación Exitosa!', 'El contrato fue Autorizado correatamente.' , 'success');
-               table.ajax.reload(null, false);
-           },
-         });
+            swal('Operación Exitosa!', 'El contrato fue Autorizado correatamente.' , 'success');
+            table.ajax.reload(null, false);
+          },
+        });
 
         break;
 
         case "cancelar":
-            swal.close()
+        swal.close()
         break;
 
       }
@@ -452,12 +516,12 @@
       icon: "warning",
       buttons: {
         cancelar : {
-            text: "Cancelar",
-            className: "swal-button--cancel"
+          text: "Cancelar",
+          className: "swal-button--cancel"
         },
         denegar:  {
-            text: "Denegar",
-            className: "swal-button--confirm"
+          text: "Denegar",
+          className: "swal-button--confirm"
         },
 
 
@@ -467,101 +531,264 @@
 
         case "denegar":
 
-          var valores = {
-            "csrfmiddlewaretoken" : '{{csrf_token }}',
-            "id": id,
-          }
+        var valores = {
+          "csrfmiddlewaretoken" : '{{csrf_token }}',
+          "id": id,
+        }
 
-          $.ajax({
-           url: '{% url 'denegar_contrato' %}',
-           type: 'POST',
-           data: valores,
-           success: function(data) {
+        $.ajax({
+          url: '{% url 'denegar_contrato' %}',
+          type: 'POST',
+          data: valores,
+          success: function(data) {
 
-               swal('Operación Exitosa!', 'El contrato fue Denegado correatamente.' , 'success');
-               table.ajax.reload(null, false);
-           },
-         });
+            swal('Operación Exitosa!', 'El contrato fue Denegado correatamente.' , 'success');
+            table.ajax.reload(null, false);
+          },
+        });
 
         break;
 
         case "cancelar":
-            swal.close()
+        swal.close()
         break;
 
       }
     });
   }
 
-function cargarGraficos() {
-
- Morris.Bar({
-  element: 'bar-proveedor',
-  data: [
-    { y: 'a', a: 100},
-    { y: 'b', a: 75},
-    { y: 'c', a: 20},
-    { y: 'd', a: 32},
-    { y: 'e', a: 45},
-    { y: 'f', a: 94},
-    { y: 'g', a: 76},
-    { y: 'h', a: 79},
-    { y: 'i', a: 34},
-    { y: 'j', a: 33}
-  ],
-  xkey: 'y',
-  ykeys: 'a',
-  labels: ['Cantidad'],
-     barColors: ['#6ebdd1'],
-        hideHover: 'auto',
-        gridLineColor: '#eeeeee',
-});
-
- Morris.Bar({
-  element: 'bar-reparticion',
-  data: [
-    { y: 'a', a: 100},
-    { y: 'b', a: 75},
-    { y: 'c', a: 20},
-    { y: 'd', a: 32},
-    { y: 'e', a: 45},
-    { y: 'f', a: 94},
-    { y: 'g', a: 76},
-    { y: 'h', a: 79},
-    { y: 'i', a: 34},
-    { y: 'j', a: 33}
-  ],
-  xkey: 'y',
-  ykeys: 'a',
-  labels: ['Cantidad'],
-     barColors: ['#afc979'],
-        hideHover: 'auto',
-        gridLineColor: '#eeeeee',
-});
 
 
- Morris.Bar({
-  element: 'bar-medios',
-  data: [
-    { y: 'a', a: 100},
-    { y: 'b', a: 75},
-    { y: 'c', a: 20},
-    { y: 'd', a: 32},
-    { y: 'e', a: 45},
-    { y: 'f', a: 94},
-    { y: 'g', a: 76},
-    { y: 'h', a: 79},
-    { y: 'i', a: 34},
-    { y: 'j', a: 33}
-  ],
-  xkey: 'y',
-  ykeys: 'a',
-  labels: ['Cantidad'],
-     barColors: ['#faab6c'],
-        hideHover: 'auto',
-        gridLineColor: '#eeeeee',
-});
+  function cargarGraficos() {
 
-}
+    $(".div-estadistica").hide();
+    $(".div-estadistica-search").show(200);
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "anio" : $("#txt-anioSearch").val()
+    }
+
+    array_top10_CP = [];
+    array_top10_MP = [];
+
+    array_top10_CR = [];
+    array_top10_MR = [];
+
+    array_top10_CM = [];
+    array_top10_MM = [];
+
+    $.ajax({
+      url: '{% url 'datos_graficos' %}',
+      type: 'POST',
+      data: valores,
+      async: true,
+      beforeSend: function ( xhr ) {
+          $(".div-estadistica-load").show(200);
+      },
+      dataType: 'json',
+      success: function(data) {
+        $(".div-estadistica-load").hide(200);
+        $(".div-estadistica").show(200);
+
+        $("#lblContratosCP").text(data.cantidad_proveedores);
+        $("#lblContratosCR").text(data.cantidad_reparticion);
+        $("#lblContratosCM").text(data.cantidad_medio);
+        $("#lblContratosTM").text("$ "+data.monto_acumulado);
+
+        array_top10_CP = data.top_10_arrayCP;
+        array_top10_MP = data.top_10_arrayMP;
+
+        array_top10_CR = data.top_10_arrayCR;
+        array_top10_MR = data.top_10_arrayMR;
+
+        array_top10_CM = data.top_10_arrayCM;
+        array_top10_MM = data.top_10_arrayMM;
+
+
+
+        $(".body-CP").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de proveedores</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-proveedor" style="height:400px" class="graph m-t-20 text-center">' +
+        '</div>');
+
+        $(".body-MP").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de proveedores</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-MProveedores" style="height:400px" class="graph m-t-20 text-center">' +
+        '</div>');
+
+        $(".body-CR").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de reparticiones</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-reparticion" style="height:400px" class="graph m-t-20 text-center"></div>' +
+        '</div>');
+
+        $(".body-MR").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de reparticiones</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-MReparticion" style="height:400px" class="graph m-t-20 text-center"></div>' +
+        '</div>');
+
+        $(".body-CM").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de medios</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-medios" style="height:400px" class="graph m-t-20 text-center"></div>' +
+        '</div>');
+
+        $(".body-MM").html('<div class="row text-center">' +
+        '<div class="col-sm-12 col-12"> ' +
+        '<h5 class="m-0">Ranking de medios</h5>' +
+        ' </div> ' +
+        '</div>' +
+        '<div id="bar-MMedios" style="height:400px" class="graph m-t-20 text-center"></div>' +
+        '</div>');
+
+
+        if(array_top10_CP.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-proveedor',
+            data: array_top10_CP,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Contratos'],
+            barColors: ['#6ebdd1'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }else{
+          $("#bar-proveedor").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+        if(array_top10_CR.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-reparticion',
+            data: array_top10_CR,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Contratos'],
+            barColors: ['#afc979'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }else{
+          $("#bar-reparticion").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+        if(array_top10_CM.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-medios',
+            data: array_top10_CM,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Contratos'],
+            barColors: ['#faab6c'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }else{
+          $("#bar-medios").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+        if(array_top10_MP.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-MProveedores',
+            data: array_top10_MP,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Monto $'],
+            barColors: ['#81ccba'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }else{
+          $("#bar-MProveedores").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+        if(array_top10_MR.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-MReparticion',
+            data: array_top10_MR,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Monto $'],
+            barColors: ['#fcde85'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }
+        else{
+          $("#bar-MReparticion").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+        if(array_top10_MM.length > 0 ) {
+          Morris.Bar({
+            element: 'bar-MMedios',
+            data: array_top10_MM,
+            xkey: 'y',
+            ykeys: 'a',
+            resize: true,
+            xLabelAngle: 90,
+            labels: ['Monto $'],
+            barColors: ['#f79dc9'],
+            hideHover: 'auto',
+            gridLineColor: '#eeeeee',
+          });
+        }else{
+          $("#bar-MMedios").css('height', 'auto').html('<p class="text-center">No se encuentran datos!</p>');
+        }
+
+      }
+    });
+  }
+
+
+  $("#btnTabla").click(function(){
+
+    table.ajax.reload(null, false);
+    $(".div-table").show(200);
+    $(".div-estadistica, .div-estadistica-search").hide(200);
+
+  });
+
+  $("#btnEstadistica").click(function(){
+
+
+    $(".div-table").hide(200);
+
+    cargarGraficos();
+
+  });
+
+
+  $("#txt-anioSearch").change(function(){
+    if (this.value == ''){
+      $("#txt-anioSearch").val("{% now "Y" %}");
+   }
+  });
+
+ {% endif %}
 </script>
+
+
 {% endblock %}

@@ -21,12 +21,26 @@ class Profile(models.Model):
     caracter = models.CharField(max_length=10, choices=OPCIONES)
     email = models.EmailField(null=False, blank=True)
     telefono = models.CharField(max_length=50, null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True)
     foto = models.ImageField(null=True, blank=True, upload_to='sistema/profile_images')
     create_at = models.DateTimeField(auto_now_add=True)
     activate_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     disabled_at = models.DateTimeField(auto_now_add=False, null=True, blank=True)
     def __str__(self):
         return self.user.username
+
+    def to_json(self):
+        return {
+            'cuit': self.user.username,
+            'rs' : self.nombre,
+            'dni': self.dni,
+            'caracter': self.caracter,
+            'direccion': self.direccion,
+            'email': self.email,
+            'telefono': self.telefono,
+            'nombreResponsable': self.nombreResponsable,
+            'apellidoResponsable': self.apellidoResponsable
+        }
 
 
 class MenuGrupo(models.Model):
