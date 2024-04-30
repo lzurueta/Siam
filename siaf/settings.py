@@ -28,7 +28,7 @@ DEBUG = True
 
 
 USE_L10N = True
-LANGUAGE_CODE = 'es-es'
+LANGUAGE_CODE = 'es-ar'
 
 ALLOWED_HOSTS = ['*']
 # Configuracion de correo
