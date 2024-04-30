@@ -276,7 +276,13 @@
     <div class="box text-right" style="width: 21.9% !important;">
       <div class="div">
         <div class="box text-left" style="width: 25% !important;"><p>Total</p></div>
-        <div class="box" style="width: 69.9% !important;"><p class="text-right">{% load l10n %} {{importe|floatformat:2|localize}}</p></div>
+        <div class="box" style="width: 69.9% !important;">
+        <p class="text-right">
+        {% load l10n %}
+         {% firstof importe "0.00" as importe_formatted %}
+          {{ importe_formatted|unlocalize|floatformat:2|locale:'es' }}
+        </p>
+        </div>
       </div>
       <div class="div">
         <div class="box text-left" style="width: 25% !important;"><p>Saldo</p></div>
