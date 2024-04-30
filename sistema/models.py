@@ -16,7 +16,7 @@ class Profile(models.Model):
     nombre = models.CharField(max_length=150, null=False, blank=True)
     nombreResponsable = models.CharField(max_length=150, null=False, blank=True)
     apellidoResponsable = models.CharField(max_length=150, null=False, blank=True)
-    dni = models.IntegerField(null=True, default=None)
+    dni = models.BigIntegerField(null=True, default=None)
     direccion = models.CharField(max_length=150, null=False, blank=True)
     caracter = models.CharField(max_length=10, choices=OPCIONES)
     email = models.EmailField(null=False, blank=True)

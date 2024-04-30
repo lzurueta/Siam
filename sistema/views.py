@@ -54,10 +54,16 @@ def registerUser(request):
         grupo = Group.objects.get(name='Proveedores')
         usuario.groups.add(grupo)
 
+        context = {
+            'profile': '',
+            'user': usuario
+        }
 
         if usuario:
-            profile = Profile.objects.create(user=usuario, nombre=nombre, nombreResponsable=nombreResponsable, apellidoResponsable=apellidoResponsable, dni=dni, caracter=caracter, direccion=direccion, email=email, telefono=telefono)
+            profile = Profile.objects.create(user=usuario, nombre=nombre, nombreResponsable=nombreResponsable, apellidoResponsable=apellidoResponsable, dni=dni, caracter=caracter, direccion=direccion, email=email, telefono=telefono, observaciones='')
             template_name = 'registration/declaracion_jurada_pdf.html'
+
+            print(profile)
 
             aux = User.objects.get(username=usuario)
 
