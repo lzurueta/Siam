@@ -100,7 +100,7 @@
 
 <div class="div">
     <div class="box" style="width: 100% !important;">
-      <p>Celébrese el presente contrato entre {{ contrato.user.first_name }}, con domicilio en {{ profile.direccion }}, N° de CUIT {{ contrato.user.username }} en adelante "EL PROVEEDOR", y el Gobierno de la Provincia de Jujuy,  en adelante "EL CLIENTE", se celebra el presente contrato de servicios de publicidad, sujeto a las siguientes condiciones:</p>
+      <p>Celébrese el presente contrato entre {% if contrato.user.first_name %} {{ contrato.user.first_name|upper }} {% else %} {{ contrato.proveedor_rs|upper }} {% endif %}, con domicilio en {% if profile.direccion %} {{ profile.direccion }} {% else %} ---- {% endif %}, N° de CUIT {% if contrato.user.username %} {{ contrato.user.username }} {% else %} {{ contrato.proveedor_cuit }} {% endif %} en adelante "EL PROVEEDOR", y el Gobierno de la Provincia de Jujuy,  en adelante "EL CLIENTE", se celebra el presente contrato de servicios de publicidad, sujeto a las siguientes condiciones:</p>
     </div>
 </div>
 

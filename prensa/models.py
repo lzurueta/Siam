@@ -21,7 +21,9 @@ class Contrato(models.Model):
         ('D', 'DENEGADO')
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    proveedor_rs = models.CharField(max_length=300, null=True, blank=True, verbose_name="Proveedor Razón Social")
+    proveedor_cuit = models.BigIntegerField(null=True, blank=True, verbose_name="Proveedor Cuit")
     medio = models.ForeignKey(Medio, on_delete=models.CASCADE, verbose_name='Medio')
     programa = models.CharField(max_length=150, null=True, blank=True, verbose_name="Programa")
     reparticion = models.ForeignKey(Reparticion, on_delete=models.CASCADE, verbose_name='Reparticion')

@@ -41,15 +41,21 @@
                   {% csrf_token %}
 
                   {% for m in form %}
+                    {% if m.name == "proveedor_rs" or m.name == "proveedor_cuit" %}
 
-                  <div class="form-group col-lg-4 form-group mb-2">
+                     <div class="form-group col-lg-4 form-group mb-2 form-sinProve" hidden>
+                        <label>{{ m.label }}</label>
+                        {{ m }}
+                     </div>
 
-                    <label>{{ m.label }}</label>
-                    {{ m }}
+                    {% else %}
 
-                  </div>
+                     <div class="form-group col-lg-4 form-group mb-2">
+                        <label>{{ m.label }}</label>
+                        {{ m }}
+                     </div>
 
-
+                    {% endif %}
                   {% endfor %}
                 </div>
                 <div class="row">
@@ -329,8 +335,40 @@
       },
       "columns": [
         { "data": "id", "width": "5%" },
-        { "data": "user__profile__nombre", "width": "10%" },
-        { "data": "user__username", "width": "10%" },
+        {
+          "data": null,
+          "sortable": false,
+          "width": "10%",
+          "render": function(data, type, row) {
+
+            if(data.user__profile__nombre){
+
+                return data.user__profile__nombre;
+
+            }else{
+
+                return data.proveedor_rs;
+
+            }
+          }
+        },
+        {
+          "data": null,
+          "sortable": false,
+          "width": "10%",
+          "render": function(data, type, row) {
+
+            if(data.user__username){
+
+                return data.user__username;
+
+            }else{
+
+                return data.proveedor_cuit;
+
+            }
+          }
+        },
         { "data": "medio__nombre", "width": "10%" },
         { "data": "programa", "width": "10%" },
         { "data": "reparticion__nombre", "width": "15%" },
@@ -404,6 +442,7 @@
   function nuevoContrato(){
 
     $("#formContratos").trigger("reset").parsley().reset();
+    $("#id_conProveedor").change();
     $(".div-table, .div-table-estadistica").hide(200);
     $(".div-form").show(200);
 
@@ -786,6 +825,24 @@
       $("#txt-anioSearch").val("{% now "Y" %}");
    }
   });
+
+  function controlConProveedor(val){
+
+      switch (val){
+          case 'NO':
+              $(".form-sinProve").removeAttr('hidden').show();
+              $("#id_usuario").removeAttr('required').val('').attr('disabled', true);
+              $("#id_proveedor_rs, #id_proveedor_cuit").attr('required', true);
+          break;
+          default:
+          case 'SI':
+              $(".form-sinProve").hide();
+              $("#id_usuario").attr('required', true).removeAttr('disabled');
+              $("#id_proveedor_rs, #id_proveedor_cuit").removeAttr('required');
+          break;
+      }
+
+  }
 
  {% endif %}
 </script>

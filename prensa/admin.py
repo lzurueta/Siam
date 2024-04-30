@@ -5,4 +5,9 @@ admin.site.register(Medio)
 
 admin.site.register(Reparticion)
 
-admin.site.register(Contrato)
+class ContratoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'proveedor_rs', 'proveedor_cuit')
+
+
+admin.site.register(Contrato, ContratoAdmin)
+

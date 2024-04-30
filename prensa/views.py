@@ -67,6 +67,8 @@ class contratos_ajax(View):
         'user__profile__nombre',
         'user__username',
         'medio__nombre',
+        'proveedor_rs',
+        'proveedor_cuit',
         'programa',
         'monto_formateado',
         'reparticion__nombre',
@@ -85,13 +87,19 @@ class contratos_ajax(View):
         data = list(contrato)
         return JsonResponse(data, safe=False)
 
-
 def guardarFormContrato(request):
     """DAR DE ALTA NUEVO CONTRATO"""
     form = registroContrato(request.POST or None)
     if request.method == "POST" and form.is_valid():
+
         usuario_id = form.cleaned_data.get('usuario')
-        proveedor = User.objects.filter(id=usuario_id).first()
+        if usuario_id:
+            proveedor = User.objects.filter(id=usuario_id).first()
+        else:
+            proveedor = None
+
+        proveedor_rs = form.cleaned_data.get('proveedor_rs')
+        proveedor_cuit = form.cleaned_data.get('proveedor_cuit')
         medio = Medio.objects.filter(id=form.cleaned_data.get('medio')).first()
         programa = form.cleaned_data.get('programa')
         reparticion = Reparticion.objects.filter(id=form.cleaned_data.get('reparticion')).first()
@@ -99,8 +107,18 @@ def guardarFormContrato(request):
         fechaInicio = form.cleaned_data.get('fecha_inicio')
         fechaFin = form.cleaned_data.get('fecha_fin')
 
-
-        contrato = Contrato.objects.create(user = proveedor, medio = medio, programa = programa, reparticion = reparticion, monto = monto, fechaInicio = fechaInicio, fechaFin = fechaFin, status = 'P')
+        contrato = Contrato.objects.create(
+            user=proveedor,
+            proveedor_rs=proveedor_rs,
+            proveedor_cuit=proveedor_cuit,
+            medio=medio,
+            programa=programa,
+            reparticion=reparticion,
+            monto=monto,
+            fechaInicio=fechaInicio,
+            fechaFin=fechaFin,
+            status='P'
+        )
 
         idNuevoContrato = Contrato.objects.latest('id').id
 
@@ -111,7 +129,11 @@ def guardarFormContrato(request):
 
         insertAuditoria(request.user, grupo, title, description, detail)
 
-    return JsonResponse({'contrato': idNuevoContrato})
+        return JsonResponse({'contrato': idNuevoContrato})
+
+    else:
+        errors = dict(form.errors)
+        return JsonResponse({'errors': errors})
 
 def contrato_pdf(request):
     """ IMPRESOR DE CONTRATO """
@@ -119,7 +141,10 @@ def contrato_pdf(request):
 
     id = request.POST.get('id')
     contrato = Contrato.objects.get(id = id)
-    profile = Profile.objects.get(user = contrato.user)
+    if contrato.user:
+        profile = Profile.objects.get(user = contrato.user)
+    else:
+        profile = None
     context = {
         'contrato': contrato,
         'profile': profile
@@ -162,7 +187,7 @@ def datos_graficos(request):
 
     anio = request.POST.get('anio')
 
-    cantidad_proveedores = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').values('user').distinct().count()
+    cantidad_proveedores = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A',user__isnull=False).values('user').distinct().count()
     cantidad_medio = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').values('medio').distinct().count()
     cantidad_reparticion = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').values('reparticion').distinct().count()
     monto_acumulado = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').distinct().aggregate(Sum('monto'))['monto__sum']
@@ -174,7 +199,7 @@ def datos_graficos(request):
     else:
         monto_formateado = '0,00'
 
-    proveedores_top_10CP = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').values('user__first_name').annotate(total_contratos=Count('id')).order_by('-total_contratos')[:10]
+    proveedores_top_10CP = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A', user__isnull=False).values('user__first_name').annotate(total_contratos=Count('id')).order_by('-total_contratos')[:10]
 
     top_10_arrayCP = []
 
@@ -196,7 +221,7 @@ def datos_graficos(request):
     for medio in proveedores_top_10CM:
         top_10_arrayCM.append({'y': medio['medio__nombre'], 'a': medio['total_contratos']})
 
-    proveedores_top_10MP = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A').values('user__first_name').annotate(monto_total=Sum('monto')).order_by('-monto_total')[:10]
+    proveedores_top_10MP = Contrato.objects.filter(Q(fechaInicio__year=anio) | Q(fechaFin__year=anio), status='A', user__isnull=False).values('user__first_name').annotate(monto_total=Sum('monto')).order_by('-monto_total')[:10]
 
     top_10_arrayMP = []
 
