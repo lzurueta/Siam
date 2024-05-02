@@ -56,9 +56,18 @@ class contratos_ajax(View):
     """COMPLETAR DATOS DE TABLA DE CONTRATOS"""
     def post(self, request):
 
-        nro = request.POST.get('nro') or 0
+        if 'prensa.admin_prensa' in traerPermisos(self.request):
+            if request.POST.get('nro'):
+                nro = request.POST.get('nro')
+                aux = Contrato.objects.filter(pk=nro)
+            else:
+                 aux = Contrato.objects
+        else:
+            nro = request.POST.get('nro') or 0
+            aux = Contrato.objects.filter(pk=nro)
 
-        contrato = Contrato.objects.filter(pk=nro).annotate(
+
+        contrato = aux.annotate(
         monto_formateado=Func( F('monto'), Value('9G999G999G999D99'), function='TO_CHAR', output_field=CharField()),
         fechaInicio_formateada=Func(F('fechaInicio'), Value('DD-MM-YYYY'), function='TO_CHAR', output_field=CharField()),
         fechaFin_formateada=Func(F('fechaFin'), Value('DD-MM-YYYY'), function='TO_CHAR', output_field=CharField())
