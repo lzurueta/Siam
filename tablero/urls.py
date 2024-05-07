@@ -5,4 +5,5 @@ from . import views
 
 urlpatterns = [
     path('', login_required(views.principal.as_view()), name="principal"),
+    path('principal_ajax', login_required(views.principal_ajax), name="principal_ajax"),
 ]

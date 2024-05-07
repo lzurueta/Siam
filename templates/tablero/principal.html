@@ -19,38 +19,80 @@
       </div>
 
       <div class="row clearfix">
-       <div class="col-lg-12 col-md-12">
+        <div class="col-lg-12 col-md-12">
 
-        <div class="card">
-          <div class="card-body">
-            {% load static %}
-            <div class="row">
-                 <div class="table-responsive col-lg-12">
-              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
-                <thead>
-                  <tr>
-                    <th width="25%">Udeo</th>
-                    <th width="15%">Cantidad de Personas</th>
-                    <th width="15%">Remunerativo</th>
-                    <th width="15%">No Remunerativo</th>
-                    <th width="20%">Total</th>
-                    <th width="10%" align="center">%</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
+          <div class="card">
+            <div class="card-body">
+              {% load static %}
+
+              <div class="row div-tablePrincipal">
+                <div class="col-sm-6 col-md-6 col-lg-2 offset-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Año</span>
+                    </div>
+                    <input type="number" class="form-control" onblur="controlAnio()" name="anio_ajax" value="{% now "Y" %}" id="anio_ajax" autocomplete="off">
+                  </div>
+                </div>
+
+                <div class="col-sm-6 col-md-6 col-lg-3">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Mes</span>
+                    </div>
+                    <select class="form-control" name="mes_ajax" id="mes_ajax">
+                      <option value="1">Enero</option>
+                      <option value="2">Febrero</option>
+                      <option value="3">Marzo</option>
+                      <option value="4">Abril</option>
+                      <option value="5">Mayo</option>
+                      <option value="6">Junio</option>
+                      <option value="7">Julio</option>
+                      <option value="8">Agosto</option>
+                      <option value="9">Septiembre</option>
+                      <option value="10">Octubre</option>
+                      <option value="11">Noviembre</option>
+                      <option value="12">Diciembre</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-lg-1 col-md-12 mb-3">
+                  <button onclick="cargarGraficos()" class="btn btn-primary text-center w-100"><i class="fa fa-search"></i></button>
+                </div>
+
+              </div>
+
+              <div class="row div-tablePrincipal">
+                <div class="table-responsive col-lg-12">
+                  <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                    <thead>
+                      <tr>
+                        <th width="10%">Jur</th>
+                        <th width="17%">Repartición</th>
+                        <th width="13%">Cantidad de Personas</th>
+                        <th width="10%">Remunerativo</th>
+                        <th width="10%">No Remunerativo</th>
+                        <th width="5%">Total</th>
+                        <th width="5%" align="center">%</th>
+                        <th width="1%"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+
+            <div class="row div-tablePersonas"></div>
+            <div class="row div-tableCategorias"></div>
+
             </div>
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-            </div>
-
           </div>
         </div>
-      </div>
       </div>
 
     </div>
@@ -65,6 +107,113 @@
   {% endblock %}
   {% block extraJS %}
   <script>
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
+  /******************************************************************************************/
+
+  var table;
+
+  function cargarTabla(){
+
+
+    $('#data_table_ajax').dataTable().fnClearTable();
+    $('#data_table_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "anio_ajax": $("#anio_ajax").val(),
+      "mes_ajax": $("#mes_ajax").val(),
+    }
+
+    table = $('#data_table_ajax').DataTable({
+      autoWidth: false,
+      searching: true,
+      dom: 'Bfrtip',
+      buttons: [
+        'csv', 'print',
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+      },
+      "ajax": {
+        "url": "{% url 'principal_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+        "dataSrc": ""
+      },
+      "columns": [
+        { "data": "repjur" },
+        { "data": "jurNom" },
+        { "data": "cantidad" },
+        { "data": "remunerativoFormat" },
+        { "data": "noRemunerativoFormat" },
+        { "data": "totalFormat" },
+        { "data": "porcentaje" },
+
+        {
+          "data": null,
+          "sortable": false,
+          "width" : "2%",
+          "className": "text-center",
+          "render": function(data, type, row) {
+
+             return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
+             '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-navicon"></i></button> ';
+
+          }
+        },
+
+      ],
+      {#order: [[1, 'asc']]#}
+    });
+
+  }
+
+  /******************************************************************************************/
+  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
+  /******************************************************************************************/
+
+  $(document).ready(function(){
+
+    var mes = parseInt({% now "m" %})
+
+    if (mes == 1){
+
+        var anio =  parseInt({% now "Y" %}) - 1;
+        $("#anio_ajax").val(anio);
+        $("#mes_ajax").val('12');
+
+    }else{
+
+        $("#mes_ajax").val(mes - 1);
+
+    }
+
+    cargarTabla();
+  });
+
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+
+  /******************************************************************************************/
+  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
+  /******************************************************************************************/
+
+  $("#btnBuscar").click(function(){
+    cargarTabla();
+  });
+
+ $("#anio_ajax").change(function(){
+
+     if(this.value == ''){
+
+        this.value = "{% now "Y" %}";
+
+    }
+ });
 
   </script>
   {% endblock %}

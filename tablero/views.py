@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 from sistema.functions import traerIndex
-# Create your views here.
+from sistema.functions import conectarSQLTablero
 
 class principal(View):
     template_name = 'tablero/principal.html'
@@ -22,3 +23,51 @@ class principal(View):
     def post(self, request, *args, **kwargs):
         return render(request, self.template_name, self.get_context_data())
 
+def principal_ajax(request):
+    """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
+
+    anio = request.POST.get('anio_ajax')
+    mes = request.POST.get('mes_ajax')
+
+    conexion = conectarSQLTablero()
+    cursor = conexion.cursor()
+    sql_query = ("SELECT a.repjur, a.JurNom, a.cantidad, FORMAT(a.remunerativo, 'C', 'es-AR') as remunerativoFormat, FORMAT(a.noRemunerativo, 'C', 'es-AR') as noRemunerativoFormat, FORMAT(a.total, 'C', 'es-AR') as totalFormat, "
+                 " (a.total * 100) / total_general.total_todos AS porcentaje "
+                 " FROM (SELECT "
+                 "     sector.repjur, "
+                 "     sector.JurNom, "
+                 "     (SELECT COUNT(c.cont) FROM (SELECT COUNT(DETLIQ.pecuil) as cont "
+                 "      FROM DETLIQ "
+                 "      WHERE "
+                 "          DETLIQ.DetAno = '"+anio+"' "
+                 "          AND DETLIQ.DetMes = "+mes+" "
+                 " 		 AND DETLIQ.repjur = sector.repjur "
+                 "          AND DETLIQ.JurNom = sector.JurNom "
+                 " 		 GROUP BY pecuil) as c) AS cantidad, "
+                 " 		SUM(CASE WHEN sector.deprt = 1 THEN sector.deval ELSE 0 END) AS remunerativo, "
+                 "         SUM(CASE WHEN sector.deprt = 2 THEN sector.deval ELSE 0 END) AS noRemunerativo, "
+                 " 		SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total "
+                 " FROM "
+                 "     DETLIQ AS sector "
+                 " WHERE "
+                 "     sector.DetAno = '"+anio+"' "
+                 "     AND sector.DetMes = "+mes+" "
+                 " GROUP BY "
+                 "     sector.repjur, "
+                 "     sector.JurNom) as a "
+                 " CROSS JOIN ( "
+                 "     SELECT SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total_todos "
+                 "     FROM DETLIQ "
+                 "     WHERE DetAno = '"+anio+"' AND DetMes = "+mes+" ) AS total_general "
+                 " ORDER BY a.total DESC; ")
+
+    cursor.execute(sql_query)
+    ## CONVERTIR EL CURSOR EN DICT
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in cursor.fetchall():
+        results.append(dict(zip(columns, row)))
+    ## CONVERTIR EL CURSOR EN DICT
+
+    data = list(results)
+    return JsonResponse(data, safe=False)

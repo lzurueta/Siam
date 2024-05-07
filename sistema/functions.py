@@ -100,6 +100,21 @@ def conectarSQL():
 
     return conexion
 
+def conectarSQLTablero():
+    direccion_servidor = '123.123.123.23'
+    instancia = "srv-lab"
+    nombre_bd = 'consusdo'
+    nombre_usuario = 'sbesin'
+    password = 'Cemento123$'
+
+    #### MAC Y LINUX
+    conexion = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + direccion_servidor + ', 1433;DATABASE=' + nombre_bd + ';UID=' + nombre_usuario + ';PWD=' + password + ';Encrypt=no;')
+
+    #### WINDOWS
+    # conexion = pyodbc.connect('DSN=siafprueba;UID=siafsql;PWD=159753;')
+
+    return conexion
+
 def traerIndex(request):
     grupos_usuario = request.user.groups.all()
 
