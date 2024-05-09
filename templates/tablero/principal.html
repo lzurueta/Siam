@@ -80,6 +80,17 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                      <tr class="bg-light">
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -110,6 +121,15 @@
                     </thead>
                     <tbody>
                     </tbody>
+                      <tfoot>
+                      <tr class="bg-light">
+                        <th colspan="5"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -135,6 +155,15 @@
                     </thead>
                     <tbody>
                     </tbody>
+                      <tfoot>
+                      <tr class="bg-light">
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -159,6 +188,15 @@
                     </thead>
                     <tbody>
                     </tbody>
+                    <tfoot>
+                      <tr class="bg-light">
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
               </div>
@@ -203,10 +241,6 @@
       "mes_ajax": mes,
     }
 
-    $(".div-gral").hide();
-    $(".div-tablePrincipal").show();
-
-
     swal({
       title: "",
       text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
@@ -235,13 +269,13 @@
         "dataSrc": ""
       },
       "columns": [
-        { "data": "repjur" },
-        { "data": "JurNom" },
-        { "data": "cantidad" },
-        { "data": "remunerativoFormat" },
-        { "data": "noRemunerativoFormat" },
-        { "data": "totalFormat" },
-        { "data": "porcentaje" },
+        { "data": "repjur", width: '5%' },
+        { "data": "JurNom", width: "20%"  },
+        { "data": "cantidad", width: "15%"  },
+        { "data": "remunerativoFormat", width: "15%" },
+        { "data": "noRemunerativoFormat", width: "15%" },
+        { "data": "totalFormat", width: "20%" },
+        { "data": "porcentaje", width: "10%" },
 
         {
           "data": null,
@@ -259,11 +293,115 @@
 
       ],
       {#order: [[1, 'asc']]#}
+      footerCallback: function (row, data, start, end, display) {
+        let api = this.api();
+
+
+        let intVal = function (i) {
+            return typeof i === 'string'
+                ? i.replace(/[\$,]/g, '') * 1
+                : typeof i === 'number'
+                ? i
+                : 0;
+        };
+
+        let formatNumber = function (i) {
+        if (typeof i === 'string') {
+
+        let cleanedNumber = i;
+        cleanedNumber = cleanedNumber.replace('$', '');
+        cleanedNumber = cleanedNumber.replace(/\./g, '').replace(',', '.');
+        cleanedNumber = parseFloat(cleanedNumber);
+
+        return cleanedNumber;
+        } else if (typeof i === 'number') {
+         return i;
+        } else {
+         return 0;
+        }
+        };
+
+        total = api
+            .column(2)
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        pageTotal = api
+            .column(2, { page: 'current' })
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        api.column(2).footer().innerHTML =
+            '' + pageTotal + ' <br> ( Total: ' + total + ')';
+
+        pageTotalRemu = api
+            .column(3, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalRemu = api
+            .column(3)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+
+        api.column(3).footer().innerHTML =
+            '$ ' + pageTotalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalNoRemu = api
+            .column(4, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalNoRemu = api
+            .column(4)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(4).footer().innerHTML =
+            '$ ' + pageTotalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalTotal = api
+            .column(5, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalTotal = api
+            .column(5)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(5).footer().innerHTML =
+            '$ ' + pageTotalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+         pageTotalPorcentaje = api
+            .column(6, { page: 'current' })
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        totalPorcentaje = api
+            .column(6)
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        api.column(6).footer().innerHTML =
+            pageTotalPorcentaje.toFixed(4).replace('.', ',') + ' % <br> (Total: 100 %)';
+
+
+
+       }
     });
 
     $('#data_table_ajax').on('xhr.dt', function (e, settings, json, xhr) {
       swal.close();
     });
+
+
+    $(".div-gral").hide();
+    $(".div-tablePrincipal").show();
 
 
   }
@@ -283,7 +421,6 @@
       "anio": anio,
       "mes": mes
     }
-
     swal({
       title: "",
       text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
@@ -299,35 +436,120 @@
       searching: true,
       dom: 'Bfrtip',
       buttons: [
-
+        'csv', 'print',
       ],
-
       language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
       },
       "ajax": {
         "url": "{% url 'table_personas_ajax' %}",
         "data": valores,
         "async": true,
         "type": "POST",
+        "dataSrc": ""
       },
       "columns": [
         { "data": "pecuil" },
         { "data": "nombre" },
-        { "data": "esDes" },
+        { "data": "EsDes" },
         { "data": "repdes" },
         { "data": "CatDes" },
         { "data": "remunerativo" },
         { "data": "noRemunerativo" },
         { "data": "total" },
-        { "data": "porcentaje" },
+        { "data": "porcentaje", width: "10%" },
 
       ],
 
+       order: [[4, 'desc']],
 
-      order: [[4, 'desc']],
+        footerCallback: function (row, data, start, end, display) {
+        let api = this.api();
 
 
+        let intVal = function (i) {
+            return typeof i === 'string'
+                ? i.replace(/[\$,]/g, '') * 1
+                : typeof i === 'number'
+                ? i
+                : 0;
+        };
+
+        let formatNumber = function (i) {
+        if (typeof i === 'string') {
+
+        let cleanedNumber = i;
+        cleanedNumber = cleanedNumber.replace('$', '');
+        cleanedNumber = cleanedNumber.replace(/\./g, '').replace(',', '.');
+        cleanedNumber = parseFloat(cleanedNumber);
+
+        return cleanedNumber;
+        } else if (typeof i === 'number') {
+         return i;
+        } else {
+         return 0;
+        }
+        };
+
+
+        pageTotalRemu = api
+            .column(5, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalRemu = api
+            .column(5)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+
+        api.column(5).footer().innerHTML =
+            '$ ' + pageTotalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalNoRemu = api
+            .column(6, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalNoRemu = api
+            .column(6)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(6).footer().innerHTML =
+            '$ ' + pageTotalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalTotal = api
+            .column(7, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalTotal = api
+            .column(7)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(7).footer().innerHTML =
+            '$ ' + pageTotalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+         pageTotalPorcentaje = api
+            .column(8, { page: 'current' })
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        totalPorcentaje = api
+            .column(8)
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        api.column(8).footer().innerHTML =
+            pageTotalPorcentaje.toFixed(4).replace('.', ',') + ' % <br> (Total: 100 %)';
+
+
+       }
     });
 
 
@@ -355,7 +577,7 @@
       "mes": mes
     }
 
-    swal({
+   swal({
       title: "",
       text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
       html: true,
@@ -370,17 +592,17 @@
       searching: true,
       dom: 'Bfrtip',
       buttons: [
-
+        'csv', 'print',
       ],
-
       language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
       },
       "ajax": {
         "url": "{% url 'table_categorias_ajax' %}",
         "data": valores,
         "async": true,
         "type": "POST",
+        "dataSrc": ""
       },
       "columns": [
         { "data": "catcod" },
@@ -388,13 +610,100 @@
         { "data": "remunerativo" },
         { "data": "noRemunerativo" },
         { "data": "total" },
-        { "data": "porcentaje" },
+        { "data": "porcentaje", width: "10%" },
 
       ],
 
 
       order: [[1, 'desc']],
 
+        footerCallback: function (row, data, start, end, display) {
+        let api = this.api();
+
+
+        let intVal = function (i) {
+            return typeof i === 'string'
+                ? i.replace(/[\$,]/g, '') * 1
+                : typeof i === 'number'
+                ? i
+                : 0;
+        };
+
+        let formatNumber = function (i) {
+        if (typeof i === 'string') {
+
+        let cleanedNumber = i;
+        cleanedNumber = cleanedNumber.replace('$', '');
+        cleanedNumber = cleanedNumber.replace(/\./g, '').replace(',', '.');
+        cleanedNumber = parseFloat(cleanedNumber);
+
+        return cleanedNumber;
+        } else if (typeof i === 'number') {
+         return i;
+        } else {
+         return 0;
+        }
+        };
+
+
+        pageTotalRemu = api
+            .column(2, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalRemu = api
+            .column(2)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+
+        api.column(2).footer().innerHTML =
+            '$ ' + pageTotalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalNoRemu = api
+            .column(3, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalNoRemu = api
+            .column(3)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(3).footer().innerHTML =
+            '$ ' + pageTotalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalTotal = api
+            .column(4, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalTotal = api
+            .column(4)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(4).footer().innerHTML =
+            '$ ' + pageTotalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+         pageTotalPorcentaje = api
+            .column(5, { page: 'current' })
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        totalPorcentaje = api
+            .column(5)
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        api.column(5).footer().innerHTML =
+            pageTotalPorcentaje.toFixed(4).replace('.', ',') + ' % <br> (Total: 100 %)';
+
+
+       }
 
     });
 
@@ -423,7 +732,7 @@
       "mes": mes
     }
 
-    swal({
+   swal({
       title: "",
       text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
       html: true,
@@ -438,17 +747,17 @@
       searching: true,
       dom: 'Bfrtip',
       buttons: [
-
+        'csv', 'print',
       ],
-
       language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
       },
       "ajax": {
         "url": "{% url 'table_conceptos_ajax' %}",
         "data": valores,
         "async": true,
         "type": "POST",
+        "dataSrc": ""
       },
       "columns": [
         { "data": "cncod" },
@@ -462,6 +771,93 @@
 
 
       order: [[1, 'desc']],
+       footerCallback: function (row, data, start, end, display) {
+        let api = this.api();
+
+
+        let intVal = function (i) {
+            return typeof i === 'string'
+                ? i.replace(/[\$,]/g, '') * 1
+                : typeof i === 'number'
+                ? i
+                : 0;
+        };
+
+        let formatNumber = function (i) {
+        if (typeof i === 'string') {
+
+        let cleanedNumber = i;
+        cleanedNumber = cleanedNumber.replace('$', '');
+        cleanedNumber = cleanedNumber.replace(/\./g, '').replace(',', '.');
+        cleanedNumber = parseFloat(cleanedNumber);
+
+        return cleanedNumber;
+        } else if (typeof i === 'number') {
+         return i;
+        } else {
+         return 0;
+        }
+        };
+
+
+        pageTotalRemu = api
+            .column(2, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalRemu = api
+            .column(2)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+
+        api.column(2).footer().innerHTML =
+            '$ ' + pageTotalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalNoRemu = api
+            .column(3, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalNoRemu = api
+            .column(3)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(3).footer().innerHTML =
+            '$ ' + pageTotalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalNoRemu.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+        pageTotalTotal = api
+            .column(4, { page: 'current' })
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        totalTotal = api
+            .column(4)
+            .data()
+            .reduce((a, b) => formatNumber(a) + formatNumber(b), 0);
+
+        api.column(4).footer().innerHTML =
+            '$ ' + pageTotalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + '<br> ( Total: $ ' + totalTotal.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ')';
+
+
+         pageTotalPorcentaje = api
+            .column(5, { page: 'current' })
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        totalPorcentaje = api
+            .column(5)
+            .data()
+            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+        api.column(5).footer().innerHTML =
+            pageTotalPorcentaje.toFixed(4).replace('.', ',') + ' % <br> (Total: 100 %)';
+
+
+       }
 
 
     });

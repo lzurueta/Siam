@@ -92,7 +92,7 @@ def table_personas_ajax(request):
     " a.totalFormat as total, "
     " (a.total * 100) / total_general.total_todos AS porcentaje "
     " FROM (SELECT  "
-    " pecuil, " 
+    " pecuil, "
     " UPPER(Peayn) AS nombre, "
     " EsDes, "
     " repdes, "
@@ -178,7 +178,6 @@ def table_categorias_ajax(request):
     for row in cursor.fetchall():
         results.append(dict(zip(columns, row)))
     ## CONVERTIR EL CURSOR EN DICT
-
     data = list(results)
     return JsonResponse(data, safe=False)
 
