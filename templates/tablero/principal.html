@@ -83,15 +83,16 @@
                   </table>
                 </div>
               </div>
-                <!-- --------------------------------------------------------------------------------- -->
-                <!-- --------------------------------------------------------------------------------- -->
-                <!-- --------------------------------------------------------------------------------- -->
-            <div class="row div-gral div-tablePersonas" style="display: none">
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+              <div class="row div-gral div-tablePersonas" style="display: none">
                 <div class="col-lg-3 col-md-3 col-sm-12">
-                    <button class="btn btn-primary mb-3 w-100" onclick="volverAlTablero()"><i class="fa fa-angle-double-left"></i> Volver al tablero principal</button>
+                  <button class="btn btn-primary mb-3 w-100" onclick="volverAlTablero()"><i class="fa fa-angle-double-left"></i> Volver al tablero principal</button>
                 </div>
-            </div>
-           <div class="row div-gral div-tablePersonas" style="display: none">
+              </div>
+              <div class="row div-gral div-tablePersonas" style="display: none">
                 <div class="table-responsive col-lg-12">
                   <table id="data_table_personas_ajax" class="table table-bordered table-striped table-hover small">
                     <thead>
@@ -104,6 +105,7 @@
                         <th width="10%">Remunerativo</th>
                         <th width="10%">No Remunerativo</th>
                         <th width="8%">Total</th>
+                        <th width="5%">%</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -113,8 +115,54 @@
               </div>
 
 
+              <div class="row div-gral div-tableCategorias" style="display: none">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                  <button class="btn btn-primary mb-3 w-100" onclick="volverAlTablero()"><i class="fa fa-angle-double-left"></i> Volver al tablero principal</button>
+                </div>
+              </div>
+              <div class="row div-gral div-tableCategorias" style="display: none">
+                <div class="table-responsive col-lg-12">
+                  <table id="data_table_categorias_ajax" class="table table-bordered table-striped table-hover small">
+                    <thead>
+                      <tr>
+                        <th width="7%">Cod.</th>
+                        <th width="13%">Categoría</th>
+                        <th width="10%">Remunerativo</th>
+                        <th width="10%">No Remunerativo</th>
+                        <th width="8%">Total</th>
+                        <th width="5%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-            <div class="row div-tableCategorias"></div>
+            <div class="row div-gral div-tableConceptos" style="display: none">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                  <button class="btn btn-primary mb-3 w-100" onclick="volverAlTablero()"><i class="fa fa-angle-double-left"></i> Volver al tablero principal</button>
+                </div>
+              </div>
+              <div class="row div-gral div-tableConceptos" style="display: none">
+                <div class="table-responsive col-lg-12">
+                  <table id="data_table_conceptos_ajax" class="table table-bordered table-striped table-hover small">
+                    <thead>
+                      <tr>
+                        <th width="7%">Cod.</th>
+                        <th width="13%">Concepto</th>
+                        <th width="10%">Remunerativo</th>
+                        <th width="10%">No Remunerativo</th>
+                        <th width="8%">Total</th>
+                        <th width="5%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+    
 
             </div>
           </div>
@@ -138,81 +186,10 @@
   /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
   /******************************************************************************************/
 
-  var tablePersonas;
-
-  function cargarTablaPersonas(jur, jurNombre, anio, mes){
-
-    $('#data_table_personas_ajax').dataTable().fnClearTable();
-    $('#data_table_personas_ajax').dataTable().fnDestroy();
-
-    var valores = {
-      "csrfmiddlewaretoken" : '{{ csrf_token }}',
-      "jur": jur,
-      "jurNombre": jurNombre,
-      "anio": anio,
-      "mes": mes
-    }
-
-     swal({
-        title: "",
-        text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
-        html: true,
-        showConfirmButton:false,
-        allowOutsideClick: false,
-        allowEscapeKey: false
-    });
-
-
-    tablePersonas = $('#data_table_personas_ajax').DataTable({
-      autoWidth: false,
-      searching: true,
-      dom: 'Bfrtip',
-      buttons: [
-
-      ],
-
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
-      },
-      "ajax": {
-        "url": "{% url 'table_personas_ajax' %}",
-        "data": valores,
-        "async": true,
-        "type": "POST",
-      },
-      "columns": [
-        { "data": "pecuil" },
-        { "data": "nombre" },
-        { "data": "esDes" },
-        { "data": "repdes" },
-        { "data": "CatDes" },
-        { "data": "remunerativo" },
-        { "data": "noRemunerativo" },
-        { "data": "total" },
-
-      ],
-
-
-      order: [[4, 'desc']],
-
-
-    });
-
-
-     $('#data_table_personas_ajax').on('xhr.dt', function (e, settings, json, xhr) {
-        swal.close();
-    });
-
-    $(".div-gral").hide();
-    $(".div-tablePersonas").show();
-
-  }
-
 
   var table;
 
   function cargarTabla(){
-
 
     $('#data_table_ajax').dataTable().fnClearTable();
     $('#data_table_ajax').dataTable().fnDestroy();
@@ -223,17 +200,17 @@
       "mes_ajax": $("#mes_ajax").val(),
     }
 
-  $(".div-gral").hide();
-  $(".div-tablePrincipal").show();
+    $(".div-gral").hide();
+    $(".div-tablePrincipal").show();
 
 
-  swal({
-        title: "",
-        text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
-        html: true,
-        showConfirmButton:false,
-        allowOutsideClick: false,
-        allowEscapeKey: false
+    swal({
+      title: "",
+      text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+      html: true,
+      showConfirmButton:false,
+      allowOutsideClick: false,
+      allowEscapeKey: false
     });
 
 
@@ -270,8 +247,9 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
-             return  '<button type="button" onclick="cargarTablaPersonas(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
-             '<button type="button" onclick="cargarTablaCategoria(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-navicon"></i></button> ';
+            return  '<button type="button" onclick="cargarTablaPersonas(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
+            '<button type="button" onclick="cargarTablaCategorias(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-list"></i></button> ' +
+            '<button type="button" onclick="cargarTablaConceptos(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Conceptos"><i class="fa fa-sitemap"></i></button> ';
 
           }
         },
@@ -281,9 +259,217 @@
     });
 
     $('#data_table_ajax').on('xhr.dt', function (e, settings, json, xhr) {
-        swal.close();
+      swal.close();
     });
 
+
+  }
+
+
+  var tablePersonas;
+
+  function cargarTablaPersonas(jur, jurNombre, anio, mes){
+
+    $('#data_table_personas_ajax').dataTable().fnClearTable();
+    $('#data_table_personas_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "jur": jur,
+      "jurNombre": jurNombre,
+      "anio": anio,
+      "mes": mes
+    }
+
+    swal({
+      title: "",
+      text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+      html: true,
+      showConfirmButton:false,
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    });
+
+
+    tablePersonas = $('#data_table_personas_ajax').DataTable({
+      autoWidth: false,
+      searching: true,
+      dom: 'Bfrtip',
+      buttons: [
+
+      ],
+
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+      },
+      "ajax": {
+        "url": "{% url 'table_personas_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+      },
+      "columns": [
+        { "data": "pecuil" },
+        { "data": "nombre" },
+        { "data": "esDes" },
+        { "data": "repdes" },
+        { "data": "CatDes" },
+        { "data": "remunerativo" },
+        { "data": "noRemunerativo" },
+        { "data": "total" },
+        { "data": "porcentaje" },
+
+      ],
+
+
+      order: [[4, 'desc']],
+
+
+    });
+
+
+    $('#data_table_personas_ajax').on('xhr.dt', function (e, settings, json, xhr) {
+      swal.close();
+    });
+
+    $(".div-gral").hide();
+    $(".div-tablePersonas").show();
+
+  }
+
+  var tableCategorias;
+
+  function cargarTablaCategorias(jur, jurNombre, anio, mes){
+
+    $('#data_table_categorias_ajax').dataTable().fnClearTable();
+    $('#data_table_categorias_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "jur": jur,
+      "jurNombre": jurNombre,
+      "anio": anio,
+      "mes": mes
+    }
+
+    swal({
+      title: "",
+      text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+      html: true,
+      showConfirmButton:false,
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    });
+
+
+    tableCategorias = $('#data_table_categorias_ajax').DataTable({
+      autoWidth: false,
+      searching: true,
+      dom: 'Bfrtip',
+      buttons: [
+
+      ],
+
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+      },
+      "ajax": {
+        "url": "{% url 'table_categorias_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+      },
+      "columns": [
+        { "data": "catcod" },
+        { "data": "nombre" },
+        { "data": "remunerativo" },
+        { "data": "noRemunerativo" },
+        { "data": "total" },
+        { "data": "porcentaje" },
+
+      ],
+
+
+      order: [[1, 'desc']],
+
+
+    });
+
+
+    $('#data_table_categorias_ajax').on('xhr.dt', function (e, settings, json, xhr) {
+      swal.close();
+    });
+
+    $(".div-gral").hide();
+    $(".div-tableCategorias").show();
+
+  }
+  
+  var tableConceptos;
+
+  function cargarTablaConceptos(jur, jurNombre, anio, mes){
+
+    $('#data_table_conceptos_ajax').dataTable().fnClearTable();
+    $('#data_table_conceptos_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "jur": jur,
+      "jurNombre": jurNombre,
+      "anio": anio,
+      "mes": mes
+    }
+
+    swal({
+      title: "",
+      text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+      html: true,
+      showConfirmButton:false,
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    });
+
+
+    tableConceptos = $('#data_table_conceptos_ajax').DataTable({
+      autoWidth: false,
+      searching: true,
+      dom: 'Bfrtip',
+      buttons: [
+
+      ],
+
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+      },
+      "ajax": {
+        "url": "{% url 'table_conceptos_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+      },
+      "columns": [
+        { "data": "cncod" },
+        { "data": "nombre" },
+        { "data": "remunerativo" },
+        { "data": "noRemunerativo" },
+        { "data": "total" },
+        { "data": "porcentaje" },
+
+      ],
+
+
+      order: [[1, 'desc']],
+
+
+    });
+
+
+    $('#data_table_conceptos_ajax').on('xhr.dt', function (e, settings, json, xhr) {
+      swal.close();
+    });
+
+    $(".div-gral").hide();
+    $(".div-tableConceptos").show();
 
   }
 
@@ -299,13 +485,13 @@
 
     if (mes == 1){
 
-        var anio =  parseInt({% now "Y" %}) - 1;
-        $("#anio_ajax").val(anio);
-        $("#mes_ajax").val('12');
+      var anio =  parseInt({% now "Y" %}) - 1;
+      $("#anio_ajax").val(anio);
+      $("#mes_ajax").val('12');
 
     }else{
 
-        $("#mes_ajax").val(mes - 1);
+      $("#mes_ajax").val(mes - 1);
 
     }
 
@@ -324,21 +510,21 @@
     cargarTabla();
   });
 
- $("#anio_ajax").change(function(){
+  $("#anio_ajax").change(function(){
 
-     if(this.value == ''){
+    if(this.value == ''){
 
-        this.value = "{% now "Y" %}";
+      this.value = "{% now "Y" %}";
 
     }
- });
+  });
 
- function volverAlTablero(){
+  function volverAlTablero(){
 
-  $(".div-gral").hide();
-  $(".div-tablePrincipal").show();
+    $(".div-gral").hide();
+    $(".div-tablePrincipal").show();
 
- }
+  }
 
   </script>
   {% endblock %}

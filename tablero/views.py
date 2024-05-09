@@ -82,22 +82,147 @@ def table_personas_ajax(request):
     conexion = conectarSQLTablero()
     cursor = conexion.cursor()
     sql_query = ("SELECT  "
-    "pecuil,  "
-    "UPPER(Peayn) AS nombre, "
-    "EsDes, "
-    "repdes, "
-    "CatDes, "
-    "FORMAT(SUM(CASE WHEN deprt = 1 THEN deval ELSE 0 END), 'C', 'es-AR') AS remunerativo, "
-    "FORMAT(SUM(CASE WHEN deprt = 2 THEN deval ELSE 0 END), 'C', 'es-AR') AS noRemunerativo, "
-    "FORMAT(SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END), 'C', 'es-AR') AS total "
-    "FROM DETLIQ  "
-    "WHERE  "
-    "DETLIQ.DetAno = '"+anio+"'  "
-    "AND DETLIQ.DetMes = "+mes+"  "
-    "AND DETLIQ.repjur = '"+jur+"' "
-    "AND DETLIQ.JurNom = '"+jurNombre+"' "
-    "GROUP BY pecuil, Peayn, EsDes, repdes, CatDes "
-    "ORDER BY CatDes ")
+    " a.pecuil, "
+    " a.nombre, "
+    " a.EsDes, "
+    " a.repdes, "
+    " a.CatDes, "
+    " a.remunerativo, "
+    " a.noRemunerativo, "
+    " a.totalFormat as total, "
+    " (a.total * 100) / total_general.total_todos AS porcentaje "
+    " FROM (SELECT  "
+    " pecuil, " 
+    " UPPER(Peayn) AS nombre, "
+    " EsDes, "
+    " repdes, "
+    " CatDes, "
+    " FORMAT(SUM(CASE WHEN deprt = 1 THEN deval ELSE 0 END), 'C', 'es-AR') AS remunerativo, "
+    " FORMAT(SUM(CASE WHEN deprt = 2 THEN deval ELSE 0 END), 'C', 'es-AR') AS noRemunerativo, "
+    " SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) as total, "
+    " FORMAT(SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END), 'C', 'es-AR') AS totalFormat "
+    " FROM DETLIQ  "
+    " WHERE  "
+    " DETLIQ.DetAno = '"+anio+"'  "
+    " AND DETLIQ.DetMes = "+mes+"  "
+    " AND DETLIQ.repjur = '"+jur+"' "
+    " AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " GROUP BY pecuil, Peayn, EsDes, repdes, CatDes) as a "
+    " CROSS JOIN ( "
+    "     SELECT SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total_todos "
+    "     FROM DETLIQ "
+    "     WHERE DETLIQ.DetAno = '"+anio+"'  "
+    " 	AND DETLIQ.DetMes = "+mes+"  "
+    " 	AND DETLIQ.repjur = '"+jur+"' "
+    " 	AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " ) AS total_general "
+    " ORDER BY a.CatDes ")
+
+    cursor.execute(sql_query)
+    ## CONVERTIR EL CURSOR EN DICT
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in cursor.fetchall():
+        results.append(dict(zip(columns, row)))
+    ## CONVERTIR EL CURSOR EN DICT
+
+    data = list(results)
+    return JsonResponse(data, safe=False)
+
+def table_categorias_ajax(request):
+    """ FUNCION PARA TRAER DATOS DE LA TABLA DE CATEGORIAS """
+
+    anio = request.POST.get('anio')
+    mes = request.POST.get('mes')
+    jur = request.POST.get('jur')
+    jurNombre = request.POST.get('jurNombre')
+
+    conexion = conectarSQLTablero()
+    cursor = conexion.cursor()
+    sql_query = (" SELECT  "
+    " a.catcod, "
+    " a.nombre, "
+    " a.remunerativo, "
+    " a.noRemunerativo, "
+    " a.totalFormat as total, "
+    " (a.total * 100) / total_general.total_todos AS porcentaje "
+    " FROM(SELECT  "
+    " catcod,  "
+    " UPPER(CatDes) AS nombre, "
+    " FORMAT(SUM(CASE WHEN deprt = 1 THEN deval ELSE 0 END), 'C', 'es-AR') AS remunerativo, "
+    " FORMAT(SUM(CASE WHEN deprt = 2 THEN deval ELSE 0 END), 'C', 'es-AR') AS noRemunerativo, "
+    " SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total, "
+    " FORMAT(SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END), 'C', 'es-AR') AS totalFormat "
+    " FROM DETLIQ  "
+    " WHERE  "
+    " DETLIQ.DetAno = '"+anio+"'  "
+    " AND DETLIQ.DetMes = "+mes+"  "
+    " AND DETLIQ.repjur = '"+jur+"' "
+    " AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " GROUP BY catcod, CatDes "
+    " ) as a "
+    " CROSS JOIN ( "
+    "     SELECT SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total_todos "
+    "     FROM DETLIQ "
+    "     WHERE DETLIQ.DetAno = '"+anio+"'  "
+    " 	AND DETLIQ.DetMes = "+mes+"  "
+    " 	AND DETLIQ.repjur = '"+jur+"' "
+    " 	AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " ) AS total_general "
+    " ORDER BY a.nombre ")
+
+    cursor.execute(sql_query)
+    ## CONVERTIR EL CURSOR EN DICT
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in cursor.fetchall():
+        results.append(dict(zip(columns, row)))
+    ## CONVERTIR EL CURSOR EN DICT
+
+    data = list(results)
+    return JsonResponse(data, safe=False)
+
+def table_conceptos_ajax(request):
+    """ FUNCION PARA TRAER DATOS DE LA TABLA DE CONCEPTOS """
+
+    anio = request.POST.get('anio')
+    mes = request.POST.get('mes')
+    jur = request.POST.get('jur')
+    jurNombre = request.POST.get('jurNombre')
+
+    conexion = conectarSQLTablero()
+    cursor = conexion.cursor()
+    sql_query = (" SELECT  "
+    " a.cncod, "
+    " a.nombre, "
+    " a.remunerativo, "
+    " a.noRemunerativo, "
+    " a.totalFormat as total, "
+    " (a.total * 100) / total_general.total_todos AS porcentaje "
+    " FROM(SELECT  "
+    " cncod,  "
+    " UPPER(dedes) AS nombre, "
+    " FORMAT(SUM(CASE WHEN deprt = 1 THEN deval ELSE 0 END), 'C', 'es-AR') AS remunerativo, "
+    " FORMAT(SUM(CASE WHEN deprt = 2 THEN deval ELSE 0 END), 'C', 'es-AR') AS noRemunerativo, "
+    " SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total, "
+    " FORMAT(SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END), 'C', 'es-AR') AS totalFormat "
+    " FROM DETLIQ  "
+    " WHERE  "
+    " DETLIQ.DetAno = '"+anio+"'  "
+    " AND DETLIQ.DetMes = "+mes+"  "
+    " AND DETLIQ.repjur = '"+jur+"' "
+    " AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " GROUP BY cncod, dedes "
+    " ) as a "
+    " CROSS JOIN ( "
+    "     SELECT SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END) AS total_todos "
+    "     FROM DETLIQ "
+    "     WHERE DETLIQ.DetAno = '"+anio+"'  "
+    " 	AND DETLIQ.DetMes = "+mes+"  "
+    " 	AND DETLIQ.repjur = '"+jur+"' "
+    " 	AND DETLIQ.JurNom = '"+jurNombre+"' "
+    " ) AS total_general "
+    " ORDER BY a.nombre ")
 
     cursor.execute(sql_query)
     ## CONVERTIR EL CURSOR EN DICT
