@@ -25,7 +25,7 @@
             <div class="card-body">
               {% load static %}
 
-              <div class="row div-tablePrincipal">
+              <div class="row div-gral div-tablePrincipal">
                 <div class="col-sm-6 col-md-6 col-lg-2 offset-lg-3">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
@@ -58,12 +58,12 @@
                 </div>
 
                 <div class="col-lg-1 col-md-12 mb-3">
-                  <button onclick="cargarGraficos()" class="btn btn-primary text-center w-100"><i class="fa fa-search"></i></button>
+                  <button onclick="cargarTabla()" class="btn btn-primary text-center w-100"><i class="fa fa-search"></i></button>
                 </div>
 
               </div>
 
-              <div class="row div-tablePrincipal">
+              <div class="row div-gral div-tablePrincipal">
                 <div class="table-responsive col-lg-12">
                   <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
                     <thead>
@@ -86,8 +86,34 @@
                 <!-- --------------------------------------------------------------------------------- -->
                 <!-- --------------------------------------------------------------------------------- -->
                 <!-- --------------------------------------------------------------------------------- -->
+            <div class="row div-gral div-tablePersonas" style="display: none">
+                <div class="col-lg-3 col-md-3 col-sm-12">
+                    <button class="btn btn-primary mb-3 w-100" onclick="volverAlTablero()"><i class="fa fa-angle-double-left"></i> Volver al tablero principal</button>
+                </div>
+            </div>
+           <div class="row div-gral div-tablePersonas" style="display: none">
+                <div class="table-responsive col-lg-12">
+                  <table id="data_table_personas_ajax" class="table table-bordered table-striped table-hover small">
+                    <thead>
+                      <tr>
+                        <th width="7%">CUIL</th>
+                        <th width="17%">Nombre y Apellido</th>
+                        <th width="10%">Estado</th>
+                        <th width="10%">Repartición</th>
+                        <th width="13%">Categoría</th>
+                        <th width="10%">Remunerativo</th>
+                        <th width="10%">No Remunerativo</th>
+                        <th width="8%">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-            <div class="row div-tablePersonas"></div>
+
+
             <div class="row div-tableCategorias"></div>
 
             </div>
@@ -112,6 +138,77 @@
   /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE  **************************/
   /******************************************************************************************/
 
+  var tablePersonas;
+
+  function cargarTablaPersonas(jur, jurNombre, anio, mes){
+
+    $('#data_table_personas_ajax').dataTable().fnClearTable();
+    $('#data_table_personas_ajax').dataTable().fnDestroy();
+
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}',
+      "jur": jur,
+      "jurNombre": jurNombre,
+      "anio": anio,
+      "mes": mes
+    }
+
+     swal({
+        title: "",
+        text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+        html: true,
+        showConfirmButton:false,
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    });
+
+
+    tablePersonas = $('#data_table_personas_ajax').DataTable({
+      autoWidth: false,
+      searching: true,
+      dom: 'Bfrtip',
+      buttons: [
+
+      ],
+
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+      },
+      "ajax": {
+        "url": "{% url 'table_personas_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+      },
+      "columns": [
+        { "data": "pecuil" },
+        { "data": "nombre" },
+        { "data": "esDes" },
+        { "data": "repdes" },
+        { "data": "CatDes" },
+        { "data": "remunerativo" },
+        { "data": "noRemunerativo" },
+        { "data": "total" },
+
+      ],
+
+
+      order: [[4, 'desc']],
+
+
+    });
+
+
+     $('#data_table_personas_ajax').on('xhr.dt', function (e, settings, json, xhr) {
+        swal.close();
+    });
+
+    $(".div-gral").hide();
+    $(".div-tablePersonas").show();
+
+  }
+
+
   var table;
 
   function cargarTabla(){
@@ -125,6 +222,20 @@
       "anio_ajax": $("#anio_ajax").val(),
       "mes_ajax": $("#mes_ajax").val(),
     }
+
+  $(".div-gral").hide();
+  $(".div-tablePrincipal").show();
+
+
+  swal({
+        title: "",
+        text: '<p class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw  mt-4"></i></p><p class="text-center mt-2 mb-4">Esta operación puede demorar, por favor aguarde mientras se carga la información.</p>',
+        html: true,
+        showConfirmButton:false,
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    });
+
 
     table = $('#data_table_ajax').DataTable({
       autoWidth: false,
@@ -145,7 +256,7 @@
       },
       "columns": [
         { "data": "repjur" },
-        { "data": "jurNom" },
+        { "data": "JurNom" },
         { "data": "cantidad" },
         { "data": "remunerativoFormat" },
         { "data": "noRemunerativoFormat" },
@@ -159,8 +270,8 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
-             return  '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
-             '<button type="button" onclick="cambiarEstado('+data.user+', false)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-navicon"></i></button> ';
+             return  '<button type="button" onclick="cargarTablaPersonas(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
+             '<button type="button" onclick="cargarTablaCategoria(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-navicon"></i></button> ';
 
           }
         },
@@ -169,7 +280,14 @@
       {#order: [[1, 'asc']]#}
     });
 
+    $('#data_table_ajax').on('xhr.dt', function (e, settings, json, xhr) {
+        swal.close();
+    });
+
+
   }
+
+
 
   /******************************************************************************************/
   /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
@@ -214,6 +332,13 @@
 
     }
  });
+
+ function volverAlTablero(){
+
+  $(".div-gral").hide();
+  $(".div-tablePrincipal").show();
+
+ }
 
   </script>
   {% endblock %}

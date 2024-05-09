@@ -68,6 +68,45 @@ def principal_ajax(request):
     for row in cursor.fetchall():
         results.append(dict(zip(columns, row)))
     ## CONVERTIR EL CURSOR EN DICT
+    data = list(results)
+    return JsonResponse(data, safe=False)
+
+def table_personas_ajax(request):
+    """ FUNCION PARA TRAER DATOS DE LA TABLA DE PERSONAS """
+
+    anio = request.POST.get('anio')
+    mes = request.POST.get('mes')
+    jur = request.POST.get('jur')
+    jurNombre = request.POST.get('jurNombre')
+
+    conexion = conectarSQLTablero()
+    cursor = conexion.cursor()
+    sql_query = ("SELECT  "
+    "pecuil,  "
+    "UPPER(Peayn) AS nombre, "
+    "EsDes, "
+    "repdes, "
+    "CatDes, "
+    "FORMAT(SUM(CASE WHEN deprt = 1 THEN deval ELSE 0 END), 'C', 'es-AR') AS remunerativo, "
+    "FORMAT(SUM(CASE WHEN deprt = 2 THEN deval ELSE 0 END), 'C', 'es-AR') AS noRemunerativo, "
+    "FORMAT(SUM(CASE WHEN deprt IN (1,2) THEN deval ELSE 0 END), 'C', 'es-AR') AS total "
+    "FROM DETLIQ  "
+    "WHERE  "
+    "DETLIQ.DetAno = '"+anio+"'  "
+    "AND DETLIQ.DetMes = "+mes+"  "
+    "AND DETLIQ.repjur = '"+jur+"' "
+    "AND DETLIQ.JurNom = '"+jurNombre+"' "
+    "GROUP BY pecuil, Peayn, EsDes, repdes, CatDes "
+    "ORDER BY CatDes ")
+
+    cursor.execute(sql_query)
+    ## CONVERTIR EL CURSOR EN DICT
+    columns = [column[0] for column in cursor.description]
+    results = []
+    for row in cursor.fetchall():
+        results.append(dict(zip(columns, row)))
+    ## CONVERTIR EL CURSOR EN DICT
 
     data = list(results)
     return JsonResponse(data, safe=False)
+
