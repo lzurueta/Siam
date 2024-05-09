@@ -162,7 +162,7 @@
                   </table>
                 </div>
               </div>
-    
+
 
             </div>
           </div>
@@ -194,10 +194,13 @@
     $('#data_table_ajax').dataTable().fnClearTable();
     $('#data_table_ajax').dataTable().fnDestroy();
 
+    var anio = $("#anio_ajax").val();
+    var mes = $("#mes_ajax").val();
+
     var valores = {
       "csrfmiddlewaretoken" : '{{ csrf_token }}',
-      "anio_ajax": $("#anio_ajax").val(),
-      "mes_ajax": $("#mes_ajax").val(),
+      "anio_ajax": anio,
+      "mes_ajax": mes,
     }
 
     $(".div-gral").hide();
@@ -247,9 +250,9 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
-            return  '<button type="button" onclick="cargarTablaPersonas(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
-            '<button type="button" onclick="cargarTablaCategorias(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-list"></i></button> ' +
-            '<button type="button" onclick="cargarTablaConceptos(`'+data.repjur+'`,`'+data.JurNom+'`, `'+data.DetAno+'`, `'+data.DetMes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Conceptos"><i class="fa fa-sitemap"></i></button> ';
+            return  '<button type="button" onclick="cargarTablaPersonas(`'+data.repjur+'`,`'+data.JurNom+'`, `'+anio+'`, `'+mes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Personas"><i class="fa fa-child"></i></button> ' +
+            '<button type="button" onclick="cargarTablaCategorias(`'+data.repjur+'`,`'+data.JurNom+'`, `'+anio+'`, `'+mes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Categoría"><i class="fa fa-list"></i></button> ' +
+            '<button type="button" onclick="cargarTablaConceptos(`'+data.repjur+'`,`'+data.JurNom+'`, `'+anio+'`, `'+mes+'`)" class="btn btn-outline-secondary js-detalle" title="Ver Por Conceptos"><i class="fa fa-sitemap"></i></button> ';
 
           }
         },
@@ -404,7 +407,7 @@
     $(".div-tableCategorias").show();
 
   }
-  
+
   var tableConceptos;
 
   function cargarTablaConceptos(jur, jurNombre, anio, mes){
