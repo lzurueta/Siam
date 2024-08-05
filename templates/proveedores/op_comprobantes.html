@@ -17,173 +17,227 @@
           </div>
         </div>
       </div>
-
+      
       <div class="row clearfix">
-       <div class="col-sm-12 col-md-12 col-lg-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="col-lg-12">
-
-              <!-- --------------------------------------------------------------------------------- -->
-              <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
-              <!-- --------------------------------------------------------------------------------- -->
-
-              <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Tipo de Comprobante</span>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="col-lg-12">
+                
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                
+                <div class="row">
+                  <div class="col-sm-6 col-md-6 col-lg-4">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Tipo de Comprobante</span>
+                      </div>
+                      <select class="form-control" id="tipo_ajax" name="tipo_ajax">
+ 
+                        <option value="FA">Factura</option>
+                        <option value="RG">Repos.Gasto</option>
+                        <option value="LV">Liq.Viaticos</option>
+                        <option value="LS">Liq.Sueldos</option>
+                        <option value="RE">Recibo</option>
+                        <option value="TK">Ticket</option>
+                        <option value="TR">Transporte</option>
+                        <option value="CD" selected="selected">Comp.Definitivo</option>
+                        <option value="CM">Contrib.Municipio</option>
+                        <option value="DE">Devolucion</option>
+                        <option value="CO">Certif.Obra</option>
+                        <option value="PS">PagoSeguro</option>
+                        <option value="CR">Carg.Rendir Cta</option>
+                      </select>
                     </div>
-                    <select class="form-control" id="tipo_ajax" name="tipo_ajax">
-                      <option value="" selected="selected">Todos</option>
-                      <option value="FA">Factura</option>
-                      <option value="RG">Repos.Gasto</option>
-                      <option value="LV">Liq.Viaticos</option>
-                      <option value="LS">Liq.Sueldos</option>
-                      <option value="RE">Recibo</option>
-                      <option value="TK">Ticket</option>
-                      <option value="TR">Transporte</option>
-                      <option value="CD">Comp.Definitivo</option>
-                      <option value="CM">Contrib.Municipio</option>
-                      <option value="DE">Devolucion</option>
-                      <option value="CO">Certif.Obra</option>
-                      <option value="PS">PagoSeguro</option>
-                      <option value="CR">Carg.Rendir Cta</option>
-                    </select>
+                  </div>
+                  
+                  <div class="col-sm-6 col-md-6 col-lg-2">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Letra</span>
+                      </div>
+                      <input type="text" class="form-control"  name="letra_ajax" id="letra_ajax" autocomplete="off">
+                    </div>
+                  </div>
+                  
+                  <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Sucursal</span>
+                      </div>
+                      <input type="number" class="form-control"  name="suc_ajax" id="suc_ajax" autocomplete="off">
+                    </div>
+                  </div>
+                  
+                  <div class="col-sm-6 col-md-6 col-lg-2">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">N°</span>
+                      </div>
+                      <input type="number" class="form-control"  name="nro_ajax" id="nro_ajax" autocomplete="off">
+                    </div>
+                  </div>
+                  
+                  <div class="col-lg-1 mb-3">
+                    <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
                   </div>
                 </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-2">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Letra</span>
-                    </div>
-                    <input type="text" class="form-control"  name="letra_ajax" id="letra_ajax" autocomplete="off">
-                  </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Sucursal</span>
-                    </div>
-                    <input type="number" class="form-control"  name="suc_ajax" id="suc_ajax" autocomplete="off">
-                  </div>
-                </div>
-
-                <div class="col-sm-6 col-md-6 col-lg-2">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">N°</span>
-                    </div>
-                    <input type="number" class="form-control"  name="nro_ajax" id="nro_ajax" autocomplete="off">
-                  </div>
-                </div>
-
-                <div class="col-lg-1 mb-3">
-                  <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
-                </div>
+                
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                
               </div>
-
+              
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- ------------------------------- TABLA OPS --------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              
+              <div class="table-responsive col-lg-12">
+                <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                  <thead>
+                    <tr>
+                      <th>Tipo</th>
+                      <th>Letra</th>
+                      <th>Sucursal</th>
+                      <th>N° Factura</th>
+                      <th>Fecha</th>
+                      <th>Ejercicio</th>
+                      <th>Jurisdicción</th>
+                      <th>UDO</th>
+                      <th>N° OP.</th>
+                      <th>Importe</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+              
               <!-- --------------------------------------------------------------------------------- -->
               <!-- --------------------------------------------------------------------------------- -->
               <!-- --------------------------------------------------------------------------------- -->
-
+              
             </div>
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- ------------------------------- TABLA OPS --------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-
-            <div class="table-responsive col-lg-12">
-              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
-                <thead>
-                  <tr>
-                    <th>Tipo</th>
-                    <th>Letra</th>
-                    <th>Sucursal</th>
-                    <th>N° Factura</th>
-                    <th>Fecha</th>
-                    <th>Ejercicio</th>
-                    <th>Jurisdicción</th>
-                    <th>UDO</th>
-                    <th>N° OP.</th>
-                    <th>Importe</th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-
           </div>
         </div>
       </div>
-     </div>
     </div>
   </div>
-
+  
   <!-- --------------------------------------------------------------------------------- -->
   <!-- ------------------------------ MODAL LG VACIO ----------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
-
-
+  
+  
   <div class="modal fade" id="modal-detalle" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content"></div>
     </div>
   </div>
-
+  
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
-
+  
   {% endblock %}
   {% block extraJS %}
   <script>
-
-    /******************************************************************************************/
-    /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE DE OPs ********************/
-    /******************************************************************************************/
-
-    var tableOP;
-
-    function cargarTabla(){
-
-      $('#data_table_ajax').dataTable().fnClearTable();
-      $('#data_table_ajax').dataTable().fnDestroy();
-
-      var valores = {
-        "csrfmiddlewaretoken" : '{{ csrf_token }}', 
-        "tipo_ajax": $("#tipo_ajax").val(),
-        "letra_ajax": $("#letra_ajax").val(),
-        "suc_ajax": $("#suc_ajax").val(),
-        "nro_ajax": $("#nro_ajax").val(),
-      }
-
-      tableOP = $('#data_table_ajax').DataTable({
-        autoWidth: false,
-        searching: false,
-        dom: 'Bfrtip',
-        buttons: [
+  
+  /******************************************************************************************/
+  /*********************** FUNCION PARA CARGAR DATOS EN DATATABLE DE OPs ********************/
+  /******************************************************************************************/
+  
+  var tableOP;
+  
+  function cargarTabla(){
+    
+    $('#data_table_ajax').dataTable().fnClearTable();
+    $('#data_table_ajax').dataTable().fnDestroy();
+    
+    var valores = {
+      "csrfmiddlewaretoken" : '{{ csrf_token }}', 
+      "tipo_ajax": $("#tipo_ajax").val(),
+      "letra_ajax": $("#letra_ajax").val(),
+      "suc_ajax": $("#suc_ajax").val(),
+      "nro_ajax": $("#nro_ajax").val(),
+    }
+    
+    tableOP = $('#data_table_ajax').DataTable({
+      autoWidth: false,
+      searching: false,
+      dom: 'Bfrtip',
+      buttons: [
         'csv', 'print',
-        ],
-        language: {
-          url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+      ],
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+      },
+      "ajax": {
+        "url": "{% url 'op_comprobantes_ajax' %}",
+        "data": valores,
+        "async": true,
+        "type": "POST",
+        "dataSrc": "",
+        "error": function (xhr, error, code) {
+            swal('Error!',"No se pudo cargar la información. Intente nuevamente o comuniquese con el area de desarrollo.", 'error');
+         }
+      },
+      "columns": [
+        {
+          "data": null,
+          "sortable": false,
+          "render": function(data, type, row) {
+            
+            switch (data.tipoCpbte) {
+              case 'FA':
+              return 'Factura';  
+              break;    
+              case 'RG':
+              return 'Repos.Gasto';     
+              break;
+              case 'LV':
+              return 'Liq.Viaticos';     
+              break;
+              case 'LS':
+              return 'Liq.Sueldos';     
+              break;
+              case 'RE':
+              return 'Recibo';     
+              break;
+              case 'TK': 
+              return 'Ticket';     
+              break;
+              case 'TR':
+              return 'Transporte';     
+              break;
+              case 'CD':
+              return 'Comp.Definitivo';     
+              break;
+              case 'CM':
+              return 'Contrib.Municipio';     
+              break;
+              case 'DE': 
+              return 'Devolucion';     
+              break;
+              case 'CO':
+              return 'Certif.Obra';     
+              break;
+              case 'PS':
+              return 'PagoSeguro';     
+              break;
+              case 'CR':
+              return 'Carg.Rendir Cta';     
+              break;
+              default:
+              return '-' 
+              
+            }
+            
+          }
         },
-        "ajax": {
-          "url": "{% url 'op_comprobantes_ajax' %}",
-          "data": valores,
-          "async": true,
-          "type": "POST",
-          "dataSrc": ""
-        },
-        "columns": [
-        { "data": "tipoCbpte" },
         { "data": "letraCpbte" },
         { "data": "sucursalCpbte" },
         { "data": "nroCpbte" },
@@ -192,42 +246,67 @@
         { "data": "juri" },
         { "data": "udo" },
         { "data": "nroOP" },
-        { "data": "importeCpbte", "className" : "text-end" },
+        {
+          "data": null,
+          "className": "text-end",
+          "render": function(data, type, row) {
+
+            return formatearNumero(parseFloat(data.importeCpbte))
+
+           }
+          },
+        
+      ],
+      "columnDefs": [
+        {
+          "targets": 4, // Índice de la columna de fechas
+          "render": function (data, type, row) {
+            if (type === 'display' || type === 'filter') {
+              var aux = data.split("T");
+              var fecha = aux[0];
+              var hora = aux[1];
+              
+              var auxFecha = fecha.split("-");
+              
+              return auxFecha[2] + "-" + auxFecha[1] + "-" + auxFecha[0] ;
+            }
+            return data;
+          }
+        }
+      ]
+    });
+  }
   
-        ]
-      });
-    }
-
-
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /******************************************************************************************/
-
-
-    /******************************************************************************************/
-    /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
-    /******************************************************************************************/
-
-    $(document).ready(function(){
-      cargarTabla();
-    });
-
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /******************************************************************************************/
-
-
-    /******************************************************************************************/
-    /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
-    /******************************************************************************************/
-
-    $("#btnBuscar").click(function(){
-      cargarTabla();
-    });
-
-    /******************************************************************************************/
-    /******************************************************************************************/
-    /******************************************************************************************/
-
+  
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+  
+  
+  /******************************************************************************************/
+  /*************************** FUNCION PARA LA CARGA DE PAGINA ******************************/
+  /******************************************************************************************/
+  
+  $(document).ready(function(){
+    cargarTabla();
+  });
+  
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+  
+  
+  /******************************************************************************************/
+  /*********************** FUNCION PARA EL BOTON BUSCAR CON FILTRO **************************/
+  /******************************************************************************************/
+  
+  $("#btnBuscar").click(function(){
+    cargarTabla();
+  });
+  
+  /******************************************************************************************/
+  /******************************************************************************************/
+  /******************************************************************************************/
+  
   </script>
   {% endblock %}

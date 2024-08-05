@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <div class="modal-header">
   <p class="h6">{{ titulo }} </p>
 </div>
@@ -40,7 +41,7 @@
           <p class="fw-bold">Fecha de Emisión:</p>
         </div>
         <div class="col-lg-7">
-          <p>{{ detalle.fecEmi }}</p>
+          <p>{{ detalle.fecEmi|formato_fecha_hora }}</p>
         </div>
       </div>
     </div>
@@ -51,7 +52,7 @@
           <p class="fw-bold">Fecha de Banco:</p>
         </div>
         <div class="col-lg-7">
-          <p>{{ detalle.fecPag }}</p>
+          <p>{{ detalle.fecPag|formato_fecha_hora }}</p>
         </div>
       </div>
     </div>

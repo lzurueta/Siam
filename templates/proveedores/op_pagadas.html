@@ -19,116 +19,116 @@
       </div>
 
       <div class="row clearfix">
-       <div class="col-sm-12 col-md-12 col-lg-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="col-lg-12">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="col-lg-12">
 
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------- FILTROS DE BUSQUEDA --------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
 
-              <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
+                <div class="row">
+                  <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
+                      </div>
+                      <input type="text" class="form-control" value="{{ anio }}" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
                     </div>
-                    <input type="text" class="form-control" value="{{ anio }}" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
                   </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
+                  <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Jur.</span>
+                      </div>
+                      <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
                     </div>
-                    <input type="text" class="form-control" name="jur_ajax" id="jur_ajax" autocomplete="off">
                   </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
+                  <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">UDO</span>
+                      </div>
+                      <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
                     </div>
-                    <input type="text" class="form-control" name="udo_ajax" id="udo_ajax" autocomplete="off">
                   </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-3">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
+                  <div class="col-sm-6 col-md-6 col-lg-3">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Nro. OP</span>
+                      </div>
+                      <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
                     </div>
-                    <input type="text" class="form-control" name="nro_op_ajax" id="nro_op_ajax" autocomplete="off">
                   </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-5">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
+                  <div class="col-sm-6 col-md-6 col-lg-5">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
+                      </div>
+                      <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
                     </div>
-                    <input type="date" class="form-control" name="desde_ajax" id="desde_ajax" autocomplete="off">
                   </div>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-5">
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
+                  <div class="col-sm-6 col-md-6 col-lg-5">
+                    <div class="input-group input-group-sm mb-3">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
+                      </div>
+                      <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
                     </div>
-                    <input type="date" class="form-control" name="hasta_ajax" id="hasta_ajax" autocomplete="off">
+                  </div>
+
+
+                  <div class="col-lg-1 mb-3">
+                    <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
+                  </div>
+                  <div class="col-lg-1 mb-3">
+                    <button class="btn btn-success w-100" type="button" id="btnExcel" title="Exportar Excel"><i class="fa fa-file-excel-o"></i></button>
                   </div>
                 </div>
 
-                  
-                <div class="col-lg-1 mb-3">
-                  <button class="btn btn-primary w-100" type="button" id="btnBuscar" title="Buscar"><i class="fa fa-search"></i></button>
-                </div>
-                <div class="col-lg-1 mb-3">
-                  <button class="btn btn-success w-100" type="button" id="btnExcel" title="Exportar Excel"><i class="fa fa-file-excel-o"></i></button>
-                </div>
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+                <!-- --------------------------------------------------------------------------------- -->
+
               </div>
 
-             <!-- --------------------------------------------------------------------------------- -->
-             <!-- --------------------------------------------------------------------------------- -->
-             <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- ------------------------------- TABLA OPS --------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+
+              <div class="table-responsive col-lg-12">
+                <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
+                  <thead>
+                    <tr>
+                      <th>Fec.Pago</th>
+                      <th>Ejer.</th>
+                      <th>Nro. OP</th>
+                      <th>Jur.</th>
+                      <th>UDO</th>
+                      <th>Repartición</th>
+                      {#                    <th>Est. Tipo</th> SACAMOS ESTA COLUMNA#}
+                      <th>Tipo Pago</th>
+                      {#                    <th>Pagado</th>#}
+                      {#                    <th>Saldo</th>#}
+                      <th>Imp.Pago</th>
+                      <th>Cuit</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
+              <!-- --------------------------------------------------------------------------------- -->
 
             </div>
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- ------------------------------- TABLA OPS --------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-
-            <div class="table-responsive col-lg-12">
-              <table id="data_table_ajax" class="table table-bordered table-striped table-hover small">
-                <thead>
-                  <tr>
-                    <th>Fec.Pago</th>
-                    <th>Ejer.</th>
-                    <th>Nro. OP</th>
-                    <th>Jur.</th>
-                    <th>UDO</th>
-                    <th>Repartición</th>
-{#                    <th>Est. Tipo</th> SACAMOS ESTA COLUMNA#}
-                    <th>Tipo Pago</th>
-{#                    <th>Pagado</th>#}
-{#                    <th>Saldo</th>#}
-                    <th>Imp.Pago</th>
-                    <th>Cuit</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                </tbody>
-              </table>
-            </div>
-
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-            <!-- --------------------------------------------------------------------------------- -->
-
           </div>
         </div>
       </div>
-     </div>
     </div>
   </div>
 
@@ -147,7 +147,7 @@
   <!-- --------------------------------------------------------------------------------- -->
   <!-- --------------------------------------------------------------------------------- -->
 
-   <div class="aux"></div>
+  <div class="aux"></div>
 
   {% endblock %}
   {% block extraJS %}
@@ -189,7 +189,10 @@
         "data": valores,
         "async": true,
         "type": "POST",
-        "dataSrc": ""
+        "dataSrc": "",
+        "error": function (xhr, error, code) {
+          swal('Error!',"No se pudo cargar la información. Intente nuevamente o comuniquese con el area de desarrollo.", 'error');
+        }
       },
       "columns": [
         { "data": "fecPago" },
@@ -199,7 +202,15 @@
         { "data": "udo" },
         { "data": "reparticion" },
         { "data": "tipoPago" },
-        { "data": "importepago", "className": "text-end" },
+        {
+          "data": null,
+          "className": "text-end",
+          "render": function(data, type, row) {
+
+            return formatearNumero(parseFloat(data.importePago))
+
+          }
+        },
         { "data": "cuit" },
         {
           "data": null,
@@ -210,10 +221,22 @@
             return '<button type="button" onclick="verPdf('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)"  class="btn btn-outline-secondary js-imprimir" title="Imprimir"><i class="fa fa-print"></i></button>' +
             ' <button type="button" onclick="verRetenciones('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Retenciones de la OP"><i class="fa fa-calculator"></i></button>'+
             ' <button type="button" onclick="verDetalle('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`)" class="btn btn-outline-secondary js-detalle" title="Detalle de la OP"><i class="fa fa-bars"></i></button>'+
-            ' <button type="button" onclick="verComprobante('+data.ejercicio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`, `'+data.popnro+'`)" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
+            ' <button type="button" onclick="verComprobante('+data.PopAnio+','+data.nroOP+',`'+data.juri+'`,`'+data.udo+'`, `'+data.Popnro+'`, `'+data.ejercicio+'`)" class="btn btn-outline-secondary js-comprobante" title="Ver Comprobante de Pago"><i class="fa fa-usd"></i></button>';
 
           }
         },
+      ],
+      "columnDefs": [
+        {
+          "targets": 0, // Índice de la columna de fechas
+          "render": function (data, type, row) {
+            if (type === 'display' || type === 'filter') {
+              var dateParts = data.split("-");
+              return dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+            }
+            return data;
+          }
+        }
       ]
     });
   }
@@ -229,23 +252,23 @@
   function verRetenciones(OpaAnio,OpaNro,jurcod,repudo){
 
     var valores = {
-        "csrfmiddlewaretoken" : '{{csrf_token }}',
-        "OpaAnio": OpaAnio,
-        "OpaNro": OpaNro,
-        "jurcod": jurcod,
-        "repudo": repudo,
+      "csrfmiddlewaretoken" : '{{csrf_token }}',
+      "OpaAnio": OpaAnio,
+      "OpaNro": OpaNro,
+      "jurcod": jurcod,
+      "repudo": repudo,
     }
 
     $.ajax({
-    url: '{% url 'op_pagadas_retenciones' %}',
-    type: 'POST',
-    data: valores,
-    dataType: 'json',
-    success: function(data) {
+      url: '{% url 'op_pagadas_retenciones' %}',
+      type: 'POST',
+      data: valores,
+      dataType: 'json',
+      success: function(data) {
 
-         $("#modal-detalle .modal-content").html(data.html_form);
-         $("#modal-detalle").modal("show");
-    },
+        $("#modal-detalle .modal-content").html(data.html_form);
+        $("#modal-detalle").modal("show");
+      },
 
     });
 
@@ -264,23 +287,23 @@
   function verDetalle(OpaAnio,OpaNro,jurcod,repudo){
 
     var valores = {
-        "csrfmiddlewaretoken" : '{{csrf_token }}',
-        "OpaAnio": OpaAnio,
-        "OpaNro": OpaNro,
-        "jurcod": jurcod,
-        "repudo": repudo,
+      "csrfmiddlewaretoken" : '{{csrf_token }}',
+      "OpaAnio": OpaAnio,
+      "OpaNro": OpaNro,
+      "jurcod": jurcod,
+      "repudo": repudo,
     }
 
     $.ajax({
-    url: '{% url 'op_detalle' %}',
-    type: 'POST',
-    data: valores,
-    dataType: 'json',
-    success: function(data) {
+      url: '{% url 'op_detalle' %}',
+      type: 'POST',
+      data: valores,
+      dataType: 'json',
+      success: function(data) {
 
-         $("#modal-detalle .modal-content").html(data.html_form);
-         $("#modal-detalle").modal("show");
-    },
+        $("#modal-detalle .modal-content").html(data.html_form);
+        $("#modal-detalle").modal("show");
+      },
 
     });
 
@@ -296,27 +319,28 @@
   /************************ FUNCION PARA EL BOTON VER COMPROBANTE ***************************/
   /******************************************************************************************/
 
-  function verComprobante(OpaAnio,OpaNro,jurcod,repudo,popnro){
+  function verComprobante(OpaAnio,OpaNro,jurcod,repudo,popnro,ejer){
 
     var valores = {
-        "csrfmiddlewaretoken" : '{{csrf_token }}',
-        "OpaAnio": OpaAnio,
-        "OpaNro": OpaNro,
-        "jurcod": jurcod,
-        "repudo": repudo,
-        "popnro": popnro
+      "csrfmiddlewaretoken" : '{{csrf_token }}',
+      "OpaAnio": OpaAnio,
+      "OpaNro": OpaNro,
+      "jurcod": jurcod,
+      "repudo": repudo,
+      "popnro": popnro,
+      "ejer" : ejer
     }
 
     $.ajax({
-    url: '{% url 'op_pagadas_comprobante' %}',
-    type: 'POST',
-    data: valores,
-    dataType: 'json',
-    success: function(data) {
+      url: '{% url 'op_pagadas_comprobante' %}',
+      type: 'POST',
+      data: valores,
+      dataType: 'json',
+      success: function(data) {
 
-         $("#modal-detalle .modal-content").html(data.html_form);
-         $("#modal-detalle").modal("show");
-    },
+        $("#modal-detalle .modal-content").html(data.html_form);
+        $("#modal-detalle").modal("show");
+      },
 
     });
 
@@ -351,81 +375,84 @@
   /******************************************************************************************/
   /******************************************************************************************/
 
-    /****************************************************************************************/
+  /****************************************************************************************/
   /************************** FUNCION PARA EL BOTON EXCEL ***********************************/
   /******************************************************************************************/
-  $("#btnExcel").click(function(){
-
-    swal({
-      title: "Atención!",
-      text: "El archivo excel puede ser exportado con detalles de comprobantes o sin el mismo.",
-      icon: "info",
-      buttons: {
-        con:  {
-            text: "Con Compr.",
-            className: "swal-button--cancel"
-        },
-        sin : {
-            text: "Sin Compr.",
-            className: "swal-button--cancel"
-        },
-        cerrar: {
-            text: "Cerrar",
-            className: "swal-button--cancel"
-        },
-      },
-    }).then((value) => {
-      switch (value) {
-
-        case "con":
-        op_pagadas_excel('con')
-        break;
-
-        case "sin":
+    $("#btnExcel").click(function(){
+        
         op_pagadas_excel('sin')
-        break;
+{##}
+{#    swal({#}
+{#    title: "Atención!",#}
+{#    text: "El archivo excel puede ser exportado con detalles de comprobantes o sin el mismo.",#}
+{#    type: "info",#}
+{#    showCancelButton: true,#}
+{#    confirmButtonText: "CON",#}
+{#    confirmButtonClass: "btn-warning",#}
+{#    cancelButtonText: "SIN",#}
+{#    cancelButtonClass: "btn-danger"#}
 
-      }
-    });
-
+{#function(isConfirm) {#}
+{#    if (isConfirm) {#}
+{##}
+{#        op_pagadas_excel('con')#}
+{##}
+{#    } else {#}
+{##}
+{#        op_pagadas_excel('sin')#}
+{##}
+{#    }#}
+{#   });#}
   });
 
-   function op_pagadas_excel(tipo){
+  function op_pagadas_excel(tipo){
 
     $(".aux").html('<form id="explortarExcel" action="{% url 'op_pagadas_excel' %}" method="POST">{%  csrf_token %}' +
-        '<input name="tipo" value="'+tipo+'"/>' +
-        '<input name="ejer_ajax" value="'+$("#ejer_ajax").val()+'"/>' +
-        '<input name="jur_ajax" value="'+$("#jur_ajax").val()+'"/>' +
-        '<input name="udo_ajax" value="'+$("#udo_ajax").val()+'"/>' +
-        '<input name="nro_op_ajax" value="'+$("#nro_op_ajax").val()+'"/>' +
-        '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
-        '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
-        '</form>');
+    '<input name="tipo" value="'+tipo+'"/>' +
+    '<input name="ejer_ajax" value="'+$("#ejer_ajax").val()+'"/>' +
+    '<input name="jur_ajax" value="'+$("#jur_ajax").val()+'"/>' +
+    '<input name="udo_ajax" value="'+$("#udo_ajax").val()+'"/>' +
+    '<input name="nro_op_ajax" value="'+$("#nro_op_ajax").val()+'"/>' +
+    '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
+    '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
+    '</form>');
 
     $("#explortarExcel").submit();
 
     $(".aux").html('');
 
-   }
+  }
 
   function verPdf(ejercicio,nroOP,juri,udo){
 
     $(".aux").html('<form id="verPdf" action="{% url 'op_imprimir' %}" target="_blank" method="POST">{%  csrf_token %}' +
-        '<input name="ejercicio" value="'+ejercicio+'"/>' +
-        '<input name="nroOP" value="'+nroOP+'"/>' +
-        '<input name="juri" value="'+juri+'"/>' +
-        '<input name="udo" value="'+udo+'"/>' +
-        '</form>');
+    '<input name="ejercicio" value="'+ejercicio+'"/>' +
+    '<input name="nroOP" value="'+nroOP+'"/>' +
+    '<input name="juri" value="'+juri+'"/>' +
+    '<input name="udo" value="'+udo+'"/>' +
+    '</form>');
 
     $("#verPdf").submit();
 
     $(".aux").html('');
 
-   }
+  }
 
   /******************************************************************************************/
   /******************************************************************************************/
   /******************************************************************************************/
+  $("#ejer_ajax").blur(function(){
 
+
+    if (this.value == ''){
+
+      var fecha = new Date();
+      var anio = fecha.getFullYear();
+
+      $("#ejer_ajax").val(anio);
+
+    }
+
+  });
 </script>
 {% endblock %}

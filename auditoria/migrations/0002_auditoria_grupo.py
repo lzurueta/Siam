@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth', '0013_group_home_group_icon'),
+        # ('auth', '0013_group_home_group_icon'),
         ('auditoria', '0001_initial'),
     ]
 

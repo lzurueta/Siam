@@ -1,5 +1,6 @@
-{% if tipo != '1' and tipo != '4' %}
+{% load custom_filters %}
 
+{% if tipo != '1' and tipo != '4' %}
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -83,32 +84,32 @@
   </div>
 
   <div class="div">
-    <div class="box" style="width: 70.9% !important;">
+    <div class="box" style="width: 60.9% !important;">
       <p style="font-size: 18px;text-decoration:underline">Para el CONTRIBUYENTE</p>
     </div>
-    <div class="box" style="width: 28% !important;">
-      <p class="text-right" style="font-size: 16px;text-decoration:underline">COMP.N° 00-  {{ comprobante.nroConstancia }} / {{ comprobante.ejerConstancia }}</p>
+    <div class="box" style="width: 38% !important;">
+      <p class="text-right" style="font-size: 16px;text-decoration:underline">COMP.N° 00-  {{ cabecera.nroConstancia }} / {{ cabecera.ejerConstancia }}</p>
     </div>
   </div>
 
   <div class="div">
     <div class="box" style="width: 99.9% !important;">
-      <span>Apellido y Nombre o Denominación: {{ comprobante.contribuyente }}</span>
+      <span>Apellido y Nombre o Denominación: {{ cabecera.contribuyente }}</span>
     </div>
   </div>
 
   <div class="div">
     <div class="box" style="margin-top:20px;width: 99.9% !important;">
-      <span>Domicilio: {{ comprobante.domicilio }} </span>
+      <span>Domicilio: {{ cabecera.domicilio }} </span>
     </div>
   </div>
 
   <div class="div">
     <div class="box" style="margin-top:20px;width: 99.9% !important;">
-      <span>C.U.I.T. / C.U.I.L.: {{ comprobante.cuit }} </span>
+      <span>C.U.I.T. / C.U.I.L.: {{ cabecera.cuit }} </span>
     </div>
   </div>
-
+{% for c in comprobante %}
   <div class="div">
     <div class="box" style="width: 99.9% !important;margin-top:20px">
       <p>Concepto de la Retención: </p>
@@ -117,19 +118,25 @@
 
   <div class="div">
     <div class="box" style="margin-top:5px;width: 99.9%">
-      <span>Alícuota: {{ comprobante.alicuota }} </span>
+      <span>Alícuota: % {{ c.alicuota }} </span>
     </div>
     <div class="box" style="margin-top:20px;width: 48.9% !important;">
-      <span>Importe de la Operación: $ {{ comprobante.importeOper }}</span>
+      <span>Importe de la Operación: $ {{ c.importeOper|formatear_numero }}</span>
     </div>
     <div class="box" style="margin-top:20px;width: 49.9% !important;">
-      <span>Fecha de la Retención: {{ comprobante.fecRetencion }}</span>
+      <span>Fecha de la Retención: {{ c.fecReten|formato_fecha }}</span>
     </div>
     <div class="box" style="margin-top:20px;width: 99.9%">
-      <span>Los comprobantes corresponden a la Liquidación Nro.: {{ comprobante.nroLiquidacion }} / {{ comprobante.ejerLiquidacion }} </span>
+      <span>Los comprobantes corresponden a la Liquidación Nro.: {{ c.nroLiquidacion }} / {{ c.ejerLiquidacion }} </span>
     </div>
   </div>
 
+  <div class="div">
+    <div class="box text-center" style="width: 100%;">
+        <hr style="border: solid 0.5px black"/>
+    </div>
+  </div>
+{% endfor %}
   <div class="div">
     <div class="box text-center" style="margin-top:20px;width: 45.9%">
       <img src="{% static 'assets/images/firma.jpeg' %}"  width="150px" alt="Logo"><br>
@@ -256,46 +263,46 @@
 
 <div class="div" style="margin-top:10px;width: 100% !important;border-bottom:  3px double #000;">
      <div class="box" style="width: 100% !important;">
-        <span><b>Nº CONSTANCIA </b> {{ comprobante.nroConstancia }}  / {{ comprobante.ejerConstancia }}</span>
+        <span><b>Nº CONSTANCIA</b> {{ cabecera.nroConstancia }} / {{ cabecera.ejerConstancia }}</span>
      </div>
   </div>
 
  <div class="div" style="width: 100% !important;border-bottom:  3px double #000;">
      <div class="box text-center" style="width: 59% !important;">
         <b>CONTRIBUYENTE </b> </br>
-         {{ comprobante.contribuyente }}
+        {{ cabecera.contribuyente }}
      </div>
        <div class="box text-right" style="width: 38.5% !important;">
-        <b>CUIT </b>{{ comprobante.cuit }}
+        <b>CUIT </b> {{ cabecera.cuit }}
      </div>
   </div>
 
  <div class="div" style="width: 100% !important;border-bottom:  1px solid #000;">
      <div class="box" style="width: 59% !important;">
-        <span>FECHA PAGO</span> {{ comprobante.fecRetencion }}</br>
+        <span>FECHA PAGO</span> {{ cabecera.fecRetencion|formato_fecha }}</br>
         <span class="text-center">COMPROBANTE</span>
      </div>
        <div class="box" style="width: 38.5% !important;">
-        <span>N° </span> {{ comprobante.nroLiquidacion }}<br>
+        <span>N° </span> {{ cabecera.nroLiquidacion }}<br>
         <span>IMPORTE </span>
      </div>
   </div>
-
+{% for c in comprobante %}
  <div class="div" style="width: 100% !important;border-bottom:  1px solid #000;">
      <div class="box" style="width: 59% !important;padding-top: 5px !important; padding-bottom: 5px !important">
-        <span>{{ comprobante.tipoCbpte }} - {{ comprobante.letraCpbte }} - {{ comprobante.sucursalCpbte }} - {{ comprobante.nroCpbte }}</span>
+        <span>{{ c.tipoCpbte }} - {{ c.letraCpbte }} - {{ c.sucursalCpbte }} - {{ c.nroCpbte }}</span>
      </div>
        <div class="box" style="width: 38.5% !important;padding-top: 5px !important; padding-bottom: 5px !important">
-        <span>{{ comprobante.importeCpbte }}</span>
+        <span>{{ c.importeCpbte|formatear_numero }}</span>
      </div>
   </div>
-
+{% endfor %}
 <div class="div" style="width: 100% !important;margin-top: 20px;">
      <div class="box" style="width: 59% !important;">
         <span>MONTO DE LA OPERACIÓN</span>
      </div>
        <div class="box" style="width: 38.5% !important;">
-        <span>{{ comprobante.importeOper }} </span>
+        <span>{{ cabecera.importeOper|formatear_numero }} </span>
      </div>
   </div>
 
@@ -304,7 +311,7 @@
         <span>ALICUOTA</span>
      </div>
        <div class="box" style="width: 38.5% !important;">
-        <span>{{ comprobante.alicuota }} </span>
+        <span>{{ cabecera.alicuota }} </span>
      </div>
   </div>
 
@@ -313,7 +320,7 @@
         <span>IMPORTE RETENCIÓN</span>
      </div>
        <div class="box" style="width: 38.5% !important;">
-        <span>{{ comprobante.importeReten }} </span>
+        <span>{{ cabecera.importeReten|formatear_numero }} </span>
      </div>
   </div>
 
@@ -441,10 +448,10 @@
 
   <div class="div" style="border-bottom: solid 1px black">
     <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Certificado Nº : {{ comprobante.nroConstancia }}  /  {{ comprobante.ejerConstancia }}</span>
+      <span>Certificado Nº : {{ cabecera.nroConstancia }}  /  {{ cabecera.ejerConstancia }}</span>
     </div>
      <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Fecha : {{ comprobante.fecha }}</span>
+      <span>Fecha : {{ cabecera.fecha|formato_fecha }}</span>
     </div>
   </div>
 
@@ -469,13 +476,13 @@
       <span style="font-size: 16px">B. - Datos del Sujeto Retenido</span>
     </div>
      <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Denominación: {{ comprobante.contribuyente }}</span>
+      <span>Denominación: {{ cabecera.contribuyente }}</span>
     </div>
     <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>C.U.I.T. Nº: {{ comprobante.cuit }}</span>
+      <span>C.U.I.T. Nº: {{ cabecera.cuit }}</span>
     </div>
     <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Domicilio: {{ comprobante.domicilio }}</span>
+      <span>Domicilio: {{ cabecera.domicilio }}</span>
     </div>
   </div>
 
@@ -484,13 +491,14 @@
       <span style="font-size: 16px">C. - Datos de la Retención Practicada</span>
     </div>
      <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Impuesto: {{ comprobante.impuesto }}</span>
+      <span>Impuesto: </span>
     </div>
     <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Régimen: {{ comprobante.regimen }}</span>
+      <span>Régimen: {{ cabecera.actividad }}</span>
     </div>
     <div class="box" style="width: 100% !important;margin-top: 5px">
-      <span>Importe de Operación: {{ comprobante.importeOper }}</span>
+      <span>Importe de Operación: {{ cabecera.importeOper|formatear_numero }}</span>
+
     </div>
   </div>
 
@@ -505,22 +513,22 @@
       <span>Concepto de Retención:</span>
     </div>
   </div>
-
+ {% for c in comprobante %}
   <div class="div" style="margin-left: 10px;margin-top: 10px">
      <div class="box" style="width: 31% !important;">
-      <span>{{ comprobante.tipoCbpte }} - {{ comprobante.letraCpbte }} - {{ comprobante.sucursalCpbte }} - {{ comprobante.nroCpbte }}</span>
+      <span>{{ c.tipoCpbte }} - {{ c.letraCpbte }} - {{ c.sucursalCpbte }} - {{ c.nroCpbte }}</span>
     </div>
     <div class="box" style="width: 31% !important;">
-      <span>{{ comprobante.importeCpbte }}</span>
+      <span>{{ c.importeCpbte|formatear_numero }}</span>
     </div>
     <div class="box" style="width: 31% !important;">
       <span></span>
     </div>
   </div>
-
+{% endfor %}
   <div class="div" style="margin-top: 10px">
      <div class="box text-right" style="width: 100% !important;">
-      <span>Monto de la Retención: {{ comprobante.importeReten }}</span>
+      <span>Monto de la Retención: {{ cabecera.importeReten|formatear_numero }}</span>
     </div>
   </div>
 

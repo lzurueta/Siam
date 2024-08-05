@@ -29,6 +29,15 @@
               <!-- --------------------------------------------------------------------------------- -->
 
               <div class="row">
+
+                  <div class="col-sm-6 col-md-6 col-lg-2">
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Ejer.</span>
+                    </div>
+                    <input type="text" class="form-control" value="2024" name="ejer_ajax" id="ejer_ajax" autocomplete="off">
+                  </div>
+                </div>
                 <div class="col-sm-6 col-md-6 col-lg-4">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
@@ -41,7 +50,7 @@
                       <option value="55">C.JUJ.DE LA CONST.</option>
                       <option value="62">CESIONES</option>
                       <option value="98">CHEQUE -NETO</option>
-                      <option value="0" selected="selected">COD.INFORMATIVO</option>
+                      <option value="0">COD.INFORMATIVO</option>
                       <option value="72">CONSTANCIAS DE DEUDA</option>
                       <option value="80">CONTRATO DE ASISTENCIA TECNICA,ING.</option>
                       <option value="51">DEPOSITO DE GARANTIA</option>
@@ -52,7 +61,7 @@
                       <option value="64">F.B.JUJUY S.A. 260411/03</option>
                       <option value="76">FONDO LABORATORIO - D.P.V.</option>
                       <option value="85">GAN.BENEFICIARIOS EXT.OBRAS</option>
-                      <option value="4">GANANCIAS</option>
+                      <option value="4" selected>GANANCIAS</option>
                       <option value="84">GANANCIAS CERT.OBR.</option>
                       <option value="66">HORAS EXTRAS</option>
                       <option value="58">IMP.A LOS SELLOS</option>
@@ -79,7 +88,7 @@
                 </div>
 
 
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Desde</span>
@@ -88,7 +97,7 @@
                   </div>
                 </div>
 
-                <div class="col-sm-6 col-md-6 col-lg-3">
+                <div class="col-sm-6 col-md-6 col-lg-2">
                   <div class="input-group input-group-sm mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="inputGroup-sizing-sm">Hasta</span>
@@ -174,6 +183,7 @@
 
       var valores = {
         "csrfmiddlewaretoken" : '{{ csrf_token }}',
+        "ejer_ajax": $("#ejer_ajax").val(),
         "tipo_ajax": $("#tipo_ajax").val(),
         "desde_ajax": $("#desde_ajax").val(),
         "hasta_ajax": $("#hasta_ajax").val(),
@@ -194,7 +204,10 @@
           "data": valores,
           "async": true,
           "type": "POST",
-          "dataSrc": ""
+          "dataSrc": "", 
+          "error": function (xhr, error, code) {
+            swal('Error!',"No se pudo cargar la información. Intente nuevamente o comuniquese con el area de desarrollo.", 'error');
+         }
         },
         "columns": [
         { "data": "ejerConstancia" },
@@ -207,7 +220,15 @@
         { "data": "udo" },
         { "data": "mes" },
         { "data": "anio" },
-        {"data" : "ImporteRetenido", "className": "text-right" },
+        {
+          "data": null,
+          "className": "text-end",
+          "render": function(data, type, row) {
+
+            return formatearNumero(parseFloat(data.importeRetenido))
+
+           }
+          },
         {
           "data": null,
           "sortable": false,
@@ -215,11 +236,23 @@
           "className": "text-center",
           "render": function(data, type, row) {
 
-            return  '<button type="button" onclick="verPdf(`'+data.tipoRetencion+'`,'+data.ejerConstancia+',`'+data.nroConstancia+'`,`'+data.tipoRetencion+'`)" class="btn btn-outline-secondary js-detalle" title="Comprobante"><i class="fa fa-file-pdf-o"></i></button>'
+            return  '<button type="button" onclick="verPdf(`'+data.tipoRetencion+'`,'+data.ejerConstancia+',`'+data.nroConstancia+'`,`'+data.importeRetenido+'`)" class="btn btn-outline-secondary js-detalle" title="Comprobante"><i class="fa fa-file-pdf-o"></i></button>'
           }
         },
 
         ],
+        "columnDefs": [
+        {
+          "targets": 3, // Índice de la columna de fechas
+          "render": function (data, type, row) {
+            if (type === 'display' || type === 'filter') {
+              var dateParts = data.split("-");
+              return dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+            }
+            return data;
+          }
+        }
+      ]   ,
         order: [[8, 'desc']]
       });
 
@@ -257,13 +290,13 @@
   /******************************************************************************************/
 
 
-  function verPdf(tipo, anio, cons, trenro){
+  function verPdf(tipo, anio, cons, importe){
 
     $(".aux").html('<form id="verPdf" action="{% url 'op_retenciones_pdf' %}" target="_blank" method="POST">{%  csrf_token %}' +
         '<input name="tipo" value="'+tipo+'"/>' +
         '<input name="anio" value="'+anio+'"/>' +
         '<input name="cons" value="'+cons+'"/>' +
-        '<input name="trenro" value="'+trenro+'"/>' +
+        '<input name="importe" value="'+importe+'"/>' +
         '</form>');
 
     $("#verPdf").submit();
@@ -276,6 +309,7 @@
   function op_retenciones_excel(){
 
     $(".aux").html('<form id="explortarExcel" action="{% url 'op_retenciones_excel' %}" method="POST">{%  csrf_token %}' +
+        '<input name="ejer_ajax" value="'+$("#ejer_ajax").val()+'"/>' +
         '<input name="tipo_ajax" value="'+$("#tipo_ajax").val()+'"/>' +
         '<input name="desde_ajax" value="'+$("#desde_ajax").val()+'"/>' +
         '<input name="hasta_ajax" value="'+$("#hasta_ajax").val()+'"/>' +
@@ -286,5 +320,19 @@
     $(".aux").html('');
 
    }
+
+     $("#ejer_ajax").blur(function(){
+
+
+    if (this.value == ''){
+
+      var fecha = new Date();
+      var anio = fecha.getFullYear();
+
+      $("#ejer_ajax").val(anio);
+
+    }
+
+  });
   </script>
   {% endblock %}

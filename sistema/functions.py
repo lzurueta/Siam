@@ -1,7 +1,6 @@
 import math
 import tempfile
 
-import pymssql
 import pyodbc
 import openpyxl
 import io
@@ -26,8 +25,6 @@ from django.contrib.auth.models import Group
 def generate_excel(request, template, texto):
 
     html_string = render_to_string(template, texto)
-
-    print(texto)
 
     workbook = Workbook()
     sheet = workbook.active
@@ -133,6 +130,7 @@ def traerIndex(request):
 def traerPermisos(request):
     listPermisos = request.user.get_all_permissions()
     return listPermisos
+
 
 def insertAuditoria(usuario, nameGrupo, titulo, descripcion, detalle):
     grupo = Group.objects.get(name=nameGrupo)

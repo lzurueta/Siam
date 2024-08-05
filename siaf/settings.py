@@ -141,12 +141,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'es-AR'
-
+LANGUAGE_CODE = 'es'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
-
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -169,6 +167,7 @@ import os
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.office365.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "tesoreria@jujuy.gob.ar"
@@ -176,3 +175,6 @@ SERVER_EMAIL = "tesoreria@jujuy.gob.ar"
 DEFAULT_FROM_EMAIL = "tesoreria@jujuy.gob.ar"
 EMAIL_HOST_PASSWORD = "XVaaQ1342!asdf!?"
 EMAIL_USE_TLS = True
+
+
+TOKEN_API = 'eyJhbGciOiJIUzI1NiIsImtpZCI6InNpbTIifQ.eyJhdWQiOiJodHRwczovL2FwaS50dWp1anV5LmdvYi5hciIsImV4cCI6MTczNTY4OTYwMCwiaXNzIjoiaHR0cHM6Ly9rcmFrZW5kLmlvIiwianRpIjoibW5iMjN2Y3NydDc1Nnl1aW9tbmJ2Y3g5OGVydHl1aW9wIiwicm9sZXMiOlsicm9sZV9hIiwicm9sZV9iIl0sInN1YiI6IjEyMzQ1Njc4OTBxd2VydHl1aW8ifQ.qA-dwPqt88S-nKxn9ibMwzzWdNqyI7EPNEhsZOcUzmM'

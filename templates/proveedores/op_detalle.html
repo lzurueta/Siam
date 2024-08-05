@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <div class="modal-header">
     <p class="h6">{{ titulo }} </p>
 </div>
@@ -7,16 +9,16 @@
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Ejercicio:</p></div>
-                <div class="col-9"><p>{{ cabecera.ejercicio }}</p></div>
+                <div class="col-9"><p>{{ cabecera.ejerOP }}</p></div>
             </div>
         </div>
 
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-3 text-end"><p class="fw-bold">Jur:</p></div>
-                <div class="col-2"><p>{{ cabecera.jurcod }}</p></div>
+                <div class="col-2"><p>{{ cabecera.jurisdiccion }}</p></div>
                 <div class="col-3 text-end"><p class="fw-bold">UDO:</p></div>
-                <div class="col-4"><p>{{ cabecera.repudo }}</p></div>
+                <div class="col-4"><p>{{ cabecera.udo }}</p></div>
             </div>
         </div>
 
@@ -61,12 +63,12 @@
                 {% for row in detalle %}
                 <tr>
                     <td>{{ cabecera.cuit }}</td>
-                    <td>{{ row.tipoCbpte }}</td>
+                    <td>{{ row.tipoCpbte }}</td>
                     <td>{{ row.letraCpbte }}</td>
                     <td align="center">{{ row.sucursalCpbte }}</td>
                     <td align="right">{{ row.nroCpbte }}</td>
-                    <td>{{ row.fecCpbte }}</td>
-                    <td align="right">{{ row.importeCpbte }}</td>
+                    <td>{{ row.fecCpbte|formato_fecha_hora }}</td>
+                    <td align="right">{{ row.importeCpbte|formatear_numero }}</td>
 
                 </tr>
                 {% endfor %}

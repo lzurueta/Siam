@@ -17,7 +17,9 @@ import datetime
 from zeep import Client, Transport
 import json
 
-# Create your views here.
+import requests
+from django.conf import settings
+
 class proveedoresHome(View):
     def get_context_data(self, **kwargs):
         cuit = self.request.user.username
@@ -62,138 +64,86 @@ def op_imprimir(request):
     repudo = request.POST.get('udo')
 
 
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/imprimircabeceraop/ejerchar='+ OpaAnio +'&nroOPchar='+ OpaNro +'&jurcod='+ jurcod +'&repudo='+repudo
 
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
 
-    sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
-                     "OPAGO2.OpaNro as 'nroOP',"
-                     "JURISDICCI.JurDes, "
-                     "REPARTICIO.RepDes as 'reparticion',"
-                     " OPAGO2.OpaLug as 'lugar',"
-                     "format(OPAGO2.OpaEmi,'dd/MM/yyyy') as 'fecEmision',"
-                     " BENEFICIAR.BenNom as 'nombreProveedor',"
-                     " OPAGO2.BENCUI as 'cuit',"
-                     " OPAGO2.OpaNom as 'paguese',"
-                     "OPAGO2.jurcod,"
-                     "OPAGO2.repudo"
-                     " FROM OPAGO2 "
-                     "inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
-                     "inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
-                     "inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod "
-                     "where OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
+    response = requests.get(url, headers=headers, verify=False)
 
-    cursor.execute(sql_query)
-    cabecera = cursor.fetchone()
+    response.raise_for_status()
+    data = response.json()
+    cabecera = data['SDTOPCabecera'][0]
 
-    sql_query = ("SELECT "
-                     "CPBTES3.OcpNro as 'nroOrdCompra',"
-                     "CPBTES3.OcpAnio as 'anioOrdCompra',"
-                     "MOVIMIE1.nomp1 as 'partidaN1',"
-                     "MOVIMIE1.nomp2 as 'partidaN2',"
-                     "MOVIMIE1.nomp3 as 'partidaN3',"
-                     "MOVIMIE1.nomp4 as 'partidaN4',"
-                     "NOMENCLADO.NomDes as 'partidaNombre',"
-                     "case "
-                     "	when MOVIMIE1.MOVEXPTIP='EE' then MOVIMIE1.MOVEXPGD"
-                     "	else concat(rtrim(MOVIMIE1.MovexpL),'-', MOVIMIE1.MovExpN,'/', MOVIMIE1.MovExpA)"
-                     "end as 'expediente',"
-                     "OPAGO1.OpaCpbTip as 'tipoCbpte',"
-                     "OPAGO1.OpaCpbLet as 'letraCpbte',"
-                     "OPAGO1.OpaSu1 as 'sucursalCpbte',"
-                     "OPAGO1.OpaCpbNro as 'nroCpbte',"
-                     "format( OPAGO1.OpaCpcFec ,'dd/MM/yyyy') as 'fecCpbte',"
-                     "OPAGO1.OpaImp as 'importeCpbte'"
-                     "from OPAGO1"
-                     " INNER join OPAGO2 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo"
-                     " INNER join CPBTES3 on OPAGO1.CpbBenCUI=CPBTES3.BENCUI AND OPAGO1.OpaCpbLet=CPBTES3.CpbLet AND OPAGO1.OpaCpbTip=CPBTES3.CpbTip AND OPAGO1.OpaSu1=CPBTES3.CpbSu1 AND OPAGO1.OpaCpbNro=CPBTES3.CpbNro"
-                     " INNER join OCPRA3 on CPBTES3.OcpAnio=OCPRA3.OcpAnio and CPBTES3.OcpNro=OCPRA3.OcpNro and CPBTES3.jurcod=OCPRA3.jurcod and CPBTES3.repudo=OCPRA3.repudo"
-                     " INNER join MOVIMIE1 on MOVIMIE1.MovAnio=OCPRA3.MovAnio and MOVIMIE1.MovCod=OCPRA3.MovCod and MOVIMIE1.jurcod=OCPRA3.jurcod and MOVIMIE1.repudo=OCPRA3.repudo"
-                     " INNER join NOMENCLADO on MOVIMIE1.nomp1=NOMENCLADO.nomp1 and MOVIMIE1.nomp2=NOMENCLADO.nomp2 and MOVIMIE1.nomp3=NOMENCLADO.nomp3 and MOVIMIE1.nomp4=NOMENCLADO.nomp4  and MOVIMIE1.scccod=NOMENCLADO.scccod and MOVIMIE1.sctcod=NOMENCLADO.sctcod "
-                     " WHERE OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/imprimirdetalleop/ejerchar='+ OpaAnio +'&nroOPchar='+ OpaNro +'&jurcod='+ jurcod +'&repudo='+repudo
 
-    cursor.execute(sql_query)
-    detalle = cursor.fetchall()
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
 
-    sql_query = ("SELECT "
-                     "SUM(OPAGO1.OpaImp) as 'importeCpbte' "
-                     "from OPAGO1"
-                     " INNER join OPAGO2 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo"
-                     " WHERE OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'"
-                     " GROUP BY OPAGO2.OpaAnio,OPAGO2.OpaNro,OPAGO2.jurcod,OPAGO2.repudo")
+    response = requests.get(url, headers=headers, verify=False)
 
-    cursor.execute(sql_query)
-    total = cursor.fetchone()
+    response.raise_for_status()
+    data = response.json()
+    detalle = data['SDTOPComprobantes']
 
-    sql_query = (" SELECT  "
-                    " POPAGO.Popnro as 'nroLiq',  "
-                    " case  "
-                    " 	when POPAGO.Poptip='D' then 'NOTA DÉBITO' "
-                    " 	when POPAGO.Poptip='C' then 'CHEQUE' "
-                    " 	when POPAGO.Poptip='1' then 'INGRESOS BRUTOS' "
-                    " 	when POPAGO.Poptip='4' then 'GANANCIAS' "
-                    " 	when POPAGO.Poptip='X' then 'EMBARGO' "
-                    " 	when POPAGO.Poptip='7' then 'CESIÓN' "
-                    " 	when POPAGO.Poptip='R' then 'DEPOSITO DE GARANTIA' "
-                    " 	when POPAGO.Poptip='S' then 'SEG.SOC.(I)' "
-                    " 	when POPAGO.Poptip='V' then 'C.JUJ.DE LA CONST.' "
-                    " 	when POPAGO.Poptip='Y' then 'IMP.A LOS SELLOS' "
-                    " 	when POPAGO.Poptip='L' then 'FONDO LABORATORIO - D.P.V.' "
-                    " 	when POPAGO.Poptip='«' then 'SEGURIDAD SOCIAL 6%' "
-                    " 	when POPAGO.Poptip='I' then 'LEY 5118/98 VIALIDAD' "
-                    " 	when POPAGO.Poptip='2' then 'MULTA' "
-                    " 	when POPAGO.Poptip='9' then 'F.B.JUJUY S.A. 260411/03' "
-                    " 	when POPAGO.Poptip='G' then 'LEY 5239/00 ART.33 D.G.ARQUITECTURA' "
-                    " 	when POPAGO.Poptip='U' then 'SEG.SOC.(C)' "
-                    " 	when POPAGO.Poptip='T' then 'LEY 5118' "
-                    " 	when POPAGO.Poptip='E' then 'RET EARPUJ DECR. 175-G-2012' "
-                    " 	when POPAGO.Poptip='_' then 'CONSTANCIAS DE DEUDA'	 "
-                    " end as 'tipoPago', " 
-                    " case  "
-                    " 	when POPAGO.Poptip='D' then CONCAT(CONVERT(VARCHAR,POPAGO.Ndbnro),'/', CONVERT(VARCHAR,POPAGO.NdbAnio))	 "
-                    " 	when POPAGO.Poptip='C' then CONVERT(VARCHAR, POPAGO.Chqnum) "
-                    "   else '0' "
-                    " end as 'cpbtePago', "
-                    " format(POPAGO.Popfpg,'dd/MM/yyyyy') as 'fecAplic', "
-                    " case  "
-                    " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
-                    " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
-                    " end as 'fecPago', "
-                    " POPAGO.Popimp as 'importeLiq' "
-                    " FROM POPAGO  "
-                    " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
-                    " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-                    " where POPAGO.popEst <> 'A' AND POPAGO.OpaAnio="+ str(OpaAnio) +" AND POPAGO.OpaNro="+ str(OpaNro) +" AND POPAGO.jurcod='"+ str(jurcod) +"' AND POPAGO.repudo='"+ str(repudo) +"' ")
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/totalizaop/opaanio=' + OpaAnio + '&OpaNro=' + OpaNro + '&jurcod=' + jurcod + '&repudo=' + repudo
 
-    cursor.execute(sql_query)
-    pagosAsociados = cursor.fetchall()
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
 
-    sql_query = (" SELECT "
-                     " SUM(POPAGO.Popimp) as 'total' "
-                     " FROM POPAGO  "
-                     " where POPAGO.popEst <> 'A' AND POPAGO.OpaAnio=" + str(OpaAnio) + " AND POPAGO.OpaNro=" + str(OpaNro) + " AND POPAGO.jurcod='" + str(jurcod) + "' AND POPAGO.repudo='" + str(repudo) + "' "
-                     " GROUP BY POPAGO.OpaAnio,POPAGO.OpaNro,POPAGO.jurcod,POPAGO.repudo ")
+    response = requests.get(url, headers=headers, verify=False)
 
-    cursor.execute(sql_query)
-    totalPagosAsoc = cursor.fetchone()
+    response.raise_for_status()
+    data = response.json()
+    total = data['total']
+
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/pagoasociado/opaanio=' + OpaAnio + '&OpaNro=' + OpaNro + '&jurcod=' + jurcod + '&repudo=' + repudo
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    pagosAsociados = data
+
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/totalizaactivoop/opaanio=' + OpaAnio + '&OpaNro=' + OpaNro + '&jurcod=' + jurcod + '&repudo=' + repudo
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    totalPagosAsoc = data['total']
+
 
     if total:
-        totalAux = float(total[0])
+        totalAux = float(total)
     else:
         totalAux = 0
 
     if totalPagosAsoc:
-        totalPagosAsocAux = float(totalPagosAsoc[0])
+        totalPagosAsocAux = float(totalPagosAsoc)
     else:
         totalPagosAsocAux = 0
 
     saldo = float(totalAux) - float(totalPagosAsocAux)
 
+    print(totalPagosAsoc)
+
     context = {
             'cabecera': cabecera,
             'detalle': detalle,
-            'importeTexto': decimal_a_texto(total[0]),
-            'importe': total[0],
+            'importeTexto': decimal_a_texto(total),
+            'importe': total,
             'pagosAsociados': pagosAsociados,
             'saldo': saldo
 
@@ -219,68 +169,50 @@ def op_pagadas_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
     cuit = request.user.username
 
-    # ARMAR PRIMER OBJETO CON NRO DE CUIL
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
-    sql_query = ("SELECT "
-    "POPAGO.OpaAnio as 'ejercicio', "
-    "POPAGO.OpaNro as 'nroOP',"
-    "POPAGO.jurcod as 'juri',"
-    "POPAGO.repudo as 'udo',"
-    "POPAGO.Poptip as 'estadoPago',"
-    "case "
-    "	when POPAGO.Poptip='D' then 'Acreditación'"
-    "	when POPAGO.Poptip='C' then 'Cheque'"
-    "end as 'tipoPago', "
-    "POPAGO.Popimp,"
-    "case "
-    "	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')"
-    "	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy')"
-    "end as 'fecPago',"
-    "FORMAT(POPAGO.Popimp, 'C', 'es-AR')  as 'importepago', "
-    "FORMAT(OPAGO2.Opapgd, 'C', 'es-AR') as 'pagado',"
-    "REPARTICIO.RepDes as 'reparticion',"
-    "OPAGO2.BENCUI as 'cuit', "
-    "POPAGO.Popnro as 'popnro' "
-    "from POPAGO "
-    "inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
-    "left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
-    "left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-    "inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
-    "where OPAGO2.BENCUI="+cuit+" and POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
+    ejer = ''
+    jur = ''
+    udo = ''
+    nroOp = ''
+    desde = ''
+    hasta = ''
 
+    #  FILTRAR POR EJE
+    if request.POST.get('ejer_ajax') != '':
+        ejer = '=' + request.POST.get('ejer_ajax')
 
-    # FILTRAR POR EJERCICIO
-    if request.POST.get('ejer_ajax'):
-        sql_query = sql_query + " AND POPAGO.OpaAnio='" + request.POST.get('ejer_ajax') + "'"
-    # FILTRAR POR JURISDICCION
-    if request.POST.get('jur_ajax'):
-        sql_query = sql_query + " AND POPAGO.jurcod='" + request.POST.get('jur_ajax') + "'"
-    # FILTRAR POR UNIDAD DE JURISDICCION
-    if request.POST.get('udo_ajax'):
-        sql_query = sql_query + " AND POPAGO.repudo='" + request.POST.get('udo_ajax') + "'"
-    # FILTRAR POR NRO DE OP
-    if request.POST.get('nro_op_ajax'):
-       sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
-    # FILTRAR POR FECHA DESDE
-    if request.POST.get('desde_ajax'):
-        sql_query = sql_query + " AND POPAGO.Popfpg>='" + request.POST.get('desde_ajax') + "'"
-    # FILTRAR POR FECHA HASTA
-    if request.POST.get('hasta_ajax'):
-        sql_query = sql_query + " AND POPAGO.Popfpg<='" + request.POST.get('hasta_ajax') + "'"
+    #  FILTRAR POR JUR
+    if request.POST.get('jur_ajax') != '':
+        jur = '=' + request.POST.get('jur_ajax')
 
+    #  FILTRAR POR UDO
+    if request.POST.get('udo_ajax') != '':
+        udo = '=' + request.POST.get('udo_ajax')
 
-    cursor.execute(sql_query)
-    ## CONVERTIR EL CURSOR EN DICT
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in cursor.fetchall():
-        results.append(dict(zip(columns, row)))
-    ## CONVERTIR EL CURSOR EN DICT
+    #  FILTRAR POR NRO OP
+    if request.POST.get('nro_op_ajax') != '':
+        nroOp = '=' + request.POST.get('nro_op_ajax')
 
-    data = list(results)
-    return JsonResponse(data, safe=False)
+    #  FILTRAR POR FECHA DESDE
+    if request.POST.get('desde_ajax') != '':
+        desde = '=' + request.POST.get('desde_ajax')
 
+    #  FILTRAR POR FECHA HASTA
+    if request.POST.get('hasta_ajax') != '':
+        hasta = '=' + request.POST.get('hasta_ajax')
+
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/OPPagadas/cuitchar='+cuit+'&ejerchar'+ejer+'&jur'+jur+'&udo='+udo+'&nroOPchar'+nroOp+'&FecDesde'+desde+'&FecHasta'+hasta
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    op_pagadas = data['SDTOPPagadasCuit']
+
+    return JsonResponse(op_pagadas, safe=False)
 
 def op_detalle(request):
     """ VISTA DE DETALLE DE ORDEN DE COMPRA """
@@ -293,54 +225,30 @@ def op_detalle(request):
         jurcod = request.POST.get('jurcod')
         repudo = request.POST.get('repudo')
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/imprimircabeceraop/ejerchar='+OpaAnio+'&nroOPchar='+OpaNro+'&jurcod='+jurcod+'&repudo='+repudo
 
-        sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
-                     "OPAGO2.OpaNro as 'nroOP',"
-                     "OPAGO2.jurcod, "
-                     "OPAGO2.repudo,"
-                     " OPAGO2.OpaLug as 'lugar',"
-                     "format(OPAGO2.OpaEmi,'dd-MM-yyyy') as 'fecEmision',"
-                     " BENEFICIAR.BenNom as 'nombreProveedor',"
-                     " OPAGO2.BENCUI as 'cuit',"
-                     "OPAGO2.OpaNom as 'paguese'"
-                     " FROM OPAGO2 "
-                     "inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
-                     "where OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'")
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
 
-        cursor.execute(sql_query)
-        cabecera = cursor.fetchone()
+        response = requests.get(url, headers=headers, verify=False)
 
+        response.raise_for_status()
+        data = response.json()
+        cabecera = data['SDTOPCabecera'][0]
 
-        sql_query = ("SELECT "
-                     "CPBTES3.OcpNro as 'nroOrdCompra',"
-                     "CPBTES3.OcpAnio as 'anioOrdCompra',"
-                     "MOVIMIE1.nomp1 as 'partidaN1',"
-                     "MOVIMIE1.nomp2 as 'partidaN2',"
-                     "MOVIMIE1.nomp3 as 'partidaN3',"
-                     "MOVIMIE1.nomp4 as 'partidaN4',"
-                     "NOMENCLADO.NomDes as 'partidaNombre',"
-                     "case "
-                     "	when MOVIMIE1.MOVEXPTIP='EE' then MOVIMIE1.MOVEXPGD"
-                     "	else concat(rtrim(MOVIMIE1.MovexpL),'-', MOVIMIE1.MovExpN,'/', MOVIMIE1.MovExpA)"
-                     "end as 'expediente',"
-                     "OPAGO1.OpaCpbTip as 'tipoCbpte',"
-                     "OPAGO1.OpaCpbLet as 'letraCpbte',"
-                     "OPAGO1.OpaSu1 as 'sucursalCpbte',"
-                     "OPAGO1.OpaCpbNro as 'nroCpbte',"
-                     "format( OPAGO1.OpaCpcFec ,'dd-MM-yyyy') as 'fecCpbte',"
-                     "format(OPAGO1.OpaImp, 'C', 'es-AR') as 'importeCpbte'"
-                     "from OPAGO1"
-                     " INNER join OPAGO2 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo"
-                     " INNER join CPBTES3 on OPAGO1.CpbBenCUI=CPBTES3.BENCUI AND OPAGO1.OpaCpbLet=CPBTES3.CpbLet AND OPAGO1.OpaCpbTip=CPBTES3.CpbTip AND OPAGO1.OpaSu1=CPBTES3.CpbSu1 AND OPAGO1.OpaCpbNro=CPBTES3.CpbNro"
-                     " INNER join OCPRA3 on CPBTES3.OcpAnio=OCPRA3.OcpAnio and CPBTES3.OcpNro=OCPRA3.OcpNro and CPBTES3.jurcod=OCPRA3.jurcod and CPBTES3.repudo=OCPRA3.repudo"
-                     " INNER join MOVIMIE1 on MOVIMIE1.MovAnio=OCPRA3.MovAnio and MOVIMIE1.MovCod=OCPRA3.MovCod and MOVIMIE1.jurcod=OCPRA3.jurcod and MOVIMIE1.repudo=OCPRA3.repudo"
-                     " INNER join NOMENCLADO on MOVIMIE1.nomp1=NOMENCLADO.nomp1 and MOVIMIE1.nomp2=NOMENCLADO.nomp2 and MOVIMIE1.nomp3=NOMENCLADO.nomp3 and MOVIMIE1.nomp4=NOMENCLADO.nomp4  and MOVIMIE1.scccod=NOMENCLADO.scccod and MOVIMIE1.sctcod=NOMENCLADO.sctcod "
-                     " WHERE OPAGO2.OpaAnio="+ str(OpaAnio) +" AND OPAGO2.OpaNro="+ str(OpaNro) +" AND OPAGO2.jurcod='"+ str(jurcod) +"' and OPAGO2.repudo='"+ str(repudo) +"'")
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/imprimirdetalleop/ejerchar=' + OpaAnio + '&nroOPchar=' + OpaNro + '&jurcod=' + jurcod + '&repudo=' + repudo
 
-        cursor.execute(sql_query)
-        detalle = cursor.fetchall()
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+        detalle = data['SDTOPComprobantes']
+
 
         context = {
             'titulo': 'Detalle de la OP N° '+OpaNro,
@@ -371,46 +279,29 @@ def op_pagadas_retenciones(request):
         jurcod = request.POST.get('jurcod')
         repudo = request.POST.get('repudo')
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/imprimircabeceraop/ejerchar=' + OpaAnio + '&nroOPchar=' + OpaNro + '&jurcod=' + jurcod + '&repudo=' + repudo
 
-        sql_query = ("SELECT OPAGO2.OpaAnio as 'ejercicio',"
-                     "OPAGO2.OpaNro as 'nroOP',"
-                     "OPAGO2.jurcod, "
-                     "OPAGO2.repudo,"
-                     " OPAGO2.OpaLug as 'lugar',"
-                     "format(OPAGO2.OpaEmi,'dd/MM/yyyy') as 'fecEmision',"
-                     " BENEFICIAR.BenNom as 'nombreProveedor',"
-                     " OPAGO2.BENCUI as 'cuit',"
-                     " OPAGO2.OpaNom as 'paguese'"
-                     " FROM OPAGO2 "
-                     "inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
-                     "where OPAGO2.OpaAnio=" + str(OpaAnio) + " AND OPAGO2.OpaNro=" + str(OpaNro) + " AND OPAGO2.jurcod='" + str(jurcod) + "' and OPAGO2.repudo='" + str(repudo) + "'")
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
 
-        cursor.execute(sql_query)
-        cabecera = cursor.fetchone()
+        response = requests.get(url, headers=headers, verify=False)
 
-        sql_query = (" SELECT  "
-" ACRE001.Ac1CAn as 'ejerConstancia', "
-" ACRE001.Ac1CNu as 'nroConstancia', "
-" ACRE001.TReNro as 'tipoRetencion', "
-" format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
-" ACRE001.Ac1Est as 'estado', "
-" acre001.Ac1anio as 'ejerOP', "
-" ACRE001.Ac1opa as 'nroOP', "
-" ACRE001.Ac1jur as 'jur', "
-" ACRE001.Ac1udo as 'udo', "
-" ACRE001.PopAnio as 'ejer', "
-" ACRE001.Popnro as 'nroLiquidacion', "
-" ACRE00.Acrmes as 'mes', "
-" ACRE00.Acrano as 'anio', "
-" FORMAT(ACRE001.Ac1Ire, 'C', 'es-AR')  as 'ImporteRetenido', "
-" FORMAT(ACRE001.Ac1Ali, 'C', 'es-AR')  as 'ImporteAlicuota' "
-" from ACRE001 "
-" inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro  "
-" where ACRE001.RfcBenCUI='"+cuit+"' AND ACRE001.Ac1Est<>'A' and ACRE001.Ac1Ire>0 and ACRE001.Ac1opa="+OpaNro+" and ACRE001.Ac1anio="+OpaAnio+" and ACRE001.Ac1jur='"+jurcod+"' and ACRE001.Ac1udo='"+repudo+"' ")
-        cursor.execute(sql_query)
-        detalle = cursor.fetchall()
+        response.raise_for_status()
+        data = response.json()
+        cabecera = data['SDTOPCabecera'][0]
+
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/retencionesop/cuitchar=' + cuit + '&nroOPchar=' + OpaNro + '&opaaniochar=' +OpaAnio+ '&jurcod=' + jurcod + '&repudo=' + repudo
+
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+        detalle = data['SDTRetencionesOP']
 
         context = {
             'titulo': 'Retenciones de la OP N° '+OpaNro,
@@ -440,42 +331,22 @@ def op_pagadas_comprobante(request):
         jurcod = request.POST.get('jurcod')
         repudo = request.POST.get('repudo')
         popnro = request.POST.get('popnro')
+        ejer = request.POST.get('ejer')
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
 
-        sql_query = (" select  "
-        " case  "
-        " 	when POPAGO.Poptip='D' then 'PAGO BANCARIZADO'	 "
-        " 	when POPAGO.Poptip='C' then 'PAGO CON CHEQUE'	 "	
-        " end as 'tipoCpbtePago', "
-        " case  "
-        " 	when POPAGO.Poptip='D' then CONCAT(NOTADB.Ndbnro,'/',NOTADB.NdbAnio) "
-        " 	when POPAGO.Poptip='C' then ltrim(CHEQ00.Chqnum) "
-        " end as 'nroCpbtePago', "
-        " case  "
-        " 	when POPAGO.Poptip='D' then CONCAT(NOTADB.Cuecod,'-',NOTADB.ticcte,'-',NOTADB.Cueori) "
-        " 	when POPAGO.Poptip='C' then concat(CHEQ00.Chqcta,'-',CHEQ00.Chqtip,'-',CHEQ00.Chqori) "
-        " end as 'cuenta', "
-        " case  "
-        " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
-        " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfec, 'dd/MM/yyyy') "
-        " end as 'fecEmi', "
-        " case  "
-        " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
-        " 	when POPAGO.Poptip='C' then format(CHEQ00.ChqFpg, 'dd/MM/yyyy') "
-        " end as 'fecPag', "
-        " case  "
-        " 	when POPAGO.Poptip='D' then NOTADB.Ndbdes "
-        " 	when POPAGO.Poptip='C' then CHEQ00.Chqdet "
-        " end as 'detalle' "
-        " from POPAGO  "
-        " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
-        " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-        " where POPAGO.PopAnio=" + str(OpaAnio) + " and POPAGO.Popnro='" + str(popnro) + "' and POPAGO.jurcod='" + str(jurcod) + "' and POPAGO.repudo='" + str(repudo) + "' and POPAGO.OpaNro=" + str(OpaNro) + " and PopEst<>'A' ")
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/cpbtedepago/opaaniochar='+ OpaAnio +'&popnrochar='+ popnro +'&ejerchar='+ ejer +'&opanrochar='+ OpaNro +'&jurcod='+ jurcod +'&repudo='+repudo
 
-        cursor.execute(sql_query)
-        detalle = cursor.fetchone()
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+        detalle = data['SDTCpbtePago'][0]
+
+
         context = {
         'titulo': 'Comprobante de pago - OP N° ' + OpaNro,
         'detalle': detalle
@@ -497,121 +368,22 @@ def datos_proveedor(request):
     if request.method == 'POST':
         cuit = request.POST.get('cuit')
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/DatosProveedor/cuit='+cuit
+        urlActividad = 'https://api.tujujuy.gob.ar/v1/proveedores/ActividadProveedor/cuit='+cuit
 
-        sql_query = ("SELECT "
-          " BENEFICIAR.BENCUI as 'cuit', "
-          " BENEFICIAR.BenDni as 'dni', "
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
 
-          " BENEFICIAR.BenNom as 'apellidoNombre', "
-          " BENEFICIAR.BenTpo as 'tipoSoc', "
+        response = requests.get(url, headers=headers, verify=False)
+        response.raise_for_status()
+        data = response.json()
+        detalle = data['SdtDatosProveedor'][0]
 
-          " BENEFICIAR.BenNo1 as 'nombreFantasia', "
-
-          " format(BENEFICIAR.BenAlt, 'dd/MM/yyyy') as 'fecAlta', "
-          " BENEFICIAR.BenTel as 'tel', "
-
-          " BENEFICIAR.BenCel as 'cel', "
-
-          " BENEFICIAR.BenMail as 'mail', "
-          " case "
-
-          " 	when BENEFICIAR.BenWap='S' then 'SI' "
-
-          " 	when BENEFICIAR.BenWap='N' then 'NO' "
-          " end as 'wappAsociado', "
-
-          " BENEFICIAR.BenDom as 'domicilio', "
-
-          " BENEFICIAR.BenNro as 'nroDomicilio', "
-          " BENEFICIAR.PosCod as 'codPostal', "
-          " POSTAL.PosLoc as 'localidad', "
-
-          " POSTAL.PosPro as 'provincia', "
-          " BENEFICIAR.BenPAl as 'pais', "
-
-          " BENEFICIAR.BenDLe as 'domicilioLegal', "
-
-          " BENEFICIAR.BenNLe as 'nroDomicilioLegal', "
-          " BENEFICIAR.BenCPLe as 'codPostalLegal', "
-          " BENEFICIAR.BenLLe as 'localidadLegal', "
-          " BENEFICIAR.BenPLe as 'provinciaLegal', "
-          " BENEFICIAR.BenPaLe as 'paisLegal', "
-
-          " BENEFICIAR.BenDAl as 'domicilioAlternativo', "
-          " BENEFICIAR.BenNAl as 'nroDomicilioAlternativo', "
-          " BENEFICIAR.BenCPAl as 'codPostalAlternativo', "
-          " BENEFICIAR.BenLAl as 'localidadAlternativo', "
-          " BENEFICIAR.BenPAl as 'paisAlternativo', "
-
-          " BENEFICIAR.BenCt3 as 'codRegistro',	 "
-
-          " format(BENEFICIAR.BenSuF, 'dd/MM/yyyy') as 'vigenciaReg', "
-          " case  "
-
-          " 	when BENEFICIAR.BenIva='1' then 'Responsable Inscripto' "
-
-          " 	when BENEFICIAR.BenIva='2' then 'Responsable No Inscripto' "
-          " 	when BENEFICIAR.BenIva='3' then 'Exento' "
-
-          " 	when BENEFICIAR.BenIva='4' then  'Responsable Monotributo' "
-          " end as 'iva', "
-          " case "
-
-          " 	when BENEFICIAR.BenIva='4' then  BENEFICIAR.BenCat "
-          " end as 'categoria', "
-          " case  "
-
-          " 	when BENEFICIAR.BenIbt='S' then 'Ingresos Brutos' "
-          " 	when BENEFICIAR.BenIbt='N' then 'No Inscripto' "
-
-          " 	when BENEFICIAR.BenIbt='M' then 'Convenio Multilateral' "
-          " 	when BENEFICIAR.BenIbt='E' then 'Exento' "
-          " end as 'ib', "
-
-          " BENEFICIAR.BenIBr as 'nroIb', "
-
-          " BENEFICIAR.BenNRes as 'resolucionIb', "
-
-          " format(BENEFICIAR.BenVigR, 'dd/MM/yyyy' ) as 'vigenciaHasta', "
-          " case  "
-
-          " 	when BENEFICIAR.BenIgn='S' then 'Inscripto' "
-
-          " 	when BENEFICIAR.BenIgn='I' then 'No Inscripto' "
-          " 	when BENEFICIAR.BenIgn='N' then 'Exento' "
-          " end as 'gan', "
-
-          " BENEFICIAR.BenMcie as 'mesCierre', "
-
-          " format(BENEFICIAR.BenFCS,'dd/MM/yyyy' ) as 'fecContrato', "
-          " BENEFICIAR.BenRpu as 'regComercio', "
-          " case "
-
-          " 	when BENEFICIAR.BenEpl='S' then 'SI' "
-
-          " 	when BENEFICIAR.BenEpl='N' then 'NO' "
-          " end as 'empleador', "
-
-          " BENEFICIAR.BenCGP as 'codCgp' "
-          " from BENEFICIAR  "
-
-          " inner join POSTAL on POSTAL.PosCod=BENEFICIAR.PosCod "
-          " where BENEFICIAR.BENCUI= " + str(cuit))
-
-        cursor.execute(sql_query)
-        detalle = cursor.fetchone()
-
-        sql_query = ("SELECT "
-          " BFACT00.ActCod as 'codActividad', "
-          " ACTIVIDAD.ActDes as 'actividad' "
-          " from BFACT00 "
-          " inner join ACTIVIDAD on ACTIVIDAD.ActCod= BFACT00.ActCod"
-          " where BFACT00.BENCUI="+ str(cuit))
-
-        cursor.execute(sql_query)
-        actividad = cursor.fetchall()
+        responseActividad = requests.get(urlActividad, headers=headers, verify=False)
+        responseActividad.raise_for_status()
+        dataActividad = responseActividad.json()
+        actividad = dataActividad['SDTActividad']
 
         context = {
          'detalle': detalle,
@@ -648,6 +420,7 @@ class op_impagas(View):
         cuit = self.request.user.username
         anio = datetime.datetime.now().year
 
+
         context = {
             'titulo': "OP Impagas",
             'anio': anio,
@@ -665,69 +438,48 @@ def op_impagas_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
     cuit = request.user.username
 
-    # ARMAR PRIMER OBJETO CON NRO DE CUIL
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
-    sql_query = ("SELECT  "
-     " OPAGO2.OpaAnio as 'ejercicio',  "
-     " OPAGO2.OpaNro as 'nroOP', "
-     " OPAGO2.jurcod as 'juri', "
-     " JURISDICCI.JurDes as 'jurisdiccion', "
-     " OPAGO2.repudo as 'udo', "
-     " REPARTICIO.RepDes as 'reparticion', "
-     " format(OPAGO2.OpaEmi,'dd-MM-yyyy') as 'fecEmision', "
-     " OPAGO2.OpaEst as 'estadoOPC', "
-     " OPAGO2.OpaHaT as 'estadoOPT', "
-     " FORMAT(OPAGO2.Opapgd, 'C', 'es-AR') as 'pagado', "
-     " FORMAT((select "
-     " sum(OPAGO1.opaimp) "
-     " from OPAGO1 "
-     " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-     " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo), 'C', 'es-AR') as 'importeTotal', "
-     "FORMAT(((select "
-     " sum(OPAGO1.opaimp) "
-     " from OPAGO1 "
-     " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-     " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) - OPAGO2.Opapgd), 'C', 'es-AR') as 'saldo' " 
-     " from OPAGO2 "
-     " inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
-     " inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
-     " inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod "
-     "where opaest <> 'A' AND OPAGO2.BENCUI= " + str(cuit) + "  AND (select "
-     " sum(OPAGO1.opaimp) "
-     " from OPAGO1 "
-     " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-     " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) > OPAGO2.Opapgd ")
+    ejer = ''
+    jur=''
+    udo = ''
+    nroOPchar = ''
+    opaest =''
 
-    # FILTRAR POR EJERCICIO
-    if request.POST.get('ejer_ajax'):
-        sql_query = sql_query + " AND OPAGO2.OpaAnio=" + request.POST.get('ejer_ajax')
-    # FILTRAR POR JURISDICCION
-    if request.POST.get('jur_ajax'):
-        sql_query = sql_query + " AND OPAGO2.jurcod='" + str(request.POST.get('jur_ajax')) + "' "
-    # FILTRAR POR UNIDAD DE JURISDICCION
-    if request.POST.get('udo_ajax'):
-        sql_query = sql_query + " AND OPAGO2.repudo='" + str(request.POST.get('udo_ajax')) + "' "
-    # FILTRAR POR NRO DE OP
-    if request.POST.get('nro_op_ajax'):
-        sql_query = sql_query + " AND OPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
-    # FILTRAR POR ESTADO
-    if request.POST.get('estado_ajax') != 'T':
-        if request.POST.get('estado_ajax') == 'S':
-         sql_query = sql_query + " AND OPAGO2.OpaEst IN ('S','H') "
-        else:
-            sql_query = sql_query + " AND OPAGO2.OpaEst is null "
 
-    cursor.execute(sql_query)
-    ## CONVERTIR EL CURSOR EN DICT
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in cursor.fetchall():
-        results.append(dict(zip(columns, row)))
-    ## CONVERTIR EL CURSOR EN DICT
+    #  FILTRAR POR EJE
+    if request.POST.get('ejer_ajax') != '':
+       ejer = '='+request.POST.get('ejer_ajax')
 
-    data = list(results)
-    return JsonResponse(data, safe=False)
+    # FILTRAR POR JUR
+    if request.POST.get('jur_ajax') != '':
+        jur = '='+request.POST.get('jur_ajax')
+
+    # FILTRAR POR UDO
+    if request.POST.get('udo_ajax') != '':
+        udo = '='+request.POST.get('udo_ajax')
+
+    #  FILTRAR POR OP
+    if request.POST.get('nro_op_ajax') != '':
+        nroOPchar = '='+request.POST.get('nro_op_ajax')
+
+    #  FILTRAR POR ESTADI
+    if request.POST.get('estado_ajax') != '':
+        opaest = '=' + request.POST.get('estado_ajax')
+
+
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/OPImpagas/cuitchar='+cuit+'&ejerchar'+ejer+'&jur'+jur+'&udo'+udo+'&nroOPchar'+nroOPchar+'&opaest'+opaest
+    print(url)
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    op_impagas = data['SDTOPImpagas']
+
+    return JsonResponse(op_impagas, safe=False)
 
 
 class op_comprobantes(View):
@@ -750,66 +502,41 @@ class op_comprobantes(View):
 def op_comprobantes_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
     cuit = request.user.username
+    OpaCpbTip = ''
+    letra = ''
+    CpbSucCar = ''
+    OpaCpbNroCar = ''
 
-    # ARMAR PRIMER OBJETO CON NRO DE CUIL
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
-
-    sql_query = (" SELECT "
-    " CASE "
-    " WHEN OPAGO1.OpaCpbTip = 'FA' THEN 'Factura' "
-    " WHEN OPAGO1.OpaCpbTip = 'RG' THEN 'Repos.Gasto' "
-    " WHEN OPAGO1.OpaCpbTip = 'LV' THEN 'Liq.Viaticos' "
-    " WHEN OPAGO1.OpaCpbTip = 'LS' THEN 'Liq.Sueldos' "
-    " WHEN OPAGO1.OpaCpbTip = 'RE' THEN 'Recibo' "
-    " WHEN OPAGO1.OpaCpbTip = 'TK' THEN 'Ticket' "
-    " WHEN OPAGO1.OpaCpbTip = 'TR' THEN 'Transporte' "
-    " WHEN OPAGO1.OpaCpbTip = 'CD' THEN 'Comp.Definitivo' "
-    " WHEN OPAGO1.OpaCpbTip = 'CM' THEN 'Contrib.Municipio' "
-    " WHEN OPAGO1.OpaCpbTip = 'DE' THEN 'Devolucion' "
-    " WHEN OPAGO1.OpaCpbTip = 'CO' THEN 'Certif.Obra' "
-    " WHEN OPAGO1.OpaCpbTip = 'PS' THEN 'PagoSeguro' "
-    " WHEN OPAGO1.OpaCpbTip = 'CR' THEN 'Carg.Rendir Cta' "
-    " ELSE '-' "
-    " END as 'tipoCbpte', "
-    " OPAGO1.OpaCpbLet as 'letraCpbte', "
-    " OPAGO1.OpaSu1 as 'sucursalCpbte', "
-    " OPAGO1.OpaCpbNro as 'nroCpbte', "
-    " OPAGO1.OpaAnio as 'ejercicio',  "
-    " OPAGO1.OpaNro as 'nroOP', "
-    " OPAGO1.jurcod as 'juri', "
-    " OPAGO1.repudo as 'udo', "
-    " format( OPAGO1.OpaCpcFec ,'dd-MM-yyyy') as 'fecCpbte', "
-    " FORMAT(OPAGO1.OpaImp, 'C', 'es-AR') as 'importeCpbte' "
-    " from OPAGO1 "
-    " where OPAGO1.CpbBenCUI=" +str(cuit)+ " and OPAGO1.OpaEstL<>'A' ")
-
-    # FILTRAR POR TIPO
-    if request.POST.get('tipo_ajax') != '' :
-        sql_query = sql_query + " AND OPAGO1.OpaCpbTip='" + request.POST.get('tipo_ajax') +"' "
+    #  FILTRAR POR TIPO
+    if request.POST.get('tipo_ajax') != '':
+        OpaCpbTip = '=' +request.POST.get('tipo_ajax')
 
     # FILTRAR POR LETRA
     if request.POST.get('letra_ajax') != '':
-        sql_query = sql_query + " AND OPAGO1.OpaCpbLet='" + request.POST.get('letra_ajax') + "' "
+        letra = '=' + request.POST.get('letra_ajax')
 
     # FILTRAR POR SUCURSAL
     if request.POST.get('suc_ajax') != '':
-        sql_query = sql_query + " AND OPAGO1.OpaSu1='" + request.POST.get('suc_ajax') + "' "
+        CpbSucCar = '=' + request.POST.get('suc_ajax')
 
-    # FILTRAR POR NUMERO
+    #  FILTRAR POR NUMERO
     if request.POST.get('nro_ajax') != '':
-        sql_query = sql_query + " AND OPAGO1.OpaCpbNro like '%" + request.POST.get('nro_ajax') + "%' "
+        OpaCpbNroCar = '=' + request.POST.get('nro_ajax')
 
-    cursor.execute(sql_query)
-    ## CONVERTIR EL CURSOR EN DICT
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in cursor.fetchall():
-        results.append(dict(zip(columns, row)))
-    ## CONVERTIR EL CURSOR EN DICT
 
-    data = list(results)
-    return JsonResponse(data, safe=False)
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/ConsultaComprobante/cuitchar='+ cuit +'&OpaCpbTip'+ OpaCpbTip +'&letra'+ letra +'&CpbSucCar'+CpbSucCar+'&OpaCpbNroCar'+OpaCpbNroCar
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    comprobante = data['SDTComprobanteCuit']
+
+    return JsonResponse(comprobante, safe=False)
 
 
 def op_pagadas_excel(request):
@@ -817,135 +544,178 @@ def op_pagadas_excel(request):
         template_name = 'proveedores/op_pagadas_excel.html'
 
         cuit = request.user.username
+        #
+        # conexion = conectarSQL()
+        # cursor = conexion.cursor()
+        #
+        # if request.POST.get('tipo') == 'con':
+        #  sql_query = (" SELECT  "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
+        #     " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
+        #     " end as 'fecPago', "
+        #     "CONCAT(POPAGO.OpaAnio,POPAGO.OpaNro,POPAGO.jurcod,POPAGO.repudo) as 'aux', "
+        #     " POPAGO.OpaAnio as 'ejerOP', "
+        #     " POPAGO.Popnro as 'nroLiq', "
+        #     " POPAGO.OpaNro as 'nroOP', "
+        #     " POPAGO.OpaAnio as 'ejerOP', "
+        #     " POPAGO.jurcod as 'jur', "
+        #     " POPAGO.repudo as 'udo', "
+        #     " REPARTICIO.RepDes as 'reparticion', "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then 'Nota Debito' "
+        #     " 	when POPAGO.Poptip='C' then 'Cheque' "
+        #     " 	when POPAGO.Poptip='1' then 'Ingresos Brutos' "
+        #     " 	when POPAGO.Poptip='4' then 'Ganancias' "
+        #     " 	when POPAGO.Poptip='X' then 'Embargo' "
+        #     " 	when POPAGO.Poptip='7' then 'Cesion' "
+        #     " 	when POPAGO.Poptip='R' then 'DEPOSITO DE GARANTIA' "
+        #     " 	when POPAGO.Poptip='S' then 'SEG.SOC.(I)' "
+        #     " 	when POPAGO.Poptip='V' then 'C.JUJ.DE LA CONST.' "
+        #     " 	when POPAGO.Poptip='Y' then 'IMP.A LOS SELLOS' "
+        #     " 	when POPAGO.Poptip='L' then 'FONDO LABORATORIO - D.P.V.' "
+        #     " 	when POPAGO.Poptip='«' then 'SEGURIDAD SOCIAL 6%' "
+        #     " 	when POPAGO.Poptip='I' then 'LEY 5118/98 VIALIDAD' "
+        #     " 	when POPAGO.Poptip='2' then 'MULTA' "
+        #     " 	when POPAGO.Poptip='9' then 'F.B.JUJUY S.A. 260411/03' "
+        #     " 	when POPAGO.Poptip='G' then 'LEY 5239/00 ART.33 D.G.ARQUITECTURA' "
+        #     " 	when POPAGO.Poptip='U' then 'SEG.SOC.(C)' "
+        #     " 	when POPAGO.Poptip='T' then 'LEY 5118' "
+        #     " 	when POPAGO.Poptip='E' then 'RET EARPUJ DECR. 175-G-2012' "
+        #     " 	when POPAGO.Poptip='_' then 'CONSTANCIAS DE DEUDA'	 "
+        #     " end as 'formaPago',  "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then CONVERT(VARCHAR,POPAGO.Ndbnro) "
+        #     " 	when POPAGO.Poptip='C' then CONVERT(VARCHAR,POPAGO.Chqnum)	 "
+        #     " 	else 0 "
+        #     " end as 'nroCpbtePago', "
+        #     " POPAGO.Popimp as 'importe', "
+        #     " OPAGO1.OpaCpbTip as 'tipoCbpte', "
+        #     " OPAGO1.OpaCpbLet as 'letraCpbte', "
+        #     " OPAGO1.OpaSu1 as 'sucursalCpbte', "
+        #     " OPAGO1.OpaCpbNro as 'nroCpbte', "
+        #     " format( OPAGO1.OpaCpcFec ,'dd/MM/yyyy') as 'fecCpbte', "
+        #     " OPAGO1.OpaImp as 'importeCpbte'	 "
+        #     " from POPAGO  "
+        #     " inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
+        #     " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
+        #     " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
+        #     " inner join OPAGO1 on OPAGO1.OpaAnio=POPAGO.OpaAnio AND OPAGO1.OpaNro=POPAGO.OpaNro AND OPAGO1.jurcod=POPAGO.jurcod AND OPAGO1.repudo=POPAGO.repudo "
+        #     " inner join BENEFICIAR on OPAGO1.CpbBenCUI=BENEFICIAR.BENCUI "
+        #     " where OPAGO1.CpbBenCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
+        # else:
+        #  sql_query = (" SELECT  "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
+        #     " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
+        #     " end as 'fecPago', "
+        #     " POPAGO.OpaAnio as 'ejerOP', "
+        #     " POPAGO.Popnro as 'nroLiq', "
+        #     " POPAGO.OpaNro as 'nroOP', "
+        #     " POPAGO.OpaAnio as 'ejerOP', "
+        #     " POPAGO.jurcod as 'jur', "
+        #     " POPAGO.repudo as 'udo', "
+        #     " REPARTICIO.RepDes as 'reparticion', "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then 'Nota Debito' "
+        #     " 	when POPAGO.Poptip='C' then 'Cheque' "
+        #     " 	when POPAGO.Poptip='1' then 'Ingresos Brutos' "
+        #     " 	when POPAGO.Poptip='4' then 'Ganancias' "
+        #     " 	when POPAGO.Poptip='X' then 'Embargo' "
+        #     " 	when POPAGO.Poptip='7' then 'Cesion' "
+        #     " 	when POPAGO.Poptip='R' then 'DEPOSITO DE GARANTIA' "
+        #     " 	when POPAGO.Poptip='S' then 'SEG.SOC.(I)' "
+        #     " 	when POPAGO.Poptip='V' then 'C.JUJ.DE LA CONST.' "
+        #     " 	when POPAGO.Poptip='Y' then 'IMP.A LOS SELLOS' "
+        #     " 	when POPAGO.Poptip='L' then 'FONDO LABORATORIO - D.P.V.' "
+        #     " 	when POPAGO.Poptip='«' then 'SEGURIDAD SOCIAL 6%' "
+        #     " 	when POPAGO.Poptip='I' then 'LEY 5118/98 VIALIDAD' "
+        #     " 	when POPAGO.Poptip='2' then 'MULTA' "
+        #     " 	when POPAGO.Poptip='9' then 'F.B.JUJUY S.A. 260411/03' "
+        #     " 	when POPAGO.Poptip='G' then 'LEY 5239/00 ART.33 D.G.ARQUITECTURA' "
+        #     " 	when POPAGO.Poptip='U' then 'SEG.SOC.(C)' "
+        #     " 	when POPAGO.Poptip='T' then 'LEY 5118' "
+        #     " 	when POPAGO.Poptip='E' then 'RET EARPUJ DECR. 175-G-2012' "
+        #     " 	when POPAGO.Poptip='_' then 'CONSTANCIAS DE DEUDA' "
+        #     " end as 'formaPago',  "
+        #     " case  "
+        #     " 	when POPAGO.Poptip='D' then CONVERT(VARCHAR,POPAGO.Ndbnro) "
+        #     " 	when POPAGO.Poptip='C' then CONVERT(VARCHAR,POPAGO.Chqnum)		 "
+        #     " 	else 0 "
+        #     " end as 'nroCpbtePago', "
+        #     " POPAGO.Popimp as 'importe' "
+        #     " from POPAGO  "
+        #     " inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
+        #     " inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
+        #     " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
+        #     " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
+        #     " WHERE OPAGO2.BENCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
+        #
+        #
+        # # FILTRAR POR EJERCICIO
+        # if request.POST.get('ejer_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.OpaAnio=" + request.POST.get('ejer_ajax')
+        # # FILTRAR POR JURISDICCION
+        # if request.POST.get('jur_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.jurcod=" + request.POST.get('jur_ajax')
+        # # FILTRAR POR UNIDAD DE JURISDICCION
+        # if request.POST.get('udo_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.repudo=" + request.POST.get('udo_ajax')
+        # # FILTRAR POR NRO DE OP
+        # if request.POST.get('nro_op_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
+        # # FILTRAR POR FECHA DESDE
+        # if request.POST.get('desde_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.Popfpg>='" + request.POST.get('desde_ajax') + "'"
+        # # FILTRAR POR FECHA HASTA
+        # if request.POST.get('hasta_ajax'):
+        #     sql_query = sql_query + " AND POPAGO.Popfpg<='" + request.POST.get('hasta_ajax') + "'"
+        #
+        # cursor.execute(sql_query)
+        # comprobante = cursor.fetchall()
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
+        ejer = ''
+        jur = ''
+        udo = ''
+        nroOp = ''
+        desde = ''
+        hasta = ''
 
-        if request.POST.get('tipo') == 'con':
-         sql_query = (" SELECT  "
-            " case  "
-            " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
-            " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
-            " end as 'fecPago', "
-            "CONCAT(POPAGO.OpaAnio,POPAGO.OpaNro,POPAGO.jurcod,POPAGO.repudo) as 'aux', "                     
-            " POPAGO.OpaAnio as 'ejerOP', "
-            " POPAGO.Popnro as 'nroLiq', "
-            " POPAGO.OpaNro as 'nroOP', "
-            " POPAGO.OpaAnio as 'ejerOP', "
-            " POPAGO.jurcod as 'jur', "
-            " POPAGO.repudo as 'udo', "
-            " REPARTICIO.RepDes as 'reparticion', "
-            " case  "
-            " 	when POPAGO.Poptip='D' then 'Nota Debito' "
-            " 	when POPAGO.Poptip='C' then 'Cheque' "
-            " 	when POPAGO.Poptip='1' then 'Ingresos Brutos' "
-            " 	when POPAGO.Poptip='4' then 'Ganancias' "
-            " 	when POPAGO.Poptip='X' then 'Embargo' "
-            " 	when POPAGO.Poptip='7' then 'Cesion' "
-            " 	when POPAGO.Poptip='R' then 'DEPOSITO DE GARANTIA' "
-            " 	when POPAGO.Poptip='S' then 'SEG.SOC.(I)' "
-            " 	when POPAGO.Poptip='V' then 'C.JUJ.DE LA CONST.' "
-            " 	when POPAGO.Poptip='Y' then 'IMP.A LOS SELLOS' "
-            " 	when POPAGO.Poptip='L' then 'FONDO LABORATORIO - D.P.V.' "
-            " 	when POPAGO.Poptip='«' then 'SEGURIDAD SOCIAL 6%' "
-            " 	when POPAGO.Poptip='I' then 'LEY 5118/98 VIALIDAD' "
-            " 	when POPAGO.Poptip='2' then 'MULTA' "
-            " 	when POPAGO.Poptip='9' then 'F.B.JUJUY S.A. 260411/03' "
-            " 	when POPAGO.Poptip='G' then 'LEY 5239/00 ART.33 D.G.ARQUITECTURA' "
-            " 	when POPAGO.Poptip='U' then 'SEG.SOC.(C)' "
-            " 	when POPAGO.Poptip='T' then 'LEY 5118' "
-            " 	when POPAGO.Poptip='E' then 'RET EARPUJ DECR. 175-G-2012' "
-            " 	when POPAGO.Poptip='_' then 'CONSTANCIAS DE DEUDA'	 "
-            " end as 'formaPago',  "
-            " case  "
-            " 	when POPAGO.Poptip='D' then CONVERT(VARCHAR,POPAGO.Ndbnro) "
-            " 	when POPAGO.Poptip='C' then CONVERT(VARCHAR,POPAGO.Chqnum)	 "	
-            " 	else 0 "
-            " end as 'nroCpbtePago', "
-            " POPAGO.Popimp as 'importe', "
-            " OPAGO1.OpaCpbTip as 'tipoCbpte', "
-            " OPAGO1.OpaCpbLet as 'letraCpbte', "
-            " OPAGO1.OpaSu1 as 'sucursalCpbte', "
-            " OPAGO1.OpaCpbNro as 'nroCpbte', "
-            " format( OPAGO1.OpaCpcFec ,'dd/MM/yyyy') as 'fecCpbte', "
-            " OPAGO1.OpaImp as 'importeCpbte'	 "
-            " from POPAGO  "
-            " inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
-            " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
-            " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-            " inner join OPAGO1 on OPAGO1.OpaAnio=POPAGO.OpaAnio AND OPAGO1.OpaNro=POPAGO.OpaNro AND OPAGO1.jurcod=POPAGO.jurcod AND OPAGO1.repudo=POPAGO.repudo "
-            " inner join BENEFICIAR on OPAGO1.CpbBenCUI=BENEFICIAR.BENCUI "
-            " where OPAGO1.CpbBenCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
-        else:
-         sql_query = (" SELECT  "
-            " case  "
-            " 	when POPAGO.Poptip='D' then format(NOTADB.Ndbfcr, 'dd/MM/yyyy')  "
-            " 	when POPAGO.Poptip='C' then format(CHEQ00.Chqfpg, 'dd/MM/yyyy') "
-            " end as 'fecPago', "
-            " POPAGO.OpaAnio as 'ejerOP', "
-            " POPAGO.Popnro as 'nroLiq', "
-            " POPAGO.OpaNro as 'nroOP', "
-            " POPAGO.OpaAnio as 'ejerOP', "
-            " POPAGO.jurcod as 'jur', "
-            " POPAGO.repudo as 'udo', "
-            " REPARTICIO.RepDes as 'reparticion', "
-            " case  "
-            " 	when POPAGO.Poptip='D' then 'Nota Debito' "
-            " 	when POPAGO.Poptip='C' then 'Cheque' "
-            " 	when POPAGO.Poptip='1' then 'Ingresos Brutos' "
-            " 	when POPAGO.Poptip='4' then 'Ganancias' "
-            " 	when POPAGO.Poptip='X' then 'Embargo' "
-            " 	when POPAGO.Poptip='7' then 'Cesion' "
-            " 	when POPAGO.Poptip='R' then 'DEPOSITO DE GARANTIA' "
-            " 	when POPAGO.Poptip='S' then 'SEG.SOC.(I)' "
-            " 	when POPAGO.Poptip='V' then 'C.JUJ.DE LA CONST.' "
-            " 	when POPAGO.Poptip='Y' then 'IMP.A LOS SELLOS' "
-            " 	when POPAGO.Poptip='L' then 'FONDO LABORATORIO - D.P.V.' "
-            " 	when POPAGO.Poptip='«' then 'SEGURIDAD SOCIAL 6%' "
-            " 	when POPAGO.Poptip='I' then 'LEY 5118/98 VIALIDAD' "
-            " 	when POPAGO.Poptip='2' then 'MULTA' "
-            " 	when POPAGO.Poptip='9' then 'F.B.JUJUY S.A. 260411/03' "
-            " 	when POPAGO.Poptip='G' then 'LEY 5239/00 ART.33 D.G.ARQUITECTURA' "
-            " 	when POPAGO.Poptip='U' then 'SEG.SOC.(C)' "
-            " 	when POPAGO.Poptip='T' then 'LEY 5118' "
-            " 	when POPAGO.Poptip='E' then 'RET EARPUJ DECR. 175-G-2012' "
-            " 	when POPAGO.Poptip='_' then 'CONSTANCIAS DE DEUDA' "	
-            " end as 'formaPago',  "
-            " case  "
-            " 	when POPAGO.Poptip='D' then CONVERT(VARCHAR,POPAGO.Ndbnro) "
-            " 	when POPAGO.Poptip='C' then CONVERT(VARCHAR,POPAGO.Chqnum)		 "
-            " 	else 0 "
-            " end as 'nroCpbtePago', "
-            " POPAGO.Popimp as 'importe' "
-            " from POPAGO  "
-            " inner join OPAGO2 on POPAGO.OpaAnio=OPAGO2.OpaAnio AND POPAGO.OpaNro=OPAGO2.OpaNro AND POPAGO.jurcod=OPAGO2.jurcod AND POPAGO.repudo=OPAGO2.repudo "
-            " inner join REPARTICIO on POPAGO.jurcod=REPARTICIO.jurcod and POPAGO.repudo=REPARTICIO.repudo "
-            " left join CHEQ00 on CHEQ00.Chqnum=POPAGO.Chqnum and CHEQ00.Chqcta=POPAGO.Chqcta and CHEQ00.Chqtip=POPAGO.Chqtip "
-            " left join NOTADB on NOTADB.NdbAnio=POPAGO.NdbAnio and NOTADB.Ndbnro=POPAGO.Ndbnro "
-            " WHERE OPAGO2.BENCUI=" + str(cuit) + " AND POPAGO.PopEst<>'A' AND (POPAGO.Poptip='D' or POPAGO.Poptip='C') ")
+        #  FILTRAR POR EJE
+        if request.POST.get('ejer_ajax') != '':
+            ejer = '=' + request.POST.get('ejer_ajax')
 
+        #  FILTRAR POR JUR
+        if request.POST.get('jur_ajax') != '':
+            jur = '=' + request.POST.get('jur_ajax')
 
-        # FILTRAR POR EJERCICIO
-        if request.POST.get('ejer_ajax'):
-            sql_query = sql_query + " AND POPAGO.OpaAnio=" + request.POST.get('ejer_ajax')
-        # FILTRAR POR JURISDICCION
-        if request.POST.get('jur_ajax'):
-            sql_query = sql_query + " AND POPAGO.jurcod=" + request.POST.get('jur_ajax')
-        # FILTRAR POR UNIDAD DE JURISDICCION
-        if request.POST.get('udo_ajax'):
-            sql_query = sql_query + " AND POPAGO.repudo=" + request.POST.get('udo_ajax')
-        # FILTRAR POR NRO DE OP
-        if request.POST.get('nro_op_ajax'):
-            sql_query = sql_query + " AND POPAGO.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
-        # FILTRAR POR FECHA DESDE
-        if request.POST.get('desde_ajax'):
-            sql_query = sql_query + " AND POPAGO.Popfpg>='" + request.POST.get('desde_ajax') + "'"
-        # FILTRAR POR FECHA HASTA
-        if request.POST.get('hasta_ajax'):
-            sql_query = sql_query + " AND POPAGO.Popfpg<='" + request.POST.get('hasta_ajax') + "'"
+        #  FILTRAR POR UDO
+        if request.POST.get('udo_ajax') != '':
+            udo = '=' + request.POST.get('udo_ajax')
 
-        cursor.execute(sql_query)
-        comprobante = cursor.fetchall()
+        #  FILTRAR POR NRO OP
+        if request.POST.get('nro_op_ajax') != '':
+            nroOp = '=' + request.POST.get('nro_op_ajax')
+
+        #  FILTRAR POR FECHA DESDE
+        if request.POST.get('desde_ajax') != '':
+            desde = '=' + request.POST.get('desde_ajax')
+
+        #  FILTRAR POR FECHA HASTA
+        if request.POST.get('hasta_ajax') != '':
+            hasta = '=' + request.POST.get('hasta_ajax')
+
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/OPPagadas/cuitchar=' + cuit + '&ejerchar' + ejer + '&jur' + jur + '&udo=' + udo + '&nroOPchar' + nroOp + '&FecDesde' + desde + '&FecHasta' + hasta
+
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+        comprobante = data['SDTOPPagadasCuit']
 
         context = {
             "comprobante": comprobante,
@@ -961,101 +731,141 @@ def op_impagas_excel(request):
 
     cuit = request.user.username
 
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
+    # conexion = conectarSQL()
+    # cursor = conexion.cursor()
+    #
+    # if request.POST.get('tipo') == 'con':
+    #   sql_query = (" SELECT  "
+    #   " OPAGO2.OpaAnio as 'ejerOP', "
+    #   " OPAGO2.OpaNro as 'nroOP', "
+    #   " OPAGO2.jurcod as 'jur', "
+    #   " OPAGO2.repudo as 'udo', "
+    #   " format( OPAGO2.OpaEmi ,'dd/MM/yyyy') as 'fecEmi', "
+    #   " REPARTICIO.RepDes as 'reparticion', "
+    #   " OPAGO1.OpaCpbTip as 'tipoCbpte', "
+    #   " OPAGO1.OpaCpbLet as 'letraCpbte', "
+    #   " OPAGO1.OpaSu1 as 'sucursalCpbte', "
+    #   " OPAGO1.OpaCpbNro as 'nroCpbte', "
+    #   " (select  "
+    #   " sum(opago1.opaimp)  "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND  "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo "
+    #   " ) as 'ImporteTotalOP', "
+    #   " opago2.opapgd as 'pagado', "
+    #   " (select  "
+    #   " sum(opago1.opaimp)  "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND  "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) - opago2.opapgd as 'SaldoOP', "
+    #   " format( OPAGO1.OpaCpcFec ,'dd/MM/yyyy') as 'fecCpbte', "
+    #   " OPAGO1.OpaImp as 'importeCpbte', "
+    #   " OPAGO2.OpaEst as 'habilitaContad', "
+    #   " OPAGO2.OpaHaT as 'habilitaTeso' "
+    #   " from OPAGO2  "
+    #   " inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
+    #   " inner join OPAGO1 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo "
+    #   " inner join BENEFICIAR on OPAGO1.CpbBenCUI=BENEFICIAR.BENCUI "
+    #   " where OPAGO1.CpbBenCUI="+  str(cuit) +"  AND (select "
+    #   " sum(OPAGO1.opaimp) "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) > OPAGO2.Opapgd  AND OPAGO2.OpaEst<>'A' ")
+    # else:
+    #     sql_query = ("SELECT  "
+    #   " OPAGO2.OpaAnio as 'ejerOP', "
+    #   " OPAGO2.OpaNro as 'nroOP', "
+    #   " OPAGO2.jurcod as 'jur', "
+    #   " JURISDICCI.JurDes as 'jurisdiccion', "
+    #   " OPAGO2.repudo as 'udo', "
+    #   " REPARTICIO.RepDes as 'reparticion', "
+    #   " format( OPAGO2.OpaEmi ,'dd/MM/yyyy') as 'fecEmi', "
+    #   " OPAGO2.OpaEst as 'estadoOPC', "
+    #   " OPAGO2.OpaHaT as 'estadoOPT', "
+    #   " OPAGO2.Opapgd as 'pagado', "
+    #   " (select "
+    #   " sum(OPAGO1.opaimp) "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) as 'ImporteTotalOP', "
+    #   "((select "
+    #   " sum(OPAGO1.opaimp) "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) - OPAGO2.Opapgd) as 'SaldoOP', "
+    #   " OPAGO2.OpaEst as 'habilitaContad', "
+    #   " OPAGO2.OpaHaT as 'habilitaTeso' "
+    #   " from OPAGO2 "
+    #   " inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
+    #   " inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
+    #   " inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod "
+    #   "where opaest <> 'A' AND OPAGO2.BENCUI= " + str(cuit) + "  AND (select "
+    #   " sum(OPAGO1.opaimp) "
+    #   " from OPAGO1 "
+    #   " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
+    #   " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) > OPAGO2.Opapgd ")
+    #
+    # # FILTRAR POR EJERCICIO
+    # if request.POST.get('ejer_ajax'):
+    #     sql_query = sql_query + " AND OPAGO2.OpaAnio=" + request.POST.get('ejer_ajax')
+    # # FILTRAR POR JURISDICCION
+    # if request.POST.get('jur_ajax'):
+    #     sql_query = sql_query + " AND POPAGO2.jurcod=" + request.POST.get('jur_ajax')
+    # # FILTRAR POR UNIDAD DE JURISDICCION
+    # if request.POST.get('udo_ajax'):
+    #     sql_query = sql_query + " AND POPAGO2.repudo=" + request.POST.get('udo_ajax')
+    # # FILTRAR POR NRO DE OP
+    # if request.POST.get('nro_op_ajax'):
+    #     sql_query = sql_query + " AND POPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
+    # # FILTRAR POR ESTADO
+    # if request.POST.get('estado_ajax') != 'T':
+    #     if request.POST.get('estado_ajax') == 'S':
+    #      sql_query = sql_query + " AND OPAGO2.OpaEst IN ('S','H') "
+    #     else:
+    #         sql_query = sql_query + " AND OPAGO2.OpaEst is null "
+    #
+    # cursor.execute(sql_query)
+    # comprobante = cursor.fetchall()
 
-    if request.POST.get('tipo') == 'con':
-      sql_query = (" SELECT  "
-      " OPAGO2.OpaAnio as 'ejerOP', "
-      " OPAGO2.OpaNro as 'nroOP', "
-      " OPAGO2.jurcod as 'jur', "
-      " OPAGO2.repudo as 'udo', "
-      " format( OPAGO2.OpaEmi ,'dd/MM/yyyy') as 'fecEmi', "
-      " REPARTICIO.RepDes as 'reparticion', "
-      " OPAGO1.OpaCpbTip as 'tipoCbpte', "
-      " OPAGO1.OpaCpbLet as 'letraCpbte', "
-      " OPAGO1.OpaSu1 as 'sucursalCpbte', "
-      " OPAGO1.OpaCpbNro as 'nroCpbte', "
-      " (select  "
-      " sum(opago1.opaimp)  "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND  "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo "
-      " ) as 'ImporteTotalOP', "
-      " opago2.opapgd as 'pagado', "
-      " (select  "
-      " sum(opago1.opaimp)  "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND  "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) - opago2.opapgd as 'SaldoOP', "
-      " format( OPAGO1.OpaCpcFec ,'dd/MM/yyyy') as 'fecCpbte', "
-      " OPAGO1.OpaImp as 'importeCpbte', "
-      " OPAGO2.OpaEst as 'habilitaContad', "
-      " OPAGO2.OpaHaT as 'habilitaTeso' "
-      " from OPAGO2  "
-      " inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
-      " inner join OPAGO1 on OPAGO1.OpaAnio=OPAGO2.OpaAnio AND OPAGO1.OpaNro=OPAGO2.OpaNro AND OPAGO1.jurcod=OPAGO2.jurcod AND OPAGO1.repudo=OPAGO2.repudo "
-      " inner join BENEFICIAR on OPAGO1.CpbBenCUI=BENEFICIAR.BENCUI "
-      " where OPAGO1.CpbBenCUI="+  str(cuit) +"  AND (select "
-      " sum(OPAGO1.opaimp) "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) > OPAGO2.Opapgd  AND OPAGO2.OpaEst<>'A' ")
-    else:
-        sql_query = ("SELECT  "
-      " OPAGO2.OpaAnio as 'ejerOP', "
-      " OPAGO2.OpaNro as 'nroOP', "
-      " OPAGO2.jurcod as 'jur', "
-      " JURISDICCI.JurDes as 'jurisdiccion', "
-      " OPAGO2.repudo as 'udo', "
-      " REPARTICIO.RepDes as 'reparticion', "
-      " format( OPAGO2.OpaEmi ,'dd/MM/yyyy') as 'fecEmi', "
-      " OPAGO2.OpaEst as 'estadoOPC', "
-      " OPAGO2.OpaHaT as 'estadoOPT', "
-      " OPAGO2.Opapgd as 'pagado', "
-      " (select "
-      " sum(OPAGO1.opaimp) "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) as 'ImporteTotalOP', "
-      "((select "
-      " sum(OPAGO1.opaimp) "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) - OPAGO2.Opapgd) as 'SaldoOP', "
-      " OPAGO2.OpaEst as 'habilitaContad', "
-      " OPAGO2.OpaHaT as 'habilitaTeso' "               
-      " from OPAGO2 "
-      " inner join REPARTICIO on OPAGO2.jurcod=REPARTICIO.jurcod and OPAGO2.repudo=REPARTICIO.repudo "
-      " inner join BENEFICIAR on OPAGO2.BENCUI=BENEFICIAR.BENCUI "
-      " inner join JURISDICCI on OPAGO2.jurcod=JURISDICCI.jurcod "
-      "where opaest <> 'A' AND OPAGO2.BENCUI= " + str(cuit) + "  AND (select "
-      " sum(OPAGO1.opaimp) "
-      " from OPAGO1 "
-      " where OPAGO2.OpaAnio=OPAGO1.OpaAnio AND OPAGO2.OpaNro=OPAGO1.OpaNro AND "
-      " OPAGO2.jurcod=OPAGO1.jurcod and OPAGO2.repudo=OPAGO1.repudo) > OPAGO2.Opapgd ")
+    ejer = ''
+    jur = ''
+    udo = ''
+    nroOPchar = ''
+    opaest = ''
 
-    # FILTRAR POR EJERCICIO
-    if request.POST.get('ejer_ajax'):
-        sql_query = sql_query + " AND OPAGO2.OpaAnio=" + request.POST.get('ejer_ajax')
-    # FILTRAR POR JURISDICCION
-    if request.POST.get('jur_ajax'):
-        sql_query = sql_query + " AND POPAGO2.jurcod=" + request.POST.get('jur_ajax')
-    # FILTRAR POR UNIDAD DE JURISDICCION
-    if request.POST.get('udo_ajax'):
-        sql_query = sql_query + " AND POPAGO2.repudo=" + request.POST.get('udo_ajax')
-    # FILTRAR POR NRO DE OP
-    if request.POST.get('nro_op_ajax'):
-        sql_query = sql_query + " AND POPAGO2.OpaNro like '%" + request.POST.get('nro_op_ajax') + "%'"
-    # FILTRAR POR ESTADO
-    if request.POST.get('estado_ajax') != 'T':
-        if request.POST.get('estado_ajax') == 'S':
-         sql_query = sql_query + " AND OPAGO2.OpaEst IN ('S','H') "
-        else:
-            sql_query = sql_query + " AND OPAGO2.OpaEst is null "
+    #  FILTRAR POR EJE
+    if request.POST.get('ejer_ajax') != '':
+        ejer = '=' + request.POST.get('ejer_ajax')
 
-    cursor.execute(sql_query)
-    comprobante = cursor.fetchall()
+    # FILTRAR POR JUR
+    if request.POST.get('jur_ajax') != '':
+        jur = '=' + request.POST.get('jur_ajax')
+
+    # FILTRAR POR UDO
+    if request.POST.get('udo_ajax') != '':
+        udo = '=' + request.POST.get('udo_ajax')
+
+    #  FILTRAR POR OP
+    if request.POST.get('nro_op_ajax') != '':
+        nroOPchar = '=' + request.POST.get('nro_op_ajax')
+
+    #  FILTRAR POR ESTADI
+    if request.POST.get('estado_ajax') != '':
+        opaest = '=' + request.POST.get('estado_ajax')
+
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/OPImpagas/cuitchar=' + cuit + '&ejerchar' + ejer + '&jur' + jur + '&udo' + udo + '&nroOPchar' + nroOPchar + '&opaest' + opaest
+    print(url)
+
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    comprobante = data['SDTOPImpagas']
+
 
     context = {
         "comprobante": comprobante,
@@ -1085,50 +895,40 @@ class op_retenciones(View):
 def op_retenciones_ajax(request):
     """ FUNCION PARA TRAER DATOS DE LA TABLA CON FILTROS DE BUSQUEDA """
     cuit = request.user.username
+    ejer = ''
+    tipo = ''
+    desde = ''
+    hasta = ''
 
-    # ARMAR PRIMER OBJETO CON NRO DE CUIL
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
-
-    sql_query = ("SELECT  "
-"  ACRE001.Ac1CAn as 'ejerConstancia', "
-"  ACRE001.Ac1CNu as 'nroConstancia', "
-"  ACRE001.TReNro as 'tipoRetencion', "
-"  format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
-"  ACRE001.Ac1Est as 'estado', "
-"  ACRE001.Ac1opa as 'nroOP', "
-"  ACRE001.Ac1jur as 'jur', "
-"  ACRE001.Ac1udo as 'udo', "
-"  ACRE001.PopAnio as 'ejer', "
-"  ACRE001.Popnro as 'nroLiquidacion', "
-"  ACRE00.Acrmes as 'mes', "
-"  ACRE00.Acrano as 'anio', "
-"  FORMAT(ACRE001.Ac1Ire, 'C', 'es-AR')  as 'ImporteRetenido' "
-"  from ACRE001 "
-"  inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro "
-"  where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' and ACRE001.Ac1Ire > 0 ")
+    # FILTRAR POR EJERCICIO
+    if request.POST.get('ejer_ajax'):
+        ejer = '=' + request.POST.get('ejer_ajax')
 
     # FILTRAR POR TIPO
     if request.POST.get('tipo_ajax'):
-        sql_query = sql_query + " AND ACRE001.TReNro=" + request.POST.get('tipo_ajax')
+        tipo = '=' + request.POST.get('tipo_ajax')
 
     # FILTRAR POR FECHA DESDE
     if request.POST.get('desde_ajax'):
-        sql_query = sql_query + " AND ACRE001.Ac1fec>='" + request.POST.get('desde_ajax') + "'"
+        desde = '=' + request.POST.get('desde_ajax')
+
     # FILTRAR POR FECHA HASTA
     if request.POST.get('hasta_ajax'):
-        sql_query = sql_query + " AND ACRE001.Ac1fec<='" + request.POST.get('hasta_ajax') + "'"
+        hasta = '=' + request.POST.get('hasta_ajax')
 
-    cursor.execute(sql_query)
-    ## CONVERTIR EL CURSOR EN DICT
-    columns = [column[0] for column in cursor.description]
-    results = []
-    for row in cursor.fetchall():
-        results.append(dict(zip(columns, row)))
-    ## CONVERTIR EL CURSOR EN DICT
+    url = 'https://api.tujujuy.gob.ar/v1/proveedores/retenciones/cuitchar=' + cuit +'&ejerchar' +ejer+ '&codretChar'+ tipo +'&opaaniochar&nroOPchar&jurcod&repudo&FecDesde'+ desde +'&FecHasta'+ hasta
 
-    data = list(results)
-    return JsonResponse(data, safe=False)
+    headers = {
+        'Authorization': f'Bearer {settings.TOKEN_API}'
+    }
+
+    response = requests.get(url, headers=headers, verify=False)
+
+    response.raise_for_status()
+    data = response.json()
+    retenciones = data['SDTRetencionesCuit']
+
+    return JsonResponse(retenciones, safe=False)
 
 
 
@@ -1139,92 +939,60 @@ def op_retenciones_pdf(request):
     tipo = request.POST.get('tipo')
     anio = request.POST.get('anio')
     cons = request.POST.get('cons')
-    trenro = request.POST.get('trenro')
-
-    conexion = conectarSQL()
-    cursor = conexion.cursor()
+    importe = request.POST.get('importe')
 
     if tipo == '4':
-      sql_query = (" SELECT "
-      " ACRE001.Ac1CNu as 'nroConstancia', "
-      " ACRE001.Ac1CAn as 'ejerConstancia', "
-      " format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecha', "
-      " BENEFICIAR.BenNom as 'contribuyente', "
-      " ACRE001.RfcBenCUI as 'cuit', "
-      " CONCAT(LTRIM(BENEFICIAR.BenDom),' ',LTRIM(BENEFICIAR.BenNro),' ',LTRIM(POSTAL.PosLoc),' ',LTRIM(POSTAL.PosPro)) as 'domicilio', "
-      " REGACT.ImpDes as 'impuesto', "
-      " REGI00.RegDes as 'regimen', "
-      " (select sum(ACRE001.Ac1Ipg) from ACRE001  "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=4) as 'importeOper', "
-      " ACRE001.CpbTip as 'tipoCbpte', "
-      " ACRE001.CpbLet as 'letraCpbte', "
-      " ACRE001.Ac1Su1 as 'sucursalCpbte', "
-      " ACRE001.CpbNro as 'nroCpbte', "
-      " acre001.ac1ipg as 'importeCpbte', "
-      " acre001.ac1opa as 'NroOP', "
-      " acre001.ac1jur as 'jur', "
-      " acre001.ac1udo as 'udo', "
-      " (select sum(ACRE001.Ac1Ire) from ACRE001  "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=4) as 'importeReten' "
-      " from ACRE001 "
-      " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro " 
-      " inner join BENEFICIAR on ACRE001.RfcBenCUI=BENEFICIAR.BENCUI "
-      " inner join POSTAL on BENEFICIAR.PosCod=POSTAL.PosCod "
-      " inner join BFACT00 ON BFACT00.BENCUI=ACRE00.RfcBenCUI and BFACT00.ActCod=ACRE001.Ac1Act "
-      " inner join REGACT on BFACT00.ActCod=REGACT.ActCod "
-      " inner join REGI00 on REGI00.REGCod=REGACT.REGCOD "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=4 ")
+
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/constanciagan/cuitchar=' + cuit + '&nroConstanciachar=' + cons + '&ejerchar=' + anio
+
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+
+        comprobante = data['SDTConstanciaGan']
+        cabecera = data['SDTConstanciaGan'][0]
 
     elif tipo == '1':
-      sql_query = (" SELECT "
-      " ACRE001.Ac1CAn as 'ejerConstancia', "
-      " ACRE001.Ac1CNu as 'nroConstancia', "
-      " BENEFICIAR.BenNom as 'contribuyente', "
-      " ACRE001.RfcBenCUI as 'cuit', "
-      " format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
-      " ACRE001.Popnro as 'nroLiquidacion', "
-      " ACRE001.CpbTip as 'tipoCbpte', "
-      " ACRE001.CpbLet as 'letraCpbte', "
-      " ACRE001.Ac1Su1 as 'sucursalCpbte', "
-      " ACRE001.CpbNro as 'nroCpbte', "
-      " acre001.ac1ipg as 'importeCpbte', "
-      " (select sum(ACRE001.Ac1Ipg) from ACRE001  "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=1) as 'importeOper', "
-      " (select sum(ACRE001.Ac1Ire) from ACRE001  "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=1) as 'importeReten', "
-      " ACRE001.Ac1Ali as 'alicuota' "
-      " from ACRE001 "
-      " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro  "
-      " inner join BENEFICIAR on ACRE001.RfcBenCUI=BENEFICIAR.BENCUI "
-      " where  ACRE001.RfcBenCUI=" +str(cuit)+ " and ACRE001.Ac1CAn=" +str(anio)+ " and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro=1 ")
+
+      url = 'https://api.tujujuy.gob.ar/v1/proveedores/constanciaib/cuitchar='+ cuit +'&nroConstanciachar='+ cons +'&ejerchar=' + anio
+
+      headers = {
+          'Authorization': f'Bearer {settings.TOKEN_API}'
+      }
+
+      response = requests.get(url, headers=headers, verify=False)
+
+      response.raise_for_status()
+      data = response.json()
+
+      comprobante = data['SDTConstanciaIB']
+      cabecera = data['SDTConstanciaIB'][0]
+
     else:
-      sql_query = (" SELECT  "
-      " ACRE001.Ac1CNu as 'nroConstancia', "
-      " ACRE001.Ac1CAn as 'ejerConstancia', "
-      " BENEFICIAR.BenNom as 'contribuyente', "
-      " CONCAT(LTRIM(BENEFICIAR.BenDom),' ',LTRIM(BENEFICIAR.BenNro),' ',LTRIM(POSTAL.PosLoc),' ',LTRIM(POSTAL.PosPro)) as 'domicilio', "
-      " ACRE001.RfcBenCUI as 'cuit', "
-      " ACRE001.Ac1Ali as 'alicuota', "
-      " (select sum(ACRE001.Ac1Ipg) from ACRE001  "
-      " where  ACRE001.RfcBenCUI="+str(cuit)+" and ACRE001.Ac1CAn="+str(anio)+" and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro<>1 AND ACRE001.TReNro<>4) as 'importeOper', "
-      " (select sum(ACRE001.Ac1Ire) from ACRE001  "
-      " where  ACRE001.RfcBenCUI="+str(cuit)+" and ACRE001.Ac1CAn="+str(anio)+" and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro<>1 AND ACRE001.TReNro<>4) as 'importeReten', "
-      " format(ACRE001.Ac1fec,'dd/MM/yyyy') as 'fecRetencion', "
-      " ACRE001.Popnro as 'nroLiquidacion', "
-      " ACRE001.Popanio as 'ejerLiquidacion' "
-      " from ACRE001 "
-      " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro " 
-      " inner join BENEFICIAR on ACRE001.RfcBenCUI=BENEFICIAR.BENCUI "
-      " inner join POSTAL on BENEFICIAR.PosCod=POSTAL.PosCod "
-      " where  ACRE001.RfcBenCUI="+str(cuit)+" and ACRE001.Ac1CAn="+str(anio)+" and ACRE001.Ac1CNu="+ str(cons) +" AND ACRE001.TReNro<>1 AND ACRE001.TReNro<>4 ")
 
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/constanciaotros/cuitchar=' + cuit + '&nroConstanciachar=' + cons + '&ejerchar=' + anio
 
-    cursor.execute(sql_query)
-    comprobante = cursor.fetchone()
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+
+        comprobante = data['SDTConstanciaOtros']
+        cabecera = data['SDTConstanciaOtros'][0]
 
     context = {
         'tipo': tipo,
-        'comprobante': comprobante
+        'comprobante': comprobante,
+        'cabecera': cabecera
     }
 
     return generate_pdf(request, template_name, context)
@@ -1234,42 +1002,38 @@ def op_retenciones_excel(request):
         template_name = 'proveedores/op_retenciones_excel.html'
 
         cuit = request.user.username
+        ejer = ''
+        tipo = ''
+        desde = ''
+        hasta = ''
 
-        conexion = conectarSQL()
-        cursor = conexion.cursor()
-
-        sql_query = (" SELECT "
-                     " ACRE001.Ac1CAn as 'ejerConstancia', "
-                     " ACRE001.Ac1CNu as 'nroConstancia', "
-                     " ACRE001.TReNro as 'tipoRetencion', "
-                     " format( ACRE001.Ac1fec ,'dd/MM/yyyy') as 'fecRetencion', "
-                     " ACRE001.Ac1Est as 'estado', "
-                     " ACRE001.Ac1opa as 'nroOP', "
-                     " ACRE001.Ac1jur as 'jur', "
-                     " ACRE001.Ac1udo as 'udo', "
-                     " ACRE001.PopAnio as 'ejer', "
-                     " ACRE001.Popnro as 'nroLiquidacion', "
-                     " ACRE00.Acrmes as 'mes', "
-                     " ACRE00.Acrano as 'anio', "
-                     "ACRE001.TReNro"
-                     " from ACRE001 "
-                     " inner join ACRE00 on ACRE001.RfcBenCUI=ACRE00.RfcBenCUI and ACRE001.Acrano=ACRE00.Acrano and ACRE001.Acrmes=ACRE00.Acrmes and ACRE001.TReNro=ACRE00.TReNro "
-                     " where ACRE001.RfcBenCUI="+cuit+" AND ACRE001.Ac1Est<>'A' ")
+        # FILTRAR POR EJERCICIO
+        if request.POST.get('ejer_ajax'):
+            ejer = '=' + request.POST.get('ejer_ajax')
 
         # FILTRAR POR TIPO
         if request.POST.get('tipo_ajax'):
-            sql_query = sql_query + " AND ACRE001.TReNro=" + request.POST.get('tipo_ajax')
+            tipo = '=' + request.POST.get('tipo_ajax')
 
         # FILTRAR POR FECHA DESDE
         if request.POST.get('desde_ajax'):
-            sql_query = sql_query + " AND ACRE001.Ac1fec>='" + request.POST.get('desde_ajax') + "'"
+            desde = '=' + request.POST.get('desde_ajax')
+
         # FILTRAR POR FECHA HASTA
         if request.POST.get('hasta_ajax'):
-            sql_query = sql_query + " AND ACRE001.Ac1fec<='" + request.POST.get('hasta_ajax') + "'"
+            hasta = '=' + request.POST.get('hasta_ajax')
 
+        url = 'https://api.tujujuy.gob.ar/v1/proveedores/retenciones/cuitchar=' + cuit + '&ejerchar' + ejer + '&codretChar' + tipo + '&opaaniochar&nroOPchar&jurcod&repudo&FecDesde' + desde + '&FecHasta' + hasta
 
-        cursor.execute(sql_query)
-        datos = cursor.fetchall()
+        headers = {
+            'Authorization': f'Bearer {settings.TOKEN_API}'
+        }
+
+        response = requests.get(url, headers=headers, verify=False)
+
+        response.raise_for_status()
+        data = response.json()
+        datos = data['SDTRetencionesCuit']
 
         context = {
             "datos": datos,
